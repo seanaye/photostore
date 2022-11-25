@@ -1,5 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import { AboutSean } from "../components/AboutSean.tsx";
+import { DefaultLayout } from "../components/DefaultLayout.tsx";
 
 const twitterUrl = `https://twitter.com/seanay3`;
 const githubUrl = `https://github.com/seanaye`;
@@ -10,13 +11,10 @@ const description = `Hi! My name is Sean Aye, I'm a ${emoji} software engineer w
 
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>Fresh App</title>
-      </Head>
+    <DefaultLayout>
       <AboutSean
         {...{ avatarImg, twitterUrl, githubUrl, linkedinUrl, description }}
       />
-    </>
+    </DefaultLayout>
   );
 }
