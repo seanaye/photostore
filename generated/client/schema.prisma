@@ -13,24 +13,44 @@ datasource db {
 }
 
 model Photo {
-  id         Int        @id @default(autoincrement())
-  previewUrl String
-  fullUrl    String
-  rawUrl     String
-  purchases  Purchase[]
+  id          Int        @id @default(autoincrement())
+  previewUrl  String
+  fullUrl     String
+  rawUrl      String
+  captureDate DateTime
+  price       Int
+  purchases   Purchase[]
 }
 
 model Purchase {
-  id      Int   @id @default(autoincrement())
-  emailId Int
-  email   Email @relation(fields: [emailId], references: [id])
+  id      Int      @id @default(autoincrement())
   photoId Int
-  photo   Photo @relation(fields: [photoId], references: [id])
-  date DateTime @default(now())
+  photo   Photo    @relation(fields: [photoId], references: [id])
+  cartId  Int
+  cart    Cart     @relation(fields: [cartId], references: [id])
+}
+
+model Notification {
+  id           Int      @id @default(autoincrement())
+  emailId      Int
+  email        Email    @relation(fields: [emailId], references: [id])
+  alertForDate DateTime
+
+  @@unique([emailId, alertForDate], name: "emailNotification")
+}
+
+model Cart {
+  id             Int        @id @default(autoincrement())
+  cartIdentifier String     @unique
+  purchases      Purchase[]
+  emailId        Int
+  email          Email      @relation(fields: [emailId], references: [id])
+  date    DateTime @default(now())
 }
 
 model Email {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  purchases Purchase[]
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  purchases     Cart[]
+  notifications Notification[]
 }
