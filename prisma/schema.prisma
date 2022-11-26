@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["deno"]
+  output          = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Photo {
+  id         Int        @id @default(autoincrement())
+  previewUrl String
+  fullUrl    String
+  rawUrl     String
+  purchases  Purchase[]
+}
+
+model Purchase {
+  id      Int   @id @default(autoincrement())
+  emailId Int
+  email   Email @relation(fields: [emailId], references: [id])
+  photoId Int
+  photo   Photo @relation(fields: [photoId], references: [id])
+  date DateTime @default(now())
+}
+
+model Email {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  purchases Purchase[]
+}
