@@ -187,3 +187,8 @@ impl DxUniverse {
         self.next.set_size(width, height);
     }
 }
+
+#[wasm_bindgen]
+pub fn get_memory() -> JsValue {
+    wasm_bindgen::memory()
+}

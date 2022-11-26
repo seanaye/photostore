@@ -1,4 +1,4 @@
-import { Cell, DxUniverse, instantiate, wasm } from "../static/rs_lib.generated.js";
+import { Cell, DxUniverse, get_memory, instantiate } from "../static/rs_lib.generated.js";
 import { signal, useComputed } from "@preact/signals";
 import { useMeasureWindow } from "../hooks/useMeasureWindow.ts";
 import { useDevicePixelRatio } from "../hooks/useGetDevicePixelRatio.ts";
@@ -55,7 +55,7 @@ export default function GameOfLifeCanvas(props: Props) {
 
       const cellsPtr = cur.cells();
       const cells = new Uint8Array(
-        wasm.memory.buffer,
+        get_memory().buffer,
         cellsPtr,
         width.value * height.value
       );
@@ -128,12 +128,12 @@ export default function GameOfLifeCanvas(props: Props) {
   });
 
   const onPointerMove = useCallback((event: PointerEvent) => {
-    const cur = universe.peek();
+    const cur = universe.value;
     if (!cur) return;
 
     const { offsetX, offsetY } = event;
-    const w = Math.floor(offsetY / pxPerCell);
-    const h = Math.floor(offsetX / pxPerCell);
+    const w = Math.floor(offsetY / (pxPerCell * devicePixelRatio.value));
+    const h = Math.floor(offsetX / (pxPerCell * devicePixelRatio.value));
     cur.set_cell(w, h, Cell.Alive);
   }, []);
 
