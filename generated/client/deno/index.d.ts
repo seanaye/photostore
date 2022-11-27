@@ -21,6 +21,18 @@ export type Photo = {
   previewUrl: string
   fullUrl: string
   rawUrl: string
+  captureDate: Date
+  price: number
+  albumId: number | null
+}
+
+/**
+ * Model Album
+ * 
+ */
+export type Album = {
+  id: number
+  name: string
 }
 
 /**
@@ -29,8 +41,28 @@ export type Photo = {
  */
 export type Purchase = {
   id: number
-  emailId: number
   photoId: number
+  cartId: number
+}
+
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = {
+  id: number
+  emailId: number
+  alertForDate: Date
+}
+
+/**
+ * Model Cart
+ * 
+ */
+export type Cart = {
+  id: number
+  cartIdentifier: string
+  emailId: number
   date: Date
 }
 
@@ -195,6 +227,16 @@ export class PrismaClient<
   get photo(): Prisma.PhotoDelegate<GlobalReject>;
 
   /**
+   * `prisma.album`: Exposes CRUD operations for the **Album** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Albums
+    * const albums = await prisma.album.findMany()
+    * ```
+    */
+  get album(): Prisma.AlbumDelegate<GlobalReject>;
+
+  /**
    * `prisma.purchase`: Exposes CRUD operations for the **Purchase** model.
     * Example usage:
     * ```ts
@@ -203,6 +245,26 @@ export class PrismaClient<
     * ```
     */
   get purchase(): Prisma.PurchaseDelegate<GlobalReject>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cart`: Exposes CRUD operations for the **Cart** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Carts
+    * const carts = await prisma.cart.findMany()
+    * ```
+    */
+  get cart(): Prisma.CartDelegate<GlobalReject>;
 
   /**
    * `prisma.email`: Exposes CRUD operations for the **Email** model.
@@ -698,7 +760,10 @@ export namespace Prisma {
 
   export const ModelName: {
     Photo: 'Photo',
+    Album: 'Album',
     Purchase: 'Purchase',
+    Notification: 'Notification',
+    Cart: 'Cart',
     Email: 'Email'
   };
 
@@ -903,16 +968,106 @@ export namespace Prisma {
 
 
   /**
+   * Count Type AlbumCountOutputType
+   */
+
+
+  export type AlbumCountOutputType = {
+    photos: number
+  }
+
+  export type AlbumCountOutputTypeSelect = {
+    photos?: boolean
+  }
+
+  export type AlbumCountOutputTypeGetPayload<S extends boolean | null | undefined | AlbumCountOutputTypeArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? AlbumCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (AlbumCountOutputTypeArgs)
+    ? AlbumCountOutputType 
+    : S extends { select: any } & (AlbumCountOutputTypeArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+    P extends keyof AlbumCountOutputType ? AlbumCountOutputType[P] : never
+  } 
+      : AlbumCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * AlbumCountOutputType without action
+   */
+  export type AlbumCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the AlbumCountOutputType
+     * 
+    **/
+    select?: AlbumCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type CartCountOutputType
+   */
+
+
+  export type CartCountOutputType = {
+    purchases: number
+  }
+
+  export type CartCountOutputTypeSelect = {
+    purchases?: boolean
+  }
+
+  export type CartCountOutputTypeGetPayload<S extends boolean | null | undefined | CartCountOutputTypeArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CartCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (CartCountOutputTypeArgs)
+    ? CartCountOutputType 
+    : S extends { select: any } & (CartCountOutputTypeArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+    P extends keyof CartCountOutputType ? CartCountOutputType[P] : never
+  } 
+      : CartCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CartCountOutputType without action
+   */
+  export type CartCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the CartCountOutputType
+     * 
+    **/
+    select?: CartCountOutputTypeSelect | null
+  }
+
+
+
+  /**
    * Count Type EmailCountOutputType
    */
 
 
   export type EmailCountOutputType = {
     purchases: number
+    notifications: number
   }
 
   export type EmailCountOutputTypeSelect = {
     purchases?: boolean
+    notifications?: boolean
   }
 
   export type EmailCountOutputTypeGetPayload<S extends boolean | null | undefined | EmailCountOutputTypeArgs, U = keyof S> =
@@ -965,10 +1120,14 @@ export namespace Prisma {
 
   export type PhotoAvgAggregateOutputType = {
     id: number | null
+    price: number | null
+    albumId: number | null
   }
 
   export type PhotoSumAggregateOutputType = {
     id: number | null
+    price: number | null
+    albumId: number | null
   }
 
   export type PhotoMinAggregateOutputType = {
@@ -976,6 +1135,9 @@ export namespace Prisma {
     previewUrl: string | null
     fullUrl: string | null
     rawUrl: string | null
+    captureDate: Date | null
+    price: number | null
+    albumId: number | null
   }
 
   export type PhotoMaxAggregateOutputType = {
@@ -983,6 +1145,9 @@ export namespace Prisma {
     previewUrl: string | null
     fullUrl: string | null
     rawUrl: string | null
+    captureDate: Date | null
+    price: number | null
+    albumId: number | null
   }
 
   export type PhotoCountAggregateOutputType = {
@@ -990,16 +1155,23 @@ export namespace Prisma {
     previewUrl: number
     fullUrl: number
     rawUrl: number
+    captureDate: number
+    price: number
+    albumId: number
     _all: number
   }
 
 
   export type PhotoAvgAggregateInputType = {
     id?: true
+    price?: true
+    albumId?: true
   }
 
   export type PhotoSumAggregateInputType = {
     id?: true
+    price?: true
+    albumId?: true
   }
 
   export type PhotoMinAggregateInputType = {
@@ -1007,6 +1179,9 @@ export namespace Prisma {
     previewUrl?: true
     fullUrl?: true
     rawUrl?: true
+    captureDate?: true
+    price?: true
+    albumId?: true
   }
 
   export type PhotoMaxAggregateInputType = {
@@ -1014,6 +1189,9 @@ export namespace Prisma {
     previewUrl?: true
     fullUrl?: true
     rawUrl?: true
+    captureDate?: true
+    price?: true
+    albumId?: true
   }
 
   export type PhotoCountAggregateInputType = {
@@ -1021,6 +1199,9 @@ export namespace Prisma {
     previewUrl?: true
     fullUrl?: true
     rawUrl?: true
+    captureDate?: true
+    price?: true
+    albumId?: true
     _all?: true
   }
 
@@ -1121,6 +1302,9 @@ export namespace Prisma {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date
+    price: number
+    albumId: number | null
     _count: PhotoCountAggregateOutputType | null
     _avg: PhotoAvgAggregateOutputType | null
     _sum: PhotoSumAggregateOutputType | null
@@ -1147,13 +1331,18 @@ export namespace Prisma {
     previewUrl?: boolean
     fullUrl?: boolean
     rawUrl?: boolean
+    captureDate?: boolean
+    price?: boolean
     purchases?: boolean | PurchaseFindManyArgs
+    albumId?: boolean
+    album?: boolean | AlbumArgs
     _count?: boolean | PhotoCountOutputTypeArgs
   }
 
 
   export type PhotoInclude = {
     purchases?: boolean | PurchaseFindManyArgs
+    album?: boolean | AlbumArgs
     _count?: boolean | PhotoCountOutputTypeArgs
   } 
 
@@ -1165,12 +1354,14 @@ export namespace Prisma {
     ? Photo  & {
     [P in TrueKeys<S['include']>]:
         P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'album' ? AlbumGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
         P extends '_count' ? PhotoCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : S extends { select: any } & (PhotoArgs | PhotoFindManyArgs)
       ? {
     [P in TrueKeys<S['select']>]:
         P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'album' ? AlbumGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
         P extends '_count' ? PhotoCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Photo ? Photo[P] : never
   } 
       : Photo
@@ -1547,6 +1738,8 @@ export namespace Prisma {
 
     purchases<T extends PurchaseFindManyArgs= {}>(args?: Subset<T, PurchaseFindManyArgs>): PrismaPromise<Array<PurchaseGetPayload<T>>| Null>;
 
+    album<T extends AlbumArgs= {}>(args?: Subset<T, AlbumArgs>): Prisma__AlbumClient<AlbumGetPayload<T> | Null>;
+
     private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1902,6 +2095,941 @@ export namespace Prisma {
 
 
   /**
+   * Model Album
+   */
+
+
+  export type AggregateAlbum = {
+    _count: AlbumCountAggregateOutputType | null
+    _avg: AlbumAvgAggregateOutputType | null
+    _sum: AlbumSumAggregateOutputType | null
+    _min: AlbumMinAggregateOutputType | null
+    _max: AlbumMaxAggregateOutputType | null
+  }
+
+  export type AlbumAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AlbumSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type AlbumMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type AlbumMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type AlbumCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type AlbumAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type AlbumSumAggregateInputType = {
+    id?: true
+  }
+
+  export type AlbumMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type AlbumMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type AlbumCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type AlbumAggregateArgs = {
+    /**
+     * Filter which Album to aggregate.
+     * 
+    **/
+    where?: AlbumWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Albums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<AlbumOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: AlbumWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Albums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Albums.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Albums
+    **/
+    _count?: true | AlbumCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AlbumAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AlbumSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AlbumMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AlbumMaxAggregateInputType
+  }
+
+  export type GetAlbumAggregateType<T extends AlbumAggregateArgs> = {
+        [P in keyof T & keyof AggregateAlbum]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAlbum[P]>
+      : GetScalarType<T[P], AggregateAlbum[P]>
+  }
+
+
+
+
+  export type AlbumGroupByArgs = {
+    where?: AlbumWhereInput
+    orderBy?: Enumerable<AlbumOrderByWithAggregationInput>
+    by: Array<AlbumScalarFieldEnum>
+    having?: AlbumScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AlbumCountAggregateInputType | true
+    _avg?: AlbumAvgAggregateInputType
+    _sum?: AlbumSumAggregateInputType
+    _min?: AlbumMinAggregateInputType
+    _max?: AlbumMaxAggregateInputType
+  }
+
+
+  export type AlbumGroupByOutputType = {
+    id: number
+    name: string
+    _count: AlbumCountAggregateOutputType | null
+    _avg: AlbumAvgAggregateOutputType | null
+    _sum: AlbumSumAggregateOutputType | null
+    _min: AlbumMinAggregateOutputType | null
+    _max: AlbumMaxAggregateOutputType | null
+  }
+
+  type GetAlbumGroupByPayload<T extends AlbumGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<AlbumGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AlbumGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AlbumGroupByOutputType[P]>
+            : GetScalarType<T[P], AlbumGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AlbumSelect = {
+    id?: boolean
+    name?: boolean
+    photos?: boolean | PhotoFindManyArgs
+    _count?: boolean | AlbumCountOutputTypeArgs
+  }
+
+
+  export type AlbumInclude = {
+    photos?: boolean | PhotoFindManyArgs
+    _count?: boolean | AlbumCountOutputTypeArgs
+  } 
+
+  export type AlbumGetPayload<S extends boolean | null | undefined | AlbumArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Album :
+    S extends undefined ? never :
+    S extends { include: any } & (AlbumArgs | AlbumFindManyArgs)
+    ? Album  & {
+    [P in TrueKeys<S['include']>]:
+        P extends 'photos' ? Array < PhotoGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends '_count' ? AlbumCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+  } 
+    : S extends { select: any } & (AlbumArgs | AlbumFindManyArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+        P extends 'photos' ? Array < PhotoGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends '_count' ? AlbumCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Album ? Album[P] : never
+  } 
+      : Album
+
+
+  type AlbumCountArgs = Merge<
+    Omit<AlbumFindManyArgs, 'select' | 'include'> & {
+      select?: AlbumCountAggregateInputType | true
+    }
+  >
+
+  export interface AlbumDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Album that matches the filter.
+     * @param {AlbumFindUniqueArgs} args - Arguments to find a Album
+     * @example
+     * // Get one Album
+     * const album = await prisma.album.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends AlbumFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, AlbumFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Album'> extends True ? Prisma__AlbumClient<AlbumGetPayload<T>> : Prisma__AlbumClient<AlbumGetPayload<T> | null, null>
+
+    /**
+     * Find the first Album that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumFindFirstArgs} args - Arguments to find a Album
+     * @example
+     * // Get one Album
+     * const album = await prisma.album.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends AlbumFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, AlbumFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Album'> extends True ? Prisma__AlbumClient<AlbumGetPayload<T>> : Prisma__AlbumClient<AlbumGetPayload<T> | null, null>
+
+    /**
+     * Find zero or more Albums that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Albums
+     * const albums = await prisma.album.findMany()
+     * 
+     * // Get first 10 Albums
+     * const albums = await prisma.album.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const albumWithIdOnly = await prisma.album.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends AlbumFindManyArgs>(
+      args?: SelectSubset<T, AlbumFindManyArgs>
+    ): PrismaPromise<Array<AlbumGetPayload<T>>>
+
+    /**
+     * Create a Album.
+     * @param {AlbumCreateArgs} args - Arguments to create a Album.
+     * @example
+     * // Create one Album
+     * const Album = await prisma.album.create({
+     *   data: {
+     *     // ... data to create a Album
+     *   }
+     * })
+     * 
+    **/
+    create<T extends AlbumCreateArgs>(
+      args: SelectSubset<T, AlbumCreateArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Create many Albums.
+     *     @param {AlbumCreateManyArgs} args - Arguments to create many Albums.
+     *     @example
+     *     // Create many Albums
+     *     const album = await prisma.album.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends AlbumCreateManyArgs>(
+      args?: SelectSubset<T, AlbumCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Album.
+     * @param {AlbumDeleteArgs} args - Arguments to delete one Album.
+     * @example
+     * // Delete one Album
+     * const Album = await prisma.album.delete({
+     *   where: {
+     *     // ... filter to delete one Album
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends AlbumDeleteArgs>(
+      args: SelectSubset<T, AlbumDeleteArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Update one Album.
+     * @param {AlbumUpdateArgs} args - Arguments to update one Album.
+     * @example
+     * // Update one Album
+     * const album = await prisma.album.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends AlbumUpdateArgs>(
+      args: SelectSubset<T, AlbumUpdateArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Delete zero or more Albums.
+     * @param {AlbumDeleteManyArgs} args - Arguments to filter Albums to delete.
+     * @example
+     * // Delete a few Albums
+     * const { count } = await prisma.album.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends AlbumDeleteManyArgs>(
+      args?: SelectSubset<T, AlbumDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Albums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Albums
+     * const album = await prisma.album.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends AlbumUpdateManyArgs>(
+      args: SelectSubset<T, AlbumUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Album.
+     * @param {AlbumUpsertArgs} args - Arguments to update or create a Album.
+     * @example
+     * // Update or create a Album
+     * const album = await prisma.album.upsert({
+     *   create: {
+     *     // ... data to create a Album
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Album we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends AlbumUpsertArgs>(
+      args: SelectSubset<T, AlbumUpsertArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Find one Album that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {AlbumFindUniqueOrThrowArgs} args - Arguments to find a Album
+     * @example
+     * // Get one Album
+     * const album = await prisma.album.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends AlbumFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, AlbumFindUniqueOrThrowArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Find the first Album that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumFindFirstOrThrowArgs} args - Arguments to find a Album
+     * @example
+     * // Get one Album
+     * const album = await prisma.album.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends AlbumFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, AlbumFindFirstOrThrowArgs>
+    ): Prisma__AlbumClient<AlbumGetPayload<T>>
+
+    /**
+     * Count the number of Albums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumCountArgs} args - Arguments to filter Albums to count.
+     * @example
+     * // Count the number of Albums
+     * const count = await prisma.album.count({
+     *   where: {
+     *     // ... the filter for the Albums we want to count
+     *   }
+     * })
+    **/
+    count<T extends AlbumCountArgs>(
+      args?: Subset<T, AlbumCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AlbumCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Album.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AlbumAggregateArgs>(args: Subset<T, AlbumAggregateArgs>): PrismaPromise<GetAlbumAggregateType<T>>
+
+    /**
+     * Group by Album.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AlbumGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AlbumGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AlbumGroupByArgs['orderBy'] }
+        : { orderBy?: AlbumGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AlbumGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAlbumGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Album.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__AlbumClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    photos<T extends PhotoFindManyArgs= {}>(args?: Subset<T, PhotoFindManyArgs>): PrismaPromise<Array<PhotoGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Album base type for findUnique actions
+   */
+  export type AlbumFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * Filter, which Album to fetch.
+     * 
+    **/
+    where: AlbumWhereUniqueInput
+  }
+
+  /**
+   * Album: findUnique
+   */
+  export interface AlbumFindUniqueArgs extends AlbumFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Album base type for findFirst actions
+   */
+  export type AlbumFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * Filter, which Album to fetch.
+     * 
+    **/
+    where?: AlbumWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Albums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<AlbumOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Albums.
+     * 
+    **/
+    cursor?: AlbumWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Albums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Albums.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Albums.
+     * 
+    **/
+    distinct?: Enumerable<AlbumScalarFieldEnum>
+  }
+
+  /**
+   * Album: findFirst
+   */
+  export interface AlbumFindFirstArgs extends AlbumFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Album findMany
+   */
+  export type AlbumFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * Filter, which Albums to fetch.
+     * 
+    **/
+    where?: AlbumWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Albums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<AlbumOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Albums.
+     * 
+    **/
+    cursor?: AlbumWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Albums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Albums.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<AlbumScalarFieldEnum>
+  }
+
+
+  /**
+   * Album create
+   */
+  export type AlbumCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * The data needed to create a Album.
+     * 
+    **/
+    data: XOR<AlbumCreateInput, AlbumUncheckedCreateInput>
+  }
+
+
+  /**
+   * Album createMany
+   */
+  export type AlbumCreateManyArgs = {
+    /**
+     * The data used to create many Albums.
+     * 
+    **/
+    data: Enumerable<AlbumCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Album update
+   */
+  export type AlbumUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * The data needed to update a Album.
+     * 
+    **/
+    data: XOR<AlbumUpdateInput, AlbumUncheckedUpdateInput>
+    /**
+     * Choose, which Album to update.
+     * 
+    **/
+    where: AlbumWhereUniqueInput
+  }
+
+
+  /**
+   * Album updateMany
+   */
+  export type AlbumUpdateManyArgs = {
+    /**
+     * The data used to update Albums.
+     * 
+    **/
+    data: XOR<AlbumUpdateManyMutationInput, AlbumUncheckedUpdateManyInput>
+    /**
+     * Filter which Albums to update
+     * 
+    **/
+    where?: AlbumWhereInput
+  }
+
+
+  /**
+   * Album upsert
+   */
+  export type AlbumUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * The filter to search for the Album to update in case it exists.
+     * 
+    **/
+    where: AlbumWhereUniqueInput
+    /**
+     * In case the Album found by the `where` argument doesn't exist, create a new Album with this data.
+     * 
+    **/
+    create: XOR<AlbumCreateInput, AlbumUncheckedCreateInput>
+    /**
+     * In case the Album was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<AlbumUpdateInput, AlbumUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Album delete
+   */
+  export type AlbumDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+    /**
+     * Filter which Album to delete.
+     * 
+    **/
+    where: AlbumWhereUniqueInput
+  }
+
+
+  /**
+   * Album deleteMany
+   */
+  export type AlbumDeleteManyArgs = {
+    /**
+     * Filter which Albums to delete
+     * 
+    **/
+    where?: AlbumWhereInput
+  }
+
+
+  /**
+   * Album: findUniqueOrThrow
+   */
+  export type AlbumFindUniqueOrThrowArgs = AlbumFindUniqueArgsBase
+      
+
+  /**
+   * Album: findFirstOrThrow
+   */
+  export type AlbumFindFirstOrThrowArgs = AlbumFindFirstArgsBase
+      
+
+  /**
+   * Album without action
+   */
+  export type AlbumArgs = {
+    /**
+     * Select specific fields to fetch from the Album
+     * 
+    **/
+    select?: AlbumSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: AlbumInclude | null
+  }
+
+
+
+  /**
    * Model Purchase
    */
 
@@ -1916,70 +3044,64 @@ export namespace Prisma {
 
   export type PurchaseAvgAggregateOutputType = {
     id: number | null
-    emailId: number | null
     photoId: number | null
+    cartId: number | null
   }
 
   export type PurchaseSumAggregateOutputType = {
     id: number | null
-    emailId: number | null
     photoId: number | null
+    cartId: number | null
   }
 
   export type PurchaseMinAggregateOutputType = {
     id: number | null
-    emailId: number | null
     photoId: number | null
-    date: Date | null
+    cartId: number | null
   }
 
   export type PurchaseMaxAggregateOutputType = {
     id: number | null
-    emailId: number | null
     photoId: number | null
-    date: Date | null
+    cartId: number | null
   }
 
   export type PurchaseCountAggregateOutputType = {
     id: number
-    emailId: number
     photoId: number
-    date: number
+    cartId: number
     _all: number
   }
 
 
   export type PurchaseAvgAggregateInputType = {
     id?: true
-    emailId?: true
     photoId?: true
+    cartId?: true
   }
 
   export type PurchaseSumAggregateInputType = {
     id?: true
-    emailId?: true
     photoId?: true
+    cartId?: true
   }
 
   export type PurchaseMinAggregateInputType = {
     id?: true
-    emailId?: true
     photoId?: true
-    date?: true
+    cartId?: true
   }
 
   export type PurchaseMaxAggregateInputType = {
     id?: true
-    emailId?: true
     photoId?: true
-    date?: true
+    cartId?: true
   }
 
   export type PurchaseCountAggregateInputType = {
     id?: true
-    emailId?: true
     photoId?: true
-    date?: true
+    cartId?: true
     _all?: true
   }
 
@@ -2077,9 +3199,8 @@ export namespace Prisma {
 
   export type PurchaseGroupByOutputType = {
     id: number
-    emailId: number
     photoId: number
-    date: Date
+    cartId: number
     _count: PurchaseCountAggregateOutputType | null
     _avg: PurchaseAvgAggregateOutputType | null
     _sum: PurchaseSumAggregateOutputType | null
@@ -2103,17 +3224,16 @@ export namespace Prisma {
 
   export type PurchaseSelect = {
     id?: boolean
-    emailId?: boolean
-    email?: boolean | EmailArgs
     photoId?: boolean
     photo?: boolean | PhotoArgs
-    date?: boolean
+    cartId?: boolean
+    cart?: boolean | CartArgs
   }
 
 
   export type PurchaseInclude = {
-    email?: boolean | EmailArgs
     photo?: boolean | PhotoArgs
+    cart?: boolean | CartArgs
   } 
 
   export type PurchaseGetPayload<S extends boolean | null | undefined | PurchaseArgs, U = keyof S> =
@@ -2123,14 +3243,14 @@ export namespace Prisma {
     S extends { include: any } & (PurchaseArgs | PurchaseFindManyArgs)
     ? Purchase  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'email' ? EmailGetPayload<Exclude<S['include'], undefined | null>[P]> :
-        P extends 'photo' ? PhotoGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+        P extends 'photo' ? PhotoGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'cart' ? CartGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : S extends { select: any } & (PurchaseArgs | PurchaseFindManyArgs)
       ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'email' ? EmailGetPayload<Exclude<S['select'], undefined | null>[P]> :
-        P extends 'photo' ? PhotoGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Purchase ? Purchase[P] : never
+        P extends 'photo' ? PhotoGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'cart' ? CartGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Purchase ? Purchase[P] : never
   } 
       : Purchase
 
@@ -2504,9 +3624,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    email<T extends EmailArgs= {}>(args?: Subset<T, EmailArgs>): Prisma__EmailClient<EmailGetPayload<T> | Null>;
-
     photo<T extends PhotoArgs= {}>(args?: Subset<T, PhotoArgs>): Prisma__PhotoClient<PhotoGetPayload<T> | Null>;
+
+    cart<T extends CartArgs= {}>(args?: Subset<T, CartArgs>): Prisma__CartClient<CartGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -2863,6 +3983,1910 @@ export namespace Prisma {
 
 
   /**
+   * Model Notification
+   */
+
+
+  export type AggregateNotification = {
+    _count: NotificationCountAggregateOutputType | null
+    _avg: NotificationAvgAggregateOutputType | null
+    _sum: NotificationSumAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  export type NotificationAvgAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type NotificationSumAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type NotificationMinAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+    alertForDate: Date | null
+  }
+
+  export type NotificationMaxAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+    alertForDate: Date | null
+  }
+
+  export type NotificationCountAggregateOutputType = {
+    id: number
+    emailId: number
+    alertForDate: number
+    _all: number
+  }
+
+
+  export type NotificationAvgAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type NotificationSumAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type NotificationMinAggregateInputType = {
+    id?: true
+    emailId?: true
+    alertForDate?: true
+  }
+
+  export type NotificationMaxAggregateInputType = {
+    id?: true
+    emailId?: true
+    alertForDate?: true
+  }
+
+  export type NotificationCountAggregateInputType = {
+    id?: true
+    emailId?: true
+    alertForDate?: true
+    _all?: true
+  }
+
+  export type NotificationAggregateArgs = {
+    /**
+     * Filter which Notification to aggregate.
+     * 
+    **/
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<NotificationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notifications
+    **/
+    _count?: true | NotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NotificationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NotificationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type GetNotificationAggregateType<T extends NotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotification[P]>
+      : GetScalarType<T[P], AggregateNotification[P]>
+  }
+
+
+
+
+  export type NotificationGroupByArgs = {
+    where?: NotificationWhereInput
+    orderBy?: Enumerable<NotificationOrderByWithAggregationInput>
+    by: Array<NotificationScalarFieldEnum>
+    having?: NotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationCountAggregateInputType | true
+    _avg?: NotificationAvgAggregateInputType
+    _sum?: NotificationSumAggregateInputType
+    _min?: NotificationMinAggregateInputType
+    _max?: NotificationMaxAggregateInputType
+  }
+
+
+  export type NotificationGroupByOutputType = {
+    id: number
+    emailId: number
+    alertForDate: Date
+    _count: NotificationCountAggregateOutputType | null
+    _avg: NotificationAvgAggregateOutputType | null
+    _sum: NotificationSumAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  type GetNotificationGroupByPayload<T extends NotificationGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<NotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSelect = {
+    id?: boolean
+    emailId?: boolean
+    email?: boolean | EmailArgs
+    alertForDate?: boolean
+  }
+
+
+  export type NotificationInclude = {
+    email?: boolean | EmailArgs
+  } 
+
+  export type NotificationGetPayload<S extends boolean | null | undefined | NotificationArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Notification :
+    S extends undefined ? never :
+    S extends { include: any } & (NotificationArgs | NotificationFindManyArgs)
+    ? Notification  & {
+    [P in TrueKeys<S['include']>]:
+        P extends 'email' ? EmailGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+  } 
+    : S extends { select: any } & (NotificationArgs | NotificationFindManyArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+        P extends 'email' ? EmailGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Notification ? Notification[P] : never
+  } 
+      : Notification
+
+
+  type NotificationCountArgs = Merge<
+    Omit<NotificationFindManyArgs, 'select' | 'include'> & {
+      select?: NotificationCountAggregateInputType | true
+    }
+  >
+
+  export interface NotificationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Notification that matches the filter.
+     * @param {NotificationFindUniqueArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends NotificationFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, NotificationFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Notification'> extends True ? Prisma__NotificationClient<NotificationGetPayload<T>> : Prisma__NotificationClient<NotificationGetPayload<T> | null, null>
+
+    /**
+     * Find the first Notification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends NotificationFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, NotificationFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Notification'> extends True ? Prisma__NotificationClient<NotificationGetPayload<T>> : Prisma__NotificationClient<NotificationGetPayload<T> | null, null>
+
+    /**
+     * Find zero or more Notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notifications
+     * const notifications = await prisma.notification.findMany()
+     * 
+     * // Get first 10 Notifications
+     * const notifications = await prisma.notification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationWithIdOnly = await prisma.notification.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends NotificationFindManyArgs>(
+      args?: SelectSubset<T, NotificationFindManyArgs>
+    ): PrismaPromise<Array<NotificationGetPayload<T>>>
+
+    /**
+     * Create a Notification.
+     * @param {NotificationCreateArgs} args - Arguments to create a Notification.
+     * @example
+     * // Create one Notification
+     * const Notification = await prisma.notification.create({
+     *   data: {
+     *     // ... data to create a Notification
+     *   }
+     * })
+     * 
+    **/
+    create<T extends NotificationCreateArgs>(
+      args: SelectSubset<T, NotificationCreateArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Create many Notifications.
+     *     @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     *     @example
+     *     // Create many Notifications
+     *     const notification = await prisma.notification.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends NotificationCreateManyArgs>(
+      args?: SelectSubset<T, NotificationCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Notification.
+     * @param {NotificationDeleteArgs} args - Arguments to delete one Notification.
+     * @example
+     * // Delete one Notification
+     * const Notification = await prisma.notification.delete({
+     *   where: {
+     *     // ... filter to delete one Notification
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends NotificationDeleteArgs>(
+      args: SelectSubset<T, NotificationDeleteArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Update one Notification.
+     * @param {NotificationUpdateArgs} args - Arguments to update one Notification.
+     * @example
+     * // Update one Notification
+     * const notification = await prisma.notification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends NotificationUpdateArgs>(
+      args: SelectSubset<T, NotificationUpdateArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Delete zero or more Notifications.
+     * @param {NotificationDeleteManyArgs} args - Arguments to filter Notifications to delete.
+     * @example
+     * // Delete a few Notifications
+     * const { count } = await prisma.notification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends NotificationDeleteManyArgs>(
+      args?: SelectSubset<T, NotificationDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends NotificationUpdateManyArgs>(
+      args: SelectSubset<T, NotificationUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Notification.
+     * @param {NotificationUpsertArgs} args - Arguments to update or create a Notification.
+     * @example
+     * // Update or create a Notification
+     * const notification = await prisma.notification.upsert({
+     *   create: {
+     *     // ... data to create a Notification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notification we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends NotificationUpsertArgs>(
+      args: SelectSubset<T, NotificationUpsertArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Find one Notification that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends NotificationFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, NotificationFindUniqueOrThrowArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Find the first Notification that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends NotificationFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, NotificationFindFirstOrThrowArgs>
+    ): Prisma__NotificationClient<NotificationGetPayload<T>>
+
+    /**
+     * Count the number of Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationCountArgs} args - Arguments to filter Notifications to count.
+     * @example
+     * // Count the number of Notifications
+     * const count = await prisma.notification.count({
+     *   where: {
+     *     // ... the filter for the Notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationCountArgs>(
+      args?: Subset<T, NotificationCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationAggregateArgs>(args: Subset<T, NotificationAggregateArgs>): PrismaPromise<GetNotificationAggregateType<T>>
+
+    /**
+     * Group by Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__NotificationClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    email<T extends EmailArgs= {}>(args?: Subset<T, EmailArgs>): Prisma__EmailClient<EmailGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Notification base type for findUnique actions
+   */
+  export type NotificationFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * Filter, which Notification to fetch.
+     * 
+    **/
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification: findUnique
+   */
+  export interface NotificationFindUniqueArgs extends NotificationFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Notification base type for findFirst actions
+   */
+  export type NotificationFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * Filter, which Notification to fetch.
+     * 
+    **/
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<NotificationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     * 
+    **/
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     * 
+    **/
+    distinct?: Enumerable<NotificationScalarFieldEnum>
+  }
+
+  /**
+   * Notification: findFirst
+   */
+  export interface NotificationFindFirstArgs extends NotificationFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Notification findMany
+   */
+  export type NotificationFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * Filter, which Notifications to fetch.
+     * 
+    **/
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<NotificationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notifications.
+     * 
+    **/
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<NotificationScalarFieldEnum>
+  }
+
+
+  /**
+   * Notification create
+   */
+  export type NotificationCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * The data needed to create a Notification.
+     * 
+    **/
+    data: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+  }
+
+
+  /**
+   * Notification createMany
+   */
+  export type NotificationCreateManyArgs = {
+    /**
+     * The data used to create many Notifications.
+     * 
+    **/
+    data: Enumerable<NotificationCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Notification update
+   */
+  export type NotificationUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * The data needed to update a Notification.
+     * 
+    **/
+    data: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+    /**
+     * Choose, which Notification to update.
+     * 
+    **/
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification updateMany
+   */
+  export type NotificationUpdateManyArgs = {
+    /**
+     * The data used to update Notifications.
+     * 
+    **/
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     * 
+    **/
+    where?: NotificationWhereInput
+  }
+
+
+  /**
+   * Notification upsert
+   */
+  export type NotificationUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * The filter to search for the Notification to update in case it exists.
+     * 
+    **/
+    where: NotificationWhereUniqueInput
+    /**
+     * In case the Notification found by the `where` argument doesn't exist, create a new Notification with this data.
+     * 
+    **/
+    create: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+    /**
+     * In case the Notification was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Notification delete
+   */
+  export type NotificationDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+    /**
+     * Filter which Notification to delete.
+     * 
+    **/
+    where: NotificationWhereUniqueInput
+  }
+
+
+  /**
+   * Notification deleteMany
+   */
+  export type NotificationDeleteManyArgs = {
+    /**
+     * Filter which Notifications to delete
+     * 
+    **/
+    where?: NotificationWhereInput
+  }
+
+
+  /**
+   * Notification: findUniqueOrThrow
+   */
+  export type NotificationFindUniqueOrThrowArgs = NotificationFindUniqueArgsBase
+      
+
+  /**
+   * Notification: findFirstOrThrow
+   */
+  export type NotificationFindFirstOrThrowArgs = NotificationFindFirstArgsBase
+      
+
+  /**
+   * Notification without action
+   */
+  export type NotificationArgs = {
+    /**
+     * Select specific fields to fetch from the Notification
+     * 
+    **/
+    select?: NotificationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NotificationInclude | null
+  }
+
+
+
+  /**
+   * Model Cart
+   */
+
+
+  export type AggregateCart = {
+    _count: CartCountAggregateOutputType | null
+    _avg: CartAvgAggregateOutputType | null
+    _sum: CartSumAggregateOutputType | null
+    _min: CartMinAggregateOutputType | null
+    _max: CartMaxAggregateOutputType | null
+  }
+
+  export type CartAvgAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type CartSumAggregateOutputType = {
+    id: number | null
+    emailId: number | null
+  }
+
+  export type CartMinAggregateOutputType = {
+    id: number | null
+    cartIdentifier: string | null
+    emailId: number | null
+    date: Date | null
+  }
+
+  export type CartMaxAggregateOutputType = {
+    id: number | null
+    cartIdentifier: string | null
+    emailId: number | null
+    date: Date | null
+  }
+
+  export type CartCountAggregateOutputType = {
+    id: number
+    cartIdentifier: number
+    emailId: number
+    date: number
+    _all: number
+  }
+
+
+  export type CartAvgAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type CartSumAggregateInputType = {
+    id?: true
+    emailId?: true
+  }
+
+  export type CartMinAggregateInputType = {
+    id?: true
+    cartIdentifier?: true
+    emailId?: true
+    date?: true
+  }
+
+  export type CartMaxAggregateInputType = {
+    id?: true
+    cartIdentifier?: true
+    emailId?: true
+    date?: true
+  }
+
+  export type CartCountAggregateInputType = {
+    id?: true
+    cartIdentifier?: true
+    emailId?: true
+    date?: true
+    _all?: true
+  }
+
+  export type CartAggregateArgs = {
+    /**
+     * Filter which Cart to aggregate.
+     * 
+    **/
+    where?: CartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Carts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CartOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Carts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Carts.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Carts
+    **/
+    _count?: true | CartCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CartAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CartSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CartMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CartMaxAggregateInputType
+  }
+
+  export type GetCartAggregateType<T extends CartAggregateArgs> = {
+        [P in keyof T & keyof AggregateCart]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCart[P]>
+      : GetScalarType<T[P], AggregateCart[P]>
+  }
+
+
+
+
+  export type CartGroupByArgs = {
+    where?: CartWhereInput
+    orderBy?: Enumerable<CartOrderByWithAggregationInput>
+    by: Array<CartScalarFieldEnum>
+    having?: CartScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CartCountAggregateInputType | true
+    _avg?: CartAvgAggregateInputType
+    _sum?: CartSumAggregateInputType
+    _min?: CartMinAggregateInputType
+    _max?: CartMaxAggregateInputType
+  }
+
+
+  export type CartGroupByOutputType = {
+    id: number
+    cartIdentifier: string
+    emailId: number
+    date: Date
+    _count: CartCountAggregateOutputType | null
+    _avg: CartAvgAggregateOutputType | null
+    _sum: CartSumAggregateOutputType | null
+    _min: CartMinAggregateOutputType | null
+    _max: CartMaxAggregateOutputType | null
+  }
+
+  type GetCartGroupByPayload<T extends CartGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CartGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CartGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CartGroupByOutputType[P]>
+            : GetScalarType<T[P], CartGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CartSelect = {
+    id?: boolean
+    cartIdentifier?: boolean
+    purchases?: boolean | PurchaseFindManyArgs
+    emailId?: boolean
+    email?: boolean | EmailArgs
+    date?: boolean
+    _count?: boolean | CartCountOutputTypeArgs
+  }
+
+
+  export type CartInclude = {
+    purchases?: boolean | PurchaseFindManyArgs
+    email?: boolean | EmailArgs
+    _count?: boolean | CartCountOutputTypeArgs
+  } 
+
+  export type CartGetPayload<S extends boolean | null | undefined | CartArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Cart :
+    S extends undefined ? never :
+    S extends { include: any } & (CartArgs | CartFindManyArgs)
+    ? Cart  & {
+    [P in TrueKeys<S['include']>]:
+        P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'email' ? EmailGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends '_count' ? CartCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+  } 
+    : S extends { select: any } & (CartArgs | CartFindManyArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+        P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'email' ? EmailGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends '_count' ? CartCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Cart ? Cart[P] : never
+  } 
+      : Cart
+
+
+  type CartCountArgs = Merge<
+    Omit<CartFindManyArgs, 'select' | 'include'> & {
+      select?: CartCountAggregateInputType | true
+    }
+  >
+
+  export interface CartDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Cart that matches the filter.
+     * @param {CartFindUniqueArgs} args - Arguments to find a Cart
+     * @example
+     * // Get one Cart
+     * const cart = await prisma.cart.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CartFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CartFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Cart'> extends True ? Prisma__CartClient<CartGetPayload<T>> : Prisma__CartClient<CartGetPayload<T> | null, null>
+
+    /**
+     * Find the first Cart that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartFindFirstArgs} args - Arguments to find a Cart
+     * @example
+     * // Get one Cart
+     * const cart = await prisma.cart.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CartFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CartFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Cart'> extends True ? Prisma__CartClient<CartGetPayload<T>> : Prisma__CartClient<CartGetPayload<T> | null, null>
+
+    /**
+     * Find zero or more Carts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Carts
+     * const carts = await prisma.cart.findMany()
+     * 
+     * // Get first 10 Carts
+     * const carts = await prisma.cart.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cartWithIdOnly = await prisma.cart.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends CartFindManyArgs>(
+      args?: SelectSubset<T, CartFindManyArgs>
+    ): PrismaPromise<Array<CartGetPayload<T>>>
+
+    /**
+     * Create a Cart.
+     * @param {CartCreateArgs} args - Arguments to create a Cart.
+     * @example
+     * // Create one Cart
+     * const Cart = await prisma.cart.create({
+     *   data: {
+     *     // ... data to create a Cart
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CartCreateArgs>(
+      args: SelectSubset<T, CartCreateArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Create many Carts.
+     *     @param {CartCreateManyArgs} args - Arguments to create many Carts.
+     *     @example
+     *     // Create many Carts
+     *     const cart = await prisma.cart.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CartCreateManyArgs>(
+      args?: SelectSubset<T, CartCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Cart.
+     * @param {CartDeleteArgs} args - Arguments to delete one Cart.
+     * @example
+     * // Delete one Cart
+     * const Cart = await prisma.cart.delete({
+     *   where: {
+     *     // ... filter to delete one Cart
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CartDeleteArgs>(
+      args: SelectSubset<T, CartDeleteArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Update one Cart.
+     * @param {CartUpdateArgs} args - Arguments to update one Cart.
+     * @example
+     * // Update one Cart
+     * const cart = await prisma.cart.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CartUpdateArgs>(
+      args: SelectSubset<T, CartUpdateArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Delete zero or more Carts.
+     * @param {CartDeleteManyArgs} args - Arguments to filter Carts to delete.
+     * @example
+     * // Delete a few Carts
+     * const { count } = await prisma.cart.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CartDeleteManyArgs>(
+      args?: SelectSubset<T, CartDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Carts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Carts
+     * const cart = await prisma.cart.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CartUpdateManyArgs>(
+      args: SelectSubset<T, CartUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Cart.
+     * @param {CartUpsertArgs} args - Arguments to update or create a Cart.
+     * @example
+     * // Update or create a Cart
+     * const cart = await prisma.cart.upsert({
+     *   create: {
+     *     // ... data to create a Cart
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Cart we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CartUpsertArgs>(
+      args: SelectSubset<T, CartUpsertArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Find one Cart that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {CartFindUniqueOrThrowArgs} args - Arguments to find a Cart
+     * @example
+     * // Get one Cart
+     * const cart = await prisma.cart.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CartFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CartFindUniqueOrThrowArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Find the first Cart that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartFindFirstOrThrowArgs} args - Arguments to find a Cart
+     * @example
+     * // Get one Cart
+     * const cart = await prisma.cart.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CartFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CartFindFirstOrThrowArgs>
+    ): Prisma__CartClient<CartGetPayload<T>>
+
+    /**
+     * Count the number of Carts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartCountArgs} args - Arguments to filter Carts to count.
+     * @example
+     * // Count the number of Carts
+     * const count = await prisma.cart.count({
+     *   where: {
+     *     // ... the filter for the Carts we want to count
+     *   }
+     * })
+    **/
+    count<T extends CartCountArgs>(
+      args?: Subset<T, CartCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CartCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Cart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CartAggregateArgs>(args: Subset<T, CartAggregateArgs>): PrismaPromise<GetCartAggregateType<T>>
+
+    /**
+     * Group by Cart.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CartGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CartGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CartGroupByArgs['orderBy'] }
+        : { orderBy?: CartGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CartGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCartGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Cart.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CartClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    purchases<T extends PurchaseFindManyArgs= {}>(args?: Subset<T, PurchaseFindManyArgs>): PrismaPromise<Array<PurchaseGetPayload<T>>| Null>;
+
+    email<T extends EmailArgs= {}>(args?: Subset<T, EmailArgs>): Prisma__EmailClient<EmailGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Cart base type for findUnique actions
+   */
+  export type CartFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * Filter, which Cart to fetch.
+     * 
+    **/
+    where: CartWhereUniqueInput
+  }
+
+  /**
+   * Cart: findUnique
+   */
+  export interface CartFindUniqueArgs extends CartFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Cart base type for findFirst actions
+   */
+  export type CartFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * Filter, which Cart to fetch.
+     * 
+    **/
+    where?: CartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Carts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CartOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Carts.
+     * 
+    **/
+    cursor?: CartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Carts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Carts.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Carts.
+     * 
+    **/
+    distinct?: Enumerable<CartScalarFieldEnum>
+  }
+
+  /**
+   * Cart: findFirst
+   */
+  export interface CartFindFirstArgs extends CartFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Cart findMany
+   */
+  export type CartFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * Filter, which Carts to fetch.
+     * 
+    **/
+    where?: CartWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Carts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CartOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Carts.
+     * 
+    **/
+    cursor?: CartWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Carts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Carts.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CartScalarFieldEnum>
+  }
+
+
+  /**
+   * Cart create
+   */
+  export type CartCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * The data needed to create a Cart.
+     * 
+    **/
+    data: XOR<CartCreateInput, CartUncheckedCreateInput>
+  }
+
+
+  /**
+   * Cart createMany
+   */
+  export type CartCreateManyArgs = {
+    /**
+     * The data used to create many Carts.
+     * 
+    **/
+    data: Enumerable<CartCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Cart update
+   */
+  export type CartUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * The data needed to update a Cart.
+     * 
+    **/
+    data: XOR<CartUpdateInput, CartUncheckedUpdateInput>
+    /**
+     * Choose, which Cart to update.
+     * 
+    **/
+    where: CartWhereUniqueInput
+  }
+
+
+  /**
+   * Cart updateMany
+   */
+  export type CartUpdateManyArgs = {
+    /**
+     * The data used to update Carts.
+     * 
+    **/
+    data: XOR<CartUpdateManyMutationInput, CartUncheckedUpdateManyInput>
+    /**
+     * Filter which Carts to update
+     * 
+    **/
+    where?: CartWhereInput
+  }
+
+
+  /**
+   * Cart upsert
+   */
+  export type CartUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * The filter to search for the Cart to update in case it exists.
+     * 
+    **/
+    where: CartWhereUniqueInput
+    /**
+     * In case the Cart found by the `where` argument doesn't exist, create a new Cart with this data.
+     * 
+    **/
+    create: XOR<CartCreateInput, CartUncheckedCreateInput>
+    /**
+     * In case the Cart was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CartUpdateInput, CartUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Cart delete
+   */
+  export type CartDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+    /**
+     * Filter which Cart to delete.
+     * 
+    **/
+    where: CartWhereUniqueInput
+  }
+
+
+  /**
+   * Cart deleteMany
+   */
+  export type CartDeleteManyArgs = {
+    /**
+     * Filter which Carts to delete
+     * 
+    **/
+    where?: CartWhereInput
+  }
+
+
+  /**
+   * Cart: findUniqueOrThrow
+   */
+  export type CartFindUniqueOrThrowArgs = CartFindUniqueArgsBase
+      
+
+  /**
+   * Cart: findFirstOrThrow
+   */
+  export type CartFindFirstOrThrowArgs = CartFindFirstArgsBase
+      
+
+  /**
+   * Cart without action
+   */
+  export type CartArgs = {
+    /**
+     * Select specific fields to fetch from the Cart
+     * 
+    **/
+    select?: CartSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CartInclude | null
+  }
+
+
+
+  /**
    * Model Email
    */
 
@@ -3043,13 +6067,15 @@ export namespace Prisma {
   export type EmailSelect = {
     id?: boolean
     email?: boolean
-    purchases?: boolean | PurchaseFindManyArgs
+    purchases?: boolean | CartFindManyArgs
+    notifications?: boolean | NotificationFindManyArgs
     _count?: boolean | EmailCountOutputTypeArgs
   }
 
 
   export type EmailInclude = {
-    purchases?: boolean | PurchaseFindManyArgs
+    purchases?: boolean | CartFindManyArgs
+    notifications?: boolean | NotificationFindManyArgs
     _count?: boolean | EmailCountOutputTypeArgs
   } 
 
@@ -3060,13 +6086,15 @@ export namespace Prisma {
     S extends { include: any } & (EmailArgs | EmailFindManyArgs)
     ? Email  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'purchases' ? Array < CartGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'notifications' ? Array < NotificationGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
         P extends '_count' ? EmailCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : S extends { select: any } & (EmailArgs | EmailFindManyArgs)
       ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'purchases' ? Array < CartGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'notifications' ? Array < NotificationGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
         P extends '_count' ? EmailCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Email ? Email[P] : never
   } 
       : Email
@@ -3441,7 +6469,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    purchases<T extends PurchaseFindManyArgs= {}>(args?: Subset<T, PurchaseFindManyArgs>): PrismaPromise<Array<PurchaseGetPayload<T>>| Null>;
+    purchases<T extends CartFindManyArgs= {}>(args?: Subset<T, CartFindManyArgs>): PrismaPromise<Array<CartGetPayload<T>>| Null>;
+
+    notifications<T extends NotificationFindManyArgs= {}>(args?: Subset<T, NotificationFindManyArgs>): PrismaPromise<Array<NotificationGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -3804,6 +6834,24 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
+  export const AlbumScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type AlbumScalarFieldEnum = (typeof AlbumScalarFieldEnum)[keyof typeof AlbumScalarFieldEnum]
+
+
+  export const CartScalarFieldEnum: {
+    id: 'id',
+    cartIdentifier: 'cartIdentifier',
+    emailId: 'emailId',
+    date: 'date'
+  };
+
+  export type CartScalarFieldEnum = (typeof CartScalarFieldEnum)[keyof typeof CartScalarFieldEnum]
+
+
   export const EmailScalarFieldEnum: {
     id: 'id',
     email: 'email'
@@ -3812,11 +6860,23 @@ export namespace Prisma {
   export type EmailScalarFieldEnum = (typeof EmailScalarFieldEnum)[keyof typeof EmailScalarFieldEnum]
 
 
+  export const NotificationScalarFieldEnum: {
+    id: 'id',
+    emailId: 'emailId',
+    alertForDate: 'alertForDate'
+  };
+
+  export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
   export const PhotoScalarFieldEnum: {
     id: 'id',
     previewUrl: 'previewUrl',
     fullUrl: 'fullUrl',
-    rawUrl: 'rawUrl'
+    rawUrl: 'rawUrl',
+    captureDate: 'captureDate',
+    price: 'price',
+    albumId: 'albumId'
   };
 
   export type PhotoScalarFieldEnum = (typeof PhotoScalarFieldEnum)[keyof typeof PhotoScalarFieldEnum]
@@ -3824,9 +6884,8 @@ export namespace Prisma {
 
   export const PurchaseScalarFieldEnum: {
     id: 'id',
-    emailId: 'emailId',
     photoId: 'photoId',
-    date: 'date'
+    cartId: 'cartId'
   };
 
   export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
@@ -3871,7 +6930,11 @@ export namespace Prisma {
     previewUrl?: StringFilter | string
     fullUrl?: StringFilter | string
     rawUrl?: StringFilter | string
+    captureDate?: DateTimeFilter | Date | string
+    price?: IntFilter | number
     purchases?: PurchaseListRelationFilter
+    albumId?: IntNullableFilter | number | null
+    album?: XOR<AlbumRelationFilter, AlbumWhereInput> | null
   }
 
   export type PhotoOrderByWithRelationInput = {
@@ -3879,7 +6942,11 @@ export namespace Prisma {
     previewUrl?: SortOrder
     fullUrl?: SortOrder
     rawUrl?: SortOrder
+    captureDate?: SortOrder
+    price?: SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
+    albumId?: SortOrder
+    album?: AlbumOrderByWithRelationInput
   }
 
   export type PhotoWhereUniqueInput = {
@@ -3891,6 +6958,9 @@ export namespace Prisma {
     previewUrl?: SortOrder
     fullUrl?: SortOrder
     rawUrl?: SortOrder
+    captureDate?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
     _count?: PhotoCountOrderByAggregateInput
     _avg?: PhotoAvgOrderByAggregateInput
     _max?: PhotoMaxOrderByAggregateInput
@@ -3906,6 +6976,46 @@ export namespace Prisma {
     previewUrl?: StringWithAggregatesFilter | string
     fullUrl?: StringWithAggregatesFilter | string
     rawUrl?: StringWithAggregatesFilter | string
+    captureDate?: DateTimeWithAggregatesFilter | Date | string
+    price?: IntWithAggregatesFilter | number
+    albumId?: IntNullableWithAggregatesFilter | number | null
+  }
+
+  export type AlbumWhereInput = {
+    AND?: Enumerable<AlbumWhereInput>
+    OR?: Enumerable<AlbumWhereInput>
+    NOT?: Enumerable<AlbumWhereInput>
+    id?: IntFilter | number
+    name?: StringFilter | string
+    photos?: PhotoListRelationFilter
+  }
+
+  export type AlbumOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    photos?: PhotoOrderByRelationAggregateInput
+  }
+
+  export type AlbumWhereUniqueInput = {
+    id?: number
+  }
+
+  export type AlbumOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: AlbumCountOrderByAggregateInput
+    _avg?: AlbumAvgOrderByAggregateInput
+    _max?: AlbumMaxOrderByAggregateInput
+    _min?: AlbumMinOrderByAggregateInput
+    _sum?: AlbumSumOrderByAggregateInput
+  }
+
+  export type AlbumScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<AlbumScalarWhereWithAggregatesInput>
+    OR?: Enumerable<AlbumScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<AlbumScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    name?: StringWithAggregatesFilter | string
   }
 
   export type PurchaseWhereInput = {
@@ -3913,20 +7023,18 @@ export namespace Prisma {
     OR?: Enumerable<PurchaseWhereInput>
     NOT?: Enumerable<PurchaseWhereInput>
     id?: IntFilter | number
-    emailId?: IntFilter | number
-    email?: XOR<EmailRelationFilter, EmailWhereInput>
     photoId?: IntFilter | number
     photo?: XOR<PhotoRelationFilter, PhotoWhereInput>
-    date?: DateTimeFilter | Date | string
+    cartId?: IntFilter | number
+    cart?: XOR<CartRelationFilter, CartWhereInput>
   }
 
   export type PurchaseOrderByWithRelationInput = {
     id?: SortOrder
-    emailId?: SortOrder
-    email?: EmailOrderByWithRelationInput
     photoId?: SortOrder
     photo?: PhotoOrderByWithRelationInput
-    date?: SortOrder
+    cartId?: SortOrder
+    cart?: CartOrderByWithRelationInput
   }
 
   export type PurchaseWhereUniqueInput = {
@@ -3935,9 +7043,8 @@ export namespace Prisma {
 
   export type PurchaseOrderByWithAggregationInput = {
     id?: SortOrder
-    emailId?: SortOrder
     photoId?: SortOrder
-    date?: SortOrder
+    cartId?: SortOrder
     _count?: PurchaseCountOrderByAggregateInput
     _avg?: PurchaseAvgOrderByAggregateInput
     _max?: PurchaseMaxOrderByAggregateInput
@@ -3950,8 +7057,97 @@ export namespace Prisma {
     OR?: Enumerable<PurchaseScalarWhereWithAggregatesInput>
     NOT?: Enumerable<PurchaseScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
-    emailId?: IntWithAggregatesFilter | number
     photoId?: IntWithAggregatesFilter | number
+    cartId?: IntWithAggregatesFilter | number
+  }
+
+  export type NotificationWhereInput = {
+    AND?: Enumerable<NotificationWhereInput>
+    OR?: Enumerable<NotificationWhereInput>
+    NOT?: Enumerable<NotificationWhereInput>
+    id?: IntFilter | number
+    emailId?: IntFilter | number
+    email?: XOR<EmailRelationFilter, EmailWhereInput>
+    alertForDate?: DateTimeFilter | Date | string
+  }
+
+  export type NotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    email?: EmailOrderByWithRelationInput
+    alertForDate?: SortOrder
+  }
+
+  export type NotificationWhereUniqueInput = {
+    id?: number
+    emailNotification?: NotificationEmailNotificationCompoundUniqueInput
+  }
+
+  export type NotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    alertForDate?: SortOrder
+    _count?: NotificationCountOrderByAggregateInput
+    _avg?: NotificationAvgOrderByAggregateInput
+    _max?: NotificationMaxOrderByAggregateInput
+    _min?: NotificationMinOrderByAggregateInput
+    _sum?: NotificationSumOrderByAggregateInput
+  }
+
+  export type NotificationScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<NotificationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<NotificationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<NotificationScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    emailId?: IntWithAggregatesFilter | number
+    alertForDate?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type CartWhereInput = {
+    AND?: Enumerable<CartWhereInput>
+    OR?: Enumerable<CartWhereInput>
+    NOT?: Enumerable<CartWhereInput>
+    id?: IntFilter | number
+    cartIdentifier?: StringFilter | string
+    purchases?: PurchaseListRelationFilter
+    emailId?: IntFilter | number
+    email?: XOR<EmailRelationFilter, EmailWhereInput>
+    date?: DateTimeFilter | Date | string
+  }
+
+  export type CartOrderByWithRelationInput = {
+    id?: SortOrder
+    cartIdentifier?: SortOrder
+    purchases?: PurchaseOrderByRelationAggregateInput
+    emailId?: SortOrder
+    email?: EmailOrderByWithRelationInput
+    date?: SortOrder
+  }
+
+  export type CartWhereUniqueInput = {
+    id?: number
+    cartIdentifier?: string
+  }
+
+  export type CartOrderByWithAggregationInput = {
+    id?: SortOrder
+    cartIdentifier?: SortOrder
+    emailId?: SortOrder
+    date?: SortOrder
+    _count?: CartCountOrderByAggregateInput
+    _avg?: CartAvgOrderByAggregateInput
+    _max?: CartMaxOrderByAggregateInput
+    _min?: CartMinOrderByAggregateInput
+    _sum?: CartSumOrderByAggregateInput
+  }
+
+  export type CartScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CartScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CartScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CartScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    cartIdentifier?: StringWithAggregatesFilter | string
+    emailId?: IntWithAggregatesFilter | number
     date?: DateTimeWithAggregatesFilter | Date | string
   }
 
@@ -3961,13 +7157,15 @@ export namespace Prisma {
     NOT?: Enumerable<EmailWhereInput>
     id?: IntFilter | number
     email?: StringFilter | string
-    purchases?: PurchaseListRelationFilter
+    purchases?: CartListRelationFilter
+    notifications?: NotificationListRelationFilter
   }
 
   export type EmailOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
-    purchases?: PurchaseOrderByRelationAggregateInput
+    purchases?: CartOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
   }
 
   export type EmailWhereUniqueInput = {
@@ -3997,7 +7195,10 @@ export namespace Prisma {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date | string
+    price: number
     purchases?: PurchaseCreateNestedManyWithoutPhotoInput
+    album?: AlbumCreateNestedOneWithoutPhotosInput
   }
 
   export type PhotoUncheckedCreateInput = {
@@ -4005,14 +7206,20 @@ export namespace Prisma {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date | string
+    price: number
     purchases?: PurchaseUncheckedCreateNestedManyWithoutPhotoInput
+    albumId?: number | null
   }
 
   export type PhotoUpdateInput = {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
     purchases?: PurchaseUpdateManyWithoutPhotoNestedInput
+    album?: AlbumUpdateOneWithoutPhotosNestedInput
   }
 
   export type PhotoUncheckedUpdateInput = {
@@ -4020,7 +7227,10 @@ export namespace Prisma {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
     purchases?: PurchaseUncheckedUpdateManyWithoutPhotoNestedInput
+    albumId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PhotoCreateManyInput = {
@@ -4028,12 +7238,17 @@ export namespace Prisma {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date | string
+    price: number
+    albumId?: number | null
   }
 
   export type PhotoUpdateManyMutationInput = {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
   }
 
   export type PhotoUncheckedUpdateManyInput = {
@@ -4041,72 +7256,196 @@ export namespace Prisma {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    albumId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type AlbumCreateInput = {
+    name: string
+    photos?: PhotoCreateNestedManyWithoutAlbumInput
+  }
+
+  export type AlbumUncheckedCreateInput = {
+    id?: number
+    name: string
+    photos?: PhotoUncheckedCreateNestedManyWithoutAlbumInput
+  }
+
+  export type AlbumUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    photos?: PhotoUpdateManyWithoutAlbumNestedInput
+  }
+
+  export type AlbumUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    photos?: PhotoUncheckedUpdateManyWithoutAlbumNestedInput
+  }
+
+  export type AlbumCreateManyInput = {
+    id?: number
+    name: string
+  }
+
+  export type AlbumUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AlbumUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
   }
 
   export type PurchaseCreateInput = {
-    email: EmailCreateNestedOneWithoutPurchasesInput
     photo: PhotoCreateNestedOneWithoutPurchasesInput
-    date?: Date | string
+    cart: CartCreateNestedOneWithoutPurchasesInput
   }
 
   export type PurchaseUncheckedCreateInput = {
     id?: number
-    emailId: number
     photoId: number
-    date?: Date | string
+    cartId: number
   }
 
   export type PurchaseUpdateInput = {
-    email?: EmailUpdateOneRequiredWithoutPurchasesNestedInput
     photo?: PhotoUpdateOneRequiredWithoutPurchasesNestedInput
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart?: CartUpdateOneRequiredWithoutPurchasesNestedInput
   }
 
   export type PurchaseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    emailId?: IntFieldUpdateOperationsInput | number
     photoId?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    cartId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PurchaseCreateManyInput = {
     id?: number
-    emailId: number
     photoId: number
-    date?: Date | string
+    cartId: number
   }
 
   export type PurchaseUpdateManyMutationInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+
   }
 
   export type PurchaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    emailId?: IntFieldUpdateOperationsInput | number
     photoId?: IntFieldUpdateOperationsInput | number
+    cartId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NotificationCreateInput = {
+    email: EmailCreateNestedOneWithoutNotificationsInput
+    alertForDate: Date | string
+  }
+
+  export type NotificationUncheckedCreateInput = {
+    id?: number
+    emailId: number
+    alertForDate: Date | string
+  }
+
+  export type NotificationUpdateInput = {
+    email?: EmailUpdateOneRequiredWithoutNotificationsNestedInput
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    emailId?: IntFieldUpdateOperationsInput | number
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateManyInput = {
+    id?: number
+    emailId: number
+    alertForDate: Date | string
+  }
+
+  export type NotificationUpdateManyMutationInput = {
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    emailId?: IntFieldUpdateOperationsInput | number
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CartCreateInput = {
+    cartIdentifier: string
+    purchases?: PurchaseCreateNestedManyWithoutCartInput
+    email: EmailCreateNestedOneWithoutPurchasesInput
+    date?: Date | string
+  }
+
+  export type CartUncheckedCreateInput = {
+    id?: number
+    cartIdentifier: string
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutCartInput
+    emailId: number
+    date?: Date | string
+  }
+
+  export type CartUpdateInput = {
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    purchases?: PurchaseUpdateManyWithoutCartNestedInput
+    email?: EmailUpdateOneRequiredWithoutPurchasesNestedInput
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CartUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    purchases?: PurchaseUncheckedUpdateManyWithoutCartNestedInput
+    emailId?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CartCreateManyInput = {
+    id?: number
+    cartIdentifier: string
+    emailId: number
+    date?: Date | string
+  }
+
+  export type CartUpdateManyMutationInput = {
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CartUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    emailId?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailCreateInput = {
     email: string
-    purchases?: PurchaseCreateNestedManyWithoutEmailInput
+    purchases?: CartCreateNestedManyWithoutEmailInput
+    notifications?: NotificationCreateNestedManyWithoutEmailInput
   }
 
   export type EmailUncheckedCreateInput = {
     id?: number
     email: string
-    purchases?: PurchaseUncheckedCreateNestedManyWithoutEmailInput
+    purchases?: CartUncheckedCreateNestedManyWithoutEmailInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutEmailInput
   }
 
   export type EmailUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
-    purchases?: PurchaseUpdateManyWithoutEmailNestedInput
+    purchases?: CartUpdateManyWithoutEmailNestedInput
+    notifications?: NotificationUpdateManyWithoutEmailNestedInput
   }
 
   export type EmailUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    purchases?: PurchaseUncheckedUpdateManyWithoutEmailNestedInput
+    purchases?: CartUncheckedUpdateManyWithoutEmailNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutEmailNestedInput
   }
 
   export type EmailCreateManyInput = {
@@ -4149,10 +7488,37 @@ export namespace Prisma {
     not?: NestedStringFilter | string
   }
 
+  export type DateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
+  }
+
   export type PurchaseListRelationFilter = {
     every?: PurchaseWhereInput
     some?: PurchaseWhereInput
     none?: PurchaseWhereInput
+  }
+
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
+  export type AlbumRelationFilter = {
+    is?: AlbumWhereInput | null
+    isNot?: AlbumWhereInput | null
   }
 
   export type PurchaseOrderByRelationAggregateInput = {
@@ -4164,10 +7530,15 @@ export namespace Prisma {
     previewUrl?: SortOrder
     fullUrl?: SortOrder
     rawUrl?: SortOrder
+    captureDate?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
   }
 
   export type PhotoAvgOrderByAggregateInput = {
     id?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
   }
 
   export type PhotoMaxOrderByAggregateInput = {
@@ -4175,6 +7546,9 @@ export namespace Prisma {
     previewUrl?: SortOrder
     fullUrl?: SortOrder
     rawUrl?: SortOrder
+    captureDate?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
   }
 
   export type PhotoMinOrderByAggregateInput = {
@@ -4182,10 +7556,15 @@ export namespace Prisma {
     previewUrl?: SortOrder
     fullUrl?: SortOrder
     rawUrl?: SortOrder
+    captureDate?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
   }
 
   export type PhotoSumOrderByAggregateInput = {
     id?: SortOrder
+    price?: SortOrder
+    albumId?: SortOrder
   }
 
   export type IntWithAggregatesFilter = {
@@ -4222,60 +7601,6 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
-  export type EmailRelationFilter = {
-    is?: EmailWhereInput
-    isNot?: EmailWhereInput
-  }
-
-  export type PhotoRelationFilter = {
-    is?: PhotoWhereInput
-    isNot?: PhotoWhereInput
-  }
-
-  export type DateTimeFilter = {
-    equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
-    lt?: Date | string
-    lte?: Date | string
-    gt?: Date | string
-    gte?: Date | string
-    not?: NestedDateTimeFilter | Date | string
-  }
-
-  export type PurchaseCountOrderByAggregateInput = {
-    id?: SortOrder
-    emailId?: SortOrder
-    photoId?: SortOrder
-    date?: SortOrder
-  }
-
-  export type PurchaseAvgOrderByAggregateInput = {
-    id?: SortOrder
-    emailId?: SortOrder
-    photoId?: SortOrder
-  }
-
-  export type PurchaseMaxOrderByAggregateInput = {
-    id?: SortOrder
-    emailId?: SortOrder
-    photoId?: SortOrder
-    date?: SortOrder
-  }
-
-  export type PurchaseMinOrderByAggregateInput = {
-    id?: SortOrder
-    emailId?: SortOrder
-    photoId?: SortOrder
-    date?: SortOrder
-  }
-
-  export type PurchaseSumOrderByAggregateInput = {
-    id?: SortOrder
-    emailId?: SortOrder
-    photoId?: SortOrder
-  }
-
   export type DateTimeWithAggregatesFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -4288,6 +7613,184 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type PhotoListRelationFilter = {
+    every?: PhotoWhereInput
+    some?: PhotoWhereInput
+    none?: PhotoWhereInput
+  }
+
+  export type PhotoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AlbumCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type AlbumAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type AlbumMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type AlbumMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type AlbumSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type PhotoRelationFilter = {
+    is?: PhotoWhereInput
+    isNot?: PhotoWhereInput
+  }
+
+  export type CartRelationFilter = {
+    is?: CartWhereInput
+    isNot?: CartWhereInput
+  }
+
+  export type PurchaseCountOrderByAggregateInput = {
+    id?: SortOrder
+    photoId?: SortOrder
+    cartId?: SortOrder
+  }
+
+  export type PurchaseAvgOrderByAggregateInput = {
+    id?: SortOrder
+    photoId?: SortOrder
+    cartId?: SortOrder
+  }
+
+  export type PurchaseMaxOrderByAggregateInput = {
+    id?: SortOrder
+    photoId?: SortOrder
+    cartId?: SortOrder
+  }
+
+  export type PurchaseMinOrderByAggregateInput = {
+    id?: SortOrder
+    photoId?: SortOrder
+    cartId?: SortOrder
+  }
+
+  export type PurchaseSumOrderByAggregateInput = {
+    id?: SortOrder
+    photoId?: SortOrder
+    cartId?: SortOrder
+  }
+
+  export type EmailRelationFilter = {
+    is?: EmailWhereInput
+    isNot?: EmailWhereInput
+  }
+
+  export type NotificationEmailNotificationCompoundUniqueInput = {
+    emailId: number
+    alertForDate: Date | string
+  }
+
+  export type NotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    alertForDate?: SortOrder
+  }
+
+  export type NotificationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type NotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    alertForDate?: SortOrder
+  }
+
+  export type NotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+    alertForDate?: SortOrder
+  }
+
+  export type NotificationSumOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type CartCountOrderByAggregateInput = {
+    id?: SortOrder
+    cartIdentifier?: SortOrder
+    emailId?: SortOrder
+    date?: SortOrder
+  }
+
+  export type CartAvgOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type CartMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cartIdentifier?: SortOrder
+    emailId?: SortOrder
+    date?: SortOrder
+  }
+
+  export type CartMinOrderByAggregateInput = {
+    id?: SortOrder
+    cartIdentifier?: SortOrder
+    emailId?: SortOrder
+    date?: SortOrder
+  }
+
+  export type CartSumOrderByAggregateInput = {
+    id?: SortOrder
+    emailId?: SortOrder
+  }
+
+  export type CartListRelationFilter = {
+    every?: CartWhereInput
+    some?: CartWhereInput
+    none?: CartWhereInput
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
+  export type CartOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type EmailCountOrderByAggregateInput = {
@@ -4320,6 +7823,12 @@ export namespace Prisma {
     connect?: Enumerable<PurchaseWhereUniqueInput>
   }
 
+  export type AlbumCreateNestedOneWithoutPhotosInput = {
+    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
+    connect?: AlbumWhereUniqueInput
+  }
+
   export type PurchaseUncheckedCreateNestedManyWithoutPhotoInput = {
     create?: XOR<Enumerable<PurchaseCreateWithoutPhotoInput>, Enumerable<PurchaseUncheckedCreateWithoutPhotoInput>>
     connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutPhotoInput>
@@ -4329,6 +7838,18 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type PurchaseUpdateManyWithoutPhotoNestedInput = {
@@ -4345,12 +7866,14 @@ export namespace Prisma {
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type AlbumUpdateOneWithoutPhotosNestedInput = {
+    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
+    upsert?: AlbumUpsertWithoutPhotosInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: AlbumWhereUniqueInput
+    update?: XOR<AlbumUpdateWithoutPhotosInput, AlbumUncheckedUpdateWithoutPhotosInput>
   }
 
   export type PurchaseUncheckedUpdateManyWithoutPhotoNestedInput = {
@@ -4367,10 +7890,54 @@ export namespace Prisma {
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
   }
 
-  export type EmailCreateNestedOneWithoutPurchasesInput = {
-    create?: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
-    connectOrCreate?: EmailCreateOrConnectWithoutPurchasesInput
-    connect?: EmailWhereUniqueInput
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type PhotoCreateNestedManyWithoutAlbumInput = {
+    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
+    createMany?: PhotoCreateManyAlbumInputEnvelope
+    connect?: Enumerable<PhotoWhereUniqueInput>
+  }
+
+  export type PhotoUncheckedCreateNestedManyWithoutAlbumInput = {
+    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
+    createMany?: PhotoCreateManyAlbumInputEnvelope
+    connect?: Enumerable<PhotoWhereUniqueInput>
+  }
+
+  export type PhotoUpdateManyWithoutAlbumNestedInput = {
+    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
+    upsert?: Enumerable<PhotoUpsertWithWhereUniqueWithoutAlbumInput>
+    createMany?: PhotoCreateManyAlbumInputEnvelope
+    set?: Enumerable<PhotoWhereUniqueInput>
+    disconnect?: Enumerable<PhotoWhereUniqueInput>
+    delete?: Enumerable<PhotoWhereUniqueInput>
+    connect?: Enumerable<PhotoWhereUniqueInput>
+    update?: Enumerable<PhotoUpdateWithWhereUniqueWithoutAlbumInput>
+    updateMany?: Enumerable<PhotoUpdateManyWithWhereWithoutAlbumInput>
+    deleteMany?: Enumerable<PhotoScalarWhereInput>
+  }
+
+  export type PhotoUncheckedUpdateManyWithoutAlbumNestedInput = {
+    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
+    upsert?: Enumerable<PhotoUpsertWithWhereUniqueWithoutAlbumInput>
+    createMany?: PhotoCreateManyAlbumInputEnvelope
+    set?: Enumerable<PhotoWhereUniqueInput>
+    disconnect?: Enumerable<PhotoWhereUniqueInput>
+    delete?: Enumerable<PhotoWhereUniqueInput>
+    connect?: Enumerable<PhotoWhereUniqueInput>
+    update?: Enumerable<PhotoUpdateWithWhereUniqueWithoutAlbumInput>
+    updateMany?: Enumerable<PhotoUpdateManyWithWhereWithoutAlbumInput>
+    deleteMany?: Enumerable<PhotoScalarWhereInput>
   }
 
   export type PhotoCreateNestedOneWithoutPurchasesInput = {
@@ -4379,12 +7946,10 @@ export namespace Prisma {
     connect?: PhotoWhereUniqueInput
   }
 
-  export type EmailUpdateOneRequiredWithoutPurchasesNestedInput = {
-    create?: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
-    connectOrCreate?: EmailCreateOrConnectWithoutPurchasesInput
-    upsert?: EmailUpsertWithoutPurchasesInput
-    connect?: EmailWhereUniqueInput
-    update?: XOR<EmailUpdateWithoutPurchasesInput, EmailUncheckedUpdateWithoutPurchasesInput>
+  export type CartCreateNestedOneWithoutPurchasesInput = {
+    create?: XOR<CartCreateWithoutPurchasesInput, CartUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: CartCreateOrConnectWithoutPurchasesInput
+    connect?: CartWhereUniqueInput
   }
 
   export type PhotoUpdateOneRequiredWithoutPurchasesNestedInput = {
@@ -4395,50 +7960,166 @@ export namespace Prisma {
     update?: XOR<PhotoUpdateWithoutPurchasesInput, PhotoUncheckedUpdateWithoutPurchasesInput>
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type CartUpdateOneRequiredWithoutPurchasesNestedInput = {
+    create?: XOR<CartCreateWithoutPurchasesInput, CartUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: CartCreateOrConnectWithoutPurchasesInput
+    upsert?: CartUpsertWithoutPurchasesInput
+    connect?: CartWhereUniqueInput
+    update?: XOR<CartUpdateWithoutPurchasesInput, CartUncheckedUpdateWithoutPurchasesInput>
   }
 
-  export type PurchaseCreateNestedManyWithoutEmailInput = {
-    create?: XOR<Enumerable<PurchaseCreateWithoutEmailInput>, Enumerable<PurchaseUncheckedCreateWithoutEmailInput>>
-    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutEmailInput>
-    createMany?: PurchaseCreateManyEmailInputEnvelope
+  export type EmailCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<EmailCreateWithoutNotificationsInput, EmailUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: EmailCreateOrConnectWithoutNotificationsInput
+    connect?: EmailWhereUniqueInput
+  }
+
+  export type EmailUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<EmailCreateWithoutNotificationsInput, EmailUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: EmailCreateOrConnectWithoutNotificationsInput
+    upsert?: EmailUpsertWithoutNotificationsInput
+    connect?: EmailWhereUniqueInput
+    update?: XOR<EmailUpdateWithoutNotificationsInput, EmailUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type PurchaseCreateNestedManyWithoutCartInput = {
+    create?: XOR<Enumerable<PurchaseCreateWithoutCartInput>, Enumerable<PurchaseUncheckedCreateWithoutCartInput>>
+    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutCartInput>
+    createMany?: PurchaseCreateManyCartInputEnvelope
     connect?: Enumerable<PurchaseWhereUniqueInput>
   }
 
-  export type PurchaseUncheckedCreateNestedManyWithoutEmailInput = {
-    create?: XOR<Enumerable<PurchaseCreateWithoutEmailInput>, Enumerable<PurchaseUncheckedCreateWithoutEmailInput>>
-    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutEmailInput>
-    createMany?: PurchaseCreateManyEmailInputEnvelope
+  export type EmailCreateNestedOneWithoutPurchasesInput = {
+    create?: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: EmailCreateOrConnectWithoutPurchasesInput
+    connect?: EmailWhereUniqueInput
+  }
+
+  export type PurchaseUncheckedCreateNestedManyWithoutCartInput = {
+    create?: XOR<Enumerable<PurchaseCreateWithoutCartInput>, Enumerable<PurchaseUncheckedCreateWithoutCartInput>>
+    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutCartInput>
+    createMany?: PurchaseCreateManyCartInputEnvelope
     connect?: Enumerable<PurchaseWhereUniqueInput>
   }
 
-  export type PurchaseUpdateManyWithoutEmailNestedInput = {
-    create?: XOR<Enumerable<PurchaseCreateWithoutEmailInput>, Enumerable<PurchaseUncheckedCreateWithoutEmailInput>>
-    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutEmailInput>
-    upsert?: Enumerable<PurchaseUpsertWithWhereUniqueWithoutEmailInput>
-    createMany?: PurchaseCreateManyEmailInputEnvelope
+  export type PurchaseUpdateManyWithoutCartNestedInput = {
+    create?: XOR<Enumerable<PurchaseCreateWithoutCartInput>, Enumerable<PurchaseUncheckedCreateWithoutCartInput>>
+    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutCartInput>
+    upsert?: Enumerable<PurchaseUpsertWithWhereUniqueWithoutCartInput>
+    createMany?: PurchaseCreateManyCartInputEnvelope
     set?: Enumerable<PurchaseWhereUniqueInput>
     disconnect?: Enumerable<PurchaseWhereUniqueInput>
     delete?: Enumerable<PurchaseWhereUniqueInput>
     connect?: Enumerable<PurchaseWhereUniqueInput>
-    update?: Enumerable<PurchaseUpdateWithWhereUniqueWithoutEmailInput>
-    updateMany?: Enumerable<PurchaseUpdateManyWithWhereWithoutEmailInput>
+    update?: Enumerable<PurchaseUpdateWithWhereUniqueWithoutCartInput>
+    updateMany?: Enumerable<PurchaseUpdateManyWithWhereWithoutCartInput>
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
   }
 
-  export type PurchaseUncheckedUpdateManyWithoutEmailNestedInput = {
-    create?: XOR<Enumerable<PurchaseCreateWithoutEmailInput>, Enumerable<PurchaseUncheckedCreateWithoutEmailInput>>
-    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutEmailInput>
-    upsert?: Enumerable<PurchaseUpsertWithWhereUniqueWithoutEmailInput>
-    createMany?: PurchaseCreateManyEmailInputEnvelope
+  export type EmailUpdateOneRequiredWithoutPurchasesNestedInput = {
+    create?: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+    connectOrCreate?: EmailCreateOrConnectWithoutPurchasesInput
+    upsert?: EmailUpsertWithoutPurchasesInput
+    connect?: EmailWhereUniqueInput
+    update?: XOR<EmailUpdateWithoutPurchasesInput, EmailUncheckedUpdateWithoutPurchasesInput>
+  }
+
+  export type PurchaseUncheckedUpdateManyWithoutCartNestedInput = {
+    create?: XOR<Enumerable<PurchaseCreateWithoutCartInput>, Enumerable<PurchaseUncheckedCreateWithoutCartInput>>
+    connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutCartInput>
+    upsert?: Enumerable<PurchaseUpsertWithWhereUniqueWithoutCartInput>
+    createMany?: PurchaseCreateManyCartInputEnvelope
     set?: Enumerable<PurchaseWhereUniqueInput>
     disconnect?: Enumerable<PurchaseWhereUniqueInput>
     delete?: Enumerable<PurchaseWhereUniqueInput>
     connect?: Enumerable<PurchaseWhereUniqueInput>
-    update?: Enumerable<PurchaseUpdateWithWhereUniqueWithoutEmailInput>
-    updateMany?: Enumerable<PurchaseUpdateManyWithWhereWithoutEmailInput>
+    update?: Enumerable<PurchaseUpdateWithWhereUniqueWithoutCartInput>
+    updateMany?: Enumerable<PurchaseUpdateManyWithWhereWithoutCartInput>
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
+  }
+
+  export type CartCreateNestedManyWithoutEmailInput = {
+    create?: XOR<Enumerable<CartCreateWithoutEmailInput>, Enumerable<CartUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<CartCreateOrConnectWithoutEmailInput>
+    createMany?: CartCreateManyEmailInputEnvelope
+    connect?: Enumerable<CartWhereUniqueInput>
+  }
+
+  export type NotificationCreateNestedManyWithoutEmailInput = {
+    create?: XOR<Enumerable<NotificationCreateWithoutEmailInput>, Enumerable<NotificationUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<NotificationCreateOrConnectWithoutEmailInput>
+    createMany?: NotificationCreateManyEmailInputEnvelope
+    connect?: Enumerable<NotificationWhereUniqueInput>
+  }
+
+  export type CartUncheckedCreateNestedManyWithoutEmailInput = {
+    create?: XOR<Enumerable<CartCreateWithoutEmailInput>, Enumerable<CartUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<CartCreateOrConnectWithoutEmailInput>
+    createMany?: CartCreateManyEmailInputEnvelope
+    connect?: Enumerable<CartWhereUniqueInput>
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutEmailInput = {
+    create?: XOR<Enumerable<NotificationCreateWithoutEmailInput>, Enumerable<NotificationUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<NotificationCreateOrConnectWithoutEmailInput>
+    createMany?: NotificationCreateManyEmailInputEnvelope
+    connect?: Enumerable<NotificationWhereUniqueInput>
+  }
+
+  export type CartUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<Enumerable<CartCreateWithoutEmailInput>, Enumerable<CartUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<CartCreateOrConnectWithoutEmailInput>
+    upsert?: Enumerable<CartUpsertWithWhereUniqueWithoutEmailInput>
+    createMany?: CartCreateManyEmailInputEnvelope
+    set?: Enumerable<CartWhereUniqueInput>
+    disconnect?: Enumerable<CartWhereUniqueInput>
+    delete?: Enumerable<CartWhereUniqueInput>
+    connect?: Enumerable<CartWhereUniqueInput>
+    update?: Enumerable<CartUpdateWithWhereUniqueWithoutEmailInput>
+    updateMany?: Enumerable<CartUpdateManyWithWhereWithoutEmailInput>
+    deleteMany?: Enumerable<CartScalarWhereInput>
+  }
+
+  export type NotificationUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<Enumerable<NotificationCreateWithoutEmailInput>, Enumerable<NotificationUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<NotificationCreateOrConnectWithoutEmailInput>
+    upsert?: Enumerable<NotificationUpsertWithWhereUniqueWithoutEmailInput>
+    createMany?: NotificationCreateManyEmailInputEnvelope
+    set?: Enumerable<NotificationWhereUniqueInput>
+    disconnect?: Enumerable<NotificationWhereUniqueInput>
+    delete?: Enumerable<NotificationWhereUniqueInput>
+    connect?: Enumerable<NotificationWhereUniqueInput>
+    update?: Enumerable<NotificationUpdateWithWhereUniqueWithoutEmailInput>
+    updateMany?: Enumerable<NotificationUpdateManyWithWhereWithoutEmailInput>
+    deleteMany?: Enumerable<NotificationScalarWhereInput>
+  }
+
+  export type CartUncheckedUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<Enumerable<CartCreateWithoutEmailInput>, Enumerable<CartUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<CartCreateOrConnectWithoutEmailInput>
+    upsert?: Enumerable<CartUpsertWithWhereUniqueWithoutEmailInput>
+    createMany?: CartCreateManyEmailInputEnvelope
+    set?: Enumerable<CartWhereUniqueInput>
+    disconnect?: Enumerable<CartWhereUniqueInput>
+    delete?: Enumerable<CartWhereUniqueInput>
+    connect?: Enumerable<CartWhereUniqueInput>
+    update?: Enumerable<CartUpdateWithWhereUniqueWithoutEmailInput>
+    updateMany?: Enumerable<CartUpdateManyWithWhereWithoutEmailInput>
+    deleteMany?: Enumerable<CartScalarWhereInput>
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutEmailNestedInput = {
+    create?: XOR<Enumerable<NotificationCreateWithoutEmailInput>, Enumerable<NotificationUncheckedCreateWithoutEmailInput>>
+    connectOrCreate?: Enumerable<NotificationCreateOrConnectWithoutEmailInput>
+    upsert?: Enumerable<NotificationUpsertWithWhereUniqueWithoutEmailInput>
+    createMany?: NotificationCreateManyEmailInputEnvelope
+    set?: Enumerable<NotificationWhereUniqueInput>
+    disconnect?: Enumerable<NotificationWhereUniqueInput>
+    delete?: Enumerable<NotificationWhereUniqueInput>
+    connect?: Enumerable<NotificationWhereUniqueInput>
+    update?: Enumerable<NotificationUpdateWithWhereUniqueWithoutEmailInput>
+    updateMany?: Enumerable<NotificationUpdateManyWithWhereWithoutEmailInput>
+    deleteMany?: Enumerable<NotificationScalarWhereInput>
   }
 
   export type NestedIntFilter = {
@@ -4464,6 +8145,28 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringFilter | string
+  }
+
+  export type NestedDateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
   }
 
   export type NestedIntWithAggregatesFilter = {
@@ -4510,17 +8213,6 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
-  export type NestedDateTimeFilter = {
-    equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
-    lt?: Date | string
-    lte?: Date | string
-    gt?: Date | string
-    gte?: Date | string
-    not?: NestedDateTimeFilter | Date | string
-  }
-
   export type NestedDateTimeWithAggregatesFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -4535,15 +8227,40 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | null
+    notIn?: Enumerable<number> | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
+  }
+
   export type PurchaseCreateWithoutPhotoInput = {
-    email: EmailCreateNestedOneWithoutPurchasesInput
-    date?: Date | string
+    cart: CartCreateNestedOneWithoutPurchasesInput
   }
 
   export type PurchaseUncheckedCreateWithoutPhotoInput = {
     id?: number
-    emailId: number
-    date?: Date | string
+    cartId: number
   }
 
   export type PurchaseCreateOrConnectWithoutPhotoInput = {
@@ -4554,6 +8271,20 @@ export namespace Prisma {
   export type PurchaseCreateManyPhotoInputEnvelope = {
     data: Enumerable<PurchaseCreateManyPhotoInput>
     skipDuplicates?: boolean
+  }
+
+  export type AlbumCreateWithoutPhotosInput = {
+    name: string
+  }
+
+  export type AlbumUncheckedCreateWithoutPhotosInput = {
+    id?: number
+    name: string
+  }
+
+  export type AlbumCreateOrConnectWithoutPhotosInput = {
+    where: AlbumWhereUniqueInput
+    create: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
   }
 
   export type PurchaseUpsertWithWhereUniqueWithoutPhotoInput = {
@@ -4577,29 +8308,89 @@ export namespace Prisma {
     OR?: Enumerable<PurchaseScalarWhereInput>
     NOT?: Enumerable<PurchaseScalarWhereInput>
     id?: IntFilter | number
-    emailId?: IntFilter | number
     photoId?: IntFilter | number
-    date?: DateTimeFilter | Date | string
+    cartId?: IntFilter | number
   }
 
-  export type EmailCreateWithoutPurchasesInput = {
-    email: string
+  export type AlbumUpsertWithoutPhotosInput = {
+    update: XOR<AlbumUpdateWithoutPhotosInput, AlbumUncheckedUpdateWithoutPhotosInput>
+    create: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
   }
 
-  export type EmailUncheckedCreateWithoutPurchasesInput = {
+  export type AlbumUpdateWithoutPhotosInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AlbumUncheckedUpdateWithoutPhotosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PhotoCreateWithoutAlbumInput = {
+    previewUrl: string
+    fullUrl: string
+    rawUrl: string
+    captureDate: Date | string
+    price: number
+    purchases?: PurchaseCreateNestedManyWithoutPhotoInput
+  }
+
+  export type PhotoUncheckedCreateWithoutAlbumInput = {
     id?: number
-    email: string
+    previewUrl: string
+    fullUrl: string
+    rawUrl: string
+    captureDate: Date | string
+    price: number
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutPhotoInput
   }
 
-  export type EmailCreateOrConnectWithoutPurchasesInput = {
-    where: EmailWhereUniqueInput
-    create: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+  export type PhotoCreateOrConnectWithoutAlbumInput = {
+    where: PhotoWhereUniqueInput
+    create: XOR<PhotoCreateWithoutAlbumInput, PhotoUncheckedCreateWithoutAlbumInput>
+  }
+
+  export type PhotoCreateManyAlbumInputEnvelope = {
+    data: Enumerable<PhotoCreateManyAlbumInput>
+    skipDuplicates?: boolean
+  }
+
+  export type PhotoUpsertWithWhereUniqueWithoutAlbumInput = {
+    where: PhotoWhereUniqueInput
+    update: XOR<PhotoUpdateWithoutAlbumInput, PhotoUncheckedUpdateWithoutAlbumInput>
+    create: XOR<PhotoCreateWithoutAlbumInput, PhotoUncheckedCreateWithoutAlbumInput>
+  }
+
+  export type PhotoUpdateWithWhereUniqueWithoutAlbumInput = {
+    where: PhotoWhereUniqueInput
+    data: XOR<PhotoUpdateWithoutAlbumInput, PhotoUncheckedUpdateWithoutAlbumInput>
+  }
+
+  export type PhotoUpdateManyWithWhereWithoutAlbumInput = {
+    where: PhotoScalarWhereInput
+    data: XOR<PhotoUpdateManyMutationInput, PhotoUncheckedUpdateManyWithoutPhotosInput>
+  }
+
+  export type PhotoScalarWhereInput = {
+    AND?: Enumerable<PhotoScalarWhereInput>
+    OR?: Enumerable<PhotoScalarWhereInput>
+    NOT?: Enumerable<PhotoScalarWhereInput>
+    id?: IntFilter | number
+    previewUrl?: StringFilter | string
+    fullUrl?: StringFilter | string
+    rawUrl?: StringFilter | string
+    captureDate?: DateTimeFilter | Date | string
+    price?: IntFilter | number
+    albumId?: IntNullableFilter | number | null
   }
 
   export type PhotoCreateWithoutPurchasesInput = {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date | string
+    price: number
+    album?: AlbumCreateNestedOneWithoutPhotosInput
   }
 
   export type PhotoUncheckedCreateWithoutPurchasesInput = {
@@ -4607,6 +8398,9 @@ export namespace Prisma {
     previewUrl: string
     fullUrl: string
     rawUrl: string
+    captureDate: Date | string
+    price: number
+    albumId?: number | null
   }
 
   export type PhotoCreateOrConnectWithoutPurchasesInput = {
@@ -4614,18 +8408,22 @@ export namespace Prisma {
     create: XOR<PhotoCreateWithoutPurchasesInput, PhotoUncheckedCreateWithoutPurchasesInput>
   }
 
-  export type EmailUpsertWithoutPurchasesInput = {
-    update: XOR<EmailUpdateWithoutPurchasesInput, EmailUncheckedUpdateWithoutPurchasesInput>
-    create: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+  export type CartCreateWithoutPurchasesInput = {
+    cartIdentifier: string
+    email: EmailCreateNestedOneWithoutPurchasesInput
+    date?: Date | string
   }
 
-  export type EmailUpdateWithoutPurchasesInput = {
-    email?: StringFieldUpdateOperationsInput | string
+  export type CartUncheckedCreateWithoutPurchasesInput = {
+    id?: number
+    cartIdentifier: string
+    emailId: number
+    date?: Date | string
   }
 
-  export type EmailUncheckedUpdateWithoutPurchasesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+  export type CartCreateOrConnectWithoutPurchasesInput = {
+    where: CartWhereUniqueInput
+    create: XOR<CartCreateWithoutPurchasesInput, CartUncheckedCreateWithoutPurchasesInput>
   }
 
   export type PhotoUpsertWithoutPurchasesInput = {
@@ -4637,6 +8435,9 @@ export namespace Prisma {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    album?: AlbumUpdateOneWithoutPhotosNestedInput
   }
 
   export type PhotoUncheckedUpdateWithoutPurchasesInput = {
@@ -4644,83 +8445,333 @@ export namespace Prisma {
     previewUrl?: StringFieldUpdateOperationsInput | string
     fullUrl?: StringFieldUpdateOperationsInput | string
     rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    albumId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
-  export type PurchaseCreateWithoutEmailInput = {
-    photo: PhotoCreateNestedOneWithoutPurchasesInput
-    date?: Date | string
+  export type CartUpsertWithoutPurchasesInput = {
+    update: XOR<CartUpdateWithoutPurchasesInput, CartUncheckedUpdateWithoutPurchasesInput>
+    create: XOR<CartCreateWithoutPurchasesInput, CartUncheckedCreateWithoutPurchasesInput>
   }
 
-  export type PurchaseUncheckedCreateWithoutEmailInput = {
-    id?: number
-    photoId: number
-    date?: Date | string
-  }
-
-  export type PurchaseCreateOrConnectWithoutEmailInput = {
-    where: PurchaseWhereUniqueInput
-    create: XOR<PurchaseCreateWithoutEmailInput, PurchaseUncheckedCreateWithoutEmailInput>
-  }
-
-  export type PurchaseCreateManyEmailInputEnvelope = {
-    data: Enumerable<PurchaseCreateManyEmailInput>
-    skipDuplicates?: boolean
-  }
-
-  export type PurchaseUpsertWithWhereUniqueWithoutEmailInput = {
-    where: PurchaseWhereUniqueInput
-    update: XOR<PurchaseUpdateWithoutEmailInput, PurchaseUncheckedUpdateWithoutEmailInput>
-    create: XOR<PurchaseCreateWithoutEmailInput, PurchaseUncheckedCreateWithoutEmailInput>
-  }
-
-  export type PurchaseUpdateWithWhereUniqueWithoutEmailInput = {
-    where: PurchaseWhereUniqueInput
-    data: XOR<PurchaseUpdateWithoutEmailInput, PurchaseUncheckedUpdateWithoutEmailInput>
-  }
-
-  export type PurchaseUpdateManyWithWhereWithoutEmailInput = {
-    where: PurchaseScalarWhereInput
-    data: XOR<PurchaseUpdateManyMutationInput, PurchaseUncheckedUpdateManyWithoutPurchasesInput>
-  }
-
-  export type PurchaseCreateManyPhotoInput = {
-    id?: number
-    emailId: number
-    date?: Date | string
-  }
-
-  export type PurchaseUpdateWithoutPhotoInput = {
+  export type CartUpdateWithoutPurchasesInput = {
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
     email?: EmailUpdateOneRequiredWithoutPurchasesNestedInput
     date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PurchaseUncheckedUpdateWithoutPhotoInput = {
+  export type CartUncheckedUpdateWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
     emailId?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailCreateWithoutNotificationsInput = {
+    email: string
+    purchases?: CartCreateNestedManyWithoutEmailInput
+  }
+
+  export type EmailUncheckedCreateWithoutNotificationsInput = {
+    id?: number
+    email: string
+    purchases?: CartUncheckedCreateNestedManyWithoutEmailInput
+  }
+
+  export type EmailCreateOrConnectWithoutNotificationsInput = {
+    where: EmailWhereUniqueInput
+    create: XOR<EmailCreateWithoutNotificationsInput, EmailUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type EmailUpsertWithoutNotificationsInput = {
+    update: XOR<EmailUpdateWithoutNotificationsInput, EmailUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<EmailCreateWithoutNotificationsInput, EmailUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type EmailUpdateWithoutNotificationsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    purchases?: CartUpdateManyWithoutEmailNestedInput
+  }
+
+  export type EmailUncheckedUpdateWithoutNotificationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    purchases?: CartUncheckedUpdateManyWithoutEmailNestedInput
+  }
+
+  export type PurchaseCreateWithoutCartInput = {
+    photo: PhotoCreateNestedOneWithoutPurchasesInput
+  }
+
+  export type PurchaseUncheckedCreateWithoutCartInput = {
+    id?: number
+    photoId: number
+  }
+
+  export type PurchaseCreateOrConnectWithoutCartInput = {
+    where: PurchaseWhereUniqueInput
+    create: XOR<PurchaseCreateWithoutCartInput, PurchaseUncheckedCreateWithoutCartInput>
+  }
+
+  export type PurchaseCreateManyCartInputEnvelope = {
+    data: Enumerable<PurchaseCreateManyCartInput>
+    skipDuplicates?: boolean
+  }
+
+  export type EmailCreateWithoutPurchasesInput = {
+    email: string
+    notifications?: NotificationCreateNestedManyWithoutEmailInput
+  }
+
+  export type EmailUncheckedCreateWithoutPurchasesInput = {
+    id?: number
+    email: string
+    notifications?: NotificationUncheckedCreateNestedManyWithoutEmailInput
+  }
+
+  export type EmailCreateOrConnectWithoutPurchasesInput = {
+    where: EmailWhereUniqueInput
+    create: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+  }
+
+  export type PurchaseUpsertWithWhereUniqueWithoutCartInput = {
+    where: PurchaseWhereUniqueInput
+    update: XOR<PurchaseUpdateWithoutCartInput, PurchaseUncheckedUpdateWithoutCartInput>
+    create: XOR<PurchaseCreateWithoutCartInput, PurchaseUncheckedCreateWithoutCartInput>
+  }
+
+  export type PurchaseUpdateWithWhereUniqueWithoutCartInput = {
+    where: PurchaseWhereUniqueInput
+    data: XOR<PurchaseUpdateWithoutCartInput, PurchaseUncheckedUpdateWithoutCartInput>
+  }
+
+  export type PurchaseUpdateManyWithWhereWithoutCartInput = {
+    where: PurchaseScalarWhereInput
+    data: XOR<PurchaseUpdateManyMutationInput, PurchaseUncheckedUpdateManyWithoutPurchasesInput>
+  }
+
+  export type EmailUpsertWithoutPurchasesInput = {
+    update: XOR<EmailUpdateWithoutPurchasesInput, EmailUncheckedUpdateWithoutPurchasesInput>
+    create: XOR<EmailCreateWithoutPurchasesInput, EmailUncheckedCreateWithoutPurchasesInput>
+  }
+
+  export type EmailUpdateWithoutPurchasesInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    notifications?: NotificationUpdateManyWithoutEmailNestedInput
+  }
+
+  export type EmailUncheckedUpdateWithoutPurchasesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    notifications?: NotificationUncheckedUpdateManyWithoutEmailNestedInput
+  }
+
+  export type CartCreateWithoutEmailInput = {
+    cartIdentifier: string
+    purchases?: PurchaseCreateNestedManyWithoutCartInput
+    date?: Date | string
+  }
+
+  export type CartUncheckedCreateWithoutEmailInput = {
+    id?: number
+    cartIdentifier: string
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutCartInput
+    date?: Date | string
+  }
+
+  export type CartCreateOrConnectWithoutEmailInput = {
+    where: CartWhereUniqueInput
+    create: XOR<CartCreateWithoutEmailInput, CartUncheckedCreateWithoutEmailInput>
+  }
+
+  export type CartCreateManyEmailInputEnvelope = {
+    data: Enumerable<CartCreateManyEmailInput>
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutEmailInput = {
+    alertForDate: Date | string
+  }
+
+  export type NotificationUncheckedCreateWithoutEmailInput = {
+    id?: number
+    alertForDate: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutEmailInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutEmailInput, NotificationUncheckedCreateWithoutEmailInput>
+  }
+
+  export type NotificationCreateManyEmailInputEnvelope = {
+    data: Enumerable<NotificationCreateManyEmailInput>
+    skipDuplicates?: boolean
+  }
+
+  export type CartUpsertWithWhereUniqueWithoutEmailInput = {
+    where: CartWhereUniqueInput
+    update: XOR<CartUpdateWithoutEmailInput, CartUncheckedUpdateWithoutEmailInput>
+    create: XOR<CartCreateWithoutEmailInput, CartUncheckedCreateWithoutEmailInput>
+  }
+
+  export type CartUpdateWithWhereUniqueWithoutEmailInput = {
+    where: CartWhereUniqueInput
+    data: XOR<CartUpdateWithoutEmailInput, CartUncheckedUpdateWithoutEmailInput>
+  }
+
+  export type CartUpdateManyWithWhereWithoutEmailInput = {
+    where: CartScalarWhereInput
+    data: XOR<CartUpdateManyMutationInput, CartUncheckedUpdateManyWithoutPurchasesInput>
+  }
+
+  export type CartScalarWhereInput = {
+    AND?: Enumerable<CartScalarWhereInput>
+    OR?: Enumerable<CartScalarWhereInput>
+    NOT?: Enumerable<CartScalarWhereInput>
+    id?: IntFilter | number
+    cartIdentifier?: StringFilter | string
+    emailId?: IntFilter | number
+    date?: DateTimeFilter | Date | string
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutEmailInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutEmailInput, NotificationUncheckedUpdateWithoutEmailInput>
+    create: XOR<NotificationCreateWithoutEmailInput, NotificationUncheckedCreateWithoutEmailInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutEmailInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutEmailInput, NotificationUncheckedUpdateWithoutEmailInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutEmailInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutNotificationsInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: Enumerable<NotificationScalarWhereInput>
+    OR?: Enumerable<NotificationScalarWhereInput>
+    NOT?: Enumerable<NotificationScalarWhereInput>
+    id?: IntFilter | number
+    emailId?: IntFilter | number
+    alertForDate?: DateTimeFilter | Date | string
+  }
+
+  export type PurchaseCreateManyPhotoInput = {
+    id?: number
+    cartId: number
+  }
+
+  export type PurchaseUpdateWithoutPhotoInput = {
+    cart?: CartUpdateOneRequiredWithoutPurchasesNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateWithoutPhotoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cartId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PurchaseUncheckedUpdateManyWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
-    emailId?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    cartId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PurchaseCreateManyEmailInput = {
+  export type PhotoCreateManyAlbumInput = {
+    id?: number
+    previewUrl: string
+    fullUrl: string
+    rawUrl: string
+    captureDate: Date | string
+    price: number
+  }
+
+  export type PhotoUpdateWithoutAlbumInput = {
+    previewUrl?: StringFieldUpdateOperationsInput | string
+    fullUrl?: StringFieldUpdateOperationsInput | string
+    rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    purchases?: PurchaseUpdateManyWithoutPhotoNestedInput
+  }
+
+  export type PhotoUncheckedUpdateWithoutAlbumInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    previewUrl?: StringFieldUpdateOperationsInput | string
+    fullUrl?: StringFieldUpdateOperationsInput | string
+    rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    purchases?: PurchaseUncheckedUpdateManyWithoutPhotoNestedInput
+  }
+
+  export type PhotoUncheckedUpdateManyWithoutPhotosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    previewUrl?: StringFieldUpdateOperationsInput | string
+    fullUrl?: StringFieldUpdateOperationsInput | string
+    rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PurchaseCreateManyCartInput = {
     id?: number
     photoId: number
+  }
+
+  export type PurchaseUpdateWithoutCartInput = {
+    photo?: PhotoUpdateOneRequiredWithoutPurchasesNestedInput
+  }
+
+  export type PurchaseUncheckedUpdateWithoutCartInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    photoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CartCreateManyEmailInput = {
+    id?: number
+    cartIdentifier: string
     date?: Date | string
   }
 
-  export type PurchaseUpdateWithoutEmailInput = {
-    photo?: PhotoUpdateOneRequiredWithoutPurchasesNestedInput
+  export type NotificationCreateManyEmailInput = {
+    id?: number
+    alertForDate: Date | string
+  }
+
+  export type CartUpdateWithoutEmailInput = {
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    purchases?: PurchaseUpdateManyWithoutCartNestedInput
     date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PurchaseUncheckedUpdateWithoutEmailInput = {
+  export type CartUncheckedUpdateWithoutEmailInput = {
     id?: IntFieldUpdateOperationsInput | number
-    photoId?: IntFieldUpdateOperationsInput | number
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    purchases?: PurchaseUncheckedUpdateManyWithoutCartNestedInput
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CartUncheckedUpdateManyWithoutPurchasesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cartIdentifier?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutEmailInput = {
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateWithoutEmailInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutNotificationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
