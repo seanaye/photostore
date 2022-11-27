@@ -13,29 +13,41 @@ datasource db {
 }
 
 model Photo {
-  id          Int        @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   previewUrl  String
   fullUrl     String
   rawUrl      String
   captureDate DateTime
   price       Int
   purchases   Purchase[]
-  albumId     Int?
-  album       Album?     @relation(fields: [albumId], references: [id])
+  albums      PhotosOnAlbums[]
+  createdAt   DateTime         @default(now())
+}
+
+model PhotosOnAlbums {
+  photoId   Int
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  albumId   Int
+  album     Album    @relation(fields: [albumId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([photoId, albumId])
 }
 
 model Album {
-  id     Int     @id @default(autoincrement())
-  name   String
-  photos Photo[]
+  id        Int              @id @default(autoincrement())
+  name      String
+  photos    PhotosOnAlbums[]
+  createdAt DateTime         @default(now())
 }
 
 model Purchase {
-  id      Int   @id @default(autoincrement())
-  photoId Int
-  photo   Photo @relation(fields: [photoId], references: [id])
-  cartId  Int
-  cart    Cart  @relation(fields: [cartId], references: [id])
+  id        Int      @id @default(autoincrement())
+  photoId   Int
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  cartId    Int
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model Notification {
@@ -43,6 +55,7 @@ model Notification {
   emailId      Int
   email        Email    @relation(fields: [emailId], references: [id])
   alertForDate DateTime
+  createdAt    DateTime @default(now())
 
   @@unique([emailId, alertForDate], name: "emailNotification")
 }
@@ -61,4 +74,5 @@ model Email {
   email         String         @unique
   purchases     Cart[]
   notifications Notification[]
+  createdAt     DateTime       @default(now())
 }

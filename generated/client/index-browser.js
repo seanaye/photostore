@@ -91,7 +91,8 @@ function makeEnum(x) { return x; }
 
 exports.Prisma.AlbumScalarFieldEnum = makeEnum({
   id: 'id',
-  name: 'name'
+  name: 'name',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.CartScalarFieldEnum = makeEnum({
@@ -103,13 +104,15 @@ exports.Prisma.CartScalarFieldEnum = makeEnum({
 
 exports.Prisma.EmailScalarFieldEnum = makeEnum({
   id: 'id',
-  email: 'email'
+  email: 'email',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.NotificationScalarFieldEnum = makeEnum({
   id: 'id',
   emailId: 'emailId',
-  alertForDate: 'alertForDate'
+  alertForDate: 'alertForDate',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.PhotoScalarFieldEnum = makeEnum({
@@ -119,13 +122,20 @@ exports.Prisma.PhotoScalarFieldEnum = makeEnum({
   rawUrl: 'rawUrl',
   captureDate: 'captureDate',
   price: 'price',
-  albumId: 'albumId'
+  createdAt: 'createdAt'
+});
+
+exports.Prisma.PhotosOnAlbumsScalarFieldEnum = makeEnum({
+  photoId: 'photoId',
+  albumId: 'albumId',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.PurchaseScalarFieldEnum = makeEnum({
   id: 'id',
   photoId: 'photoId',
-  cartId: 'cartId'
+  cartId: 'cartId',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.QueryMode = makeEnum({
@@ -148,6 +158,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.ModelName = makeEnum({
   Photo: 'Photo',
+  PhotosOnAlbums: 'PhotosOnAlbums',
   Album: 'Album',
   Purchase: 'Purchase',
   Notification: 'Notification',

@@ -23,7 +23,17 @@ export type Photo = {
   rawUrl: string
   captureDate: Date
   price: number
-  albumId: number | null
+  createdAt: Date
+}
+
+/**
+ * Model PhotosOnAlbums
+ * 
+ */
+export type PhotosOnAlbums = {
+  photoId: number
+  albumId: number
+  createdAt: Date
 }
 
 /**
@@ -33,6 +43,7 @@ export type Photo = {
 export type Album = {
   id: number
   name: string
+  createdAt: Date
 }
 
 /**
@@ -43,6 +54,7 @@ export type Purchase = {
   id: number
   photoId: number
   cartId: number
+  createdAt: Date
 }
 
 /**
@@ -53,6 +65,7 @@ export type Notification = {
   id: number
   emailId: number
   alertForDate: Date
+  createdAt: Date
 }
 
 /**
@@ -73,6 +86,7 @@ export type Cart = {
 export type Email = {
   id: number
   email: string
+  createdAt: Date
 }
 
 
@@ -225,6 +239,16 @@ export class PrismaClient<
     * ```
     */
   get photo(): Prisma.PhotoDelegate<GlobalReject>;
+
+  /**
+   * `prisma.photosOnAlbums`: Exposes CRUD operations for the **PhotosOnAlbums** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PhotosOnAlbums
+    * const photosOnAlbums = await prisma.photosOnAlbums.findMany()
+    * ```
+    */
+  get photosOnAlbums(): Prisma.PhotosOnAlbumsDelegate<GlobalReject>;
 
   /**
    * `prisma.album`: Exposes CRUD operations for the **Album** model.
@@ -760,6 +784,7 @@ export namespace Prisma {
 
   export const ModelName: {
     Photo: 'Photo',
+    PhotosOnAlbums: 'PhotosOnAlbums',
     Album: 'Album',
     Purchase: 'Purchase',
     Notification: 'Notification',
@@ -930,10 +955,12 @@ export namespace Prisma {
 
   export type PhotoCountOutputType = {
     purchases: number
+    albums: number
   }
 
   export type PhotoCountOutputTypeSelect = {
     purchases?: boolean
+    albums?: boolean
   }
 
   export type PhotoCountOutputTypeGetPayload<S extends boolean | null | undefined | PhotoCountOutputTypeArgs, U = keyof S> =
@@ -1121,13 +1148,11 @@ export namespace Prisma {
   export type PhotoAvgAggregateOutputType = {
     id: number | null
     price: number | null
-    albumId: number | null
   }
 
   export type PhotoSumAggregateOutputType = {
     id: number | null
     price: number | null
-    albumId: number | null
   }
 
   export type PhotoMinAggregateOutputType = {
@@ -1137,7 +1162,7 @@ export namespace Prisma {
     rawUrl: string | null
     captureDate: Date | null
     price: number | null
-    albumId: number | null
+    createdAt: Date | null
   }
 
   export type PhotoMaxAggregateOutputType = {
@@ -1147,7 +1172,7 @@ export namespace Prisma {
     rawUrl: string | null
     captureDate: Date | null
     price: number | null
-    albumId: number | null
+    createdAt: Date | null
   }
 
   export type PhotoCountAggregateOutputType = {
@@ -1157,7 +1182,7 @@ export namespace Prisma {
     rawUrl: number
     captureDate: number
     price: number
-    albumId: number
+    createdAt: number
     _all: number
   }
 
@@ -1165,13 +1190,11 @@ export namespace Prisma {
   export type PhotoAvgAggregateInputType = {
     id?: true
     price?: true
-    albumId?: true
   }
 
   export type PhotoSumAggregateInputType = {
     id?: true
     price?: true
-    albumId?: true
   }
 
   export type PhotoMinAggregateInputType = {
@@ -1181,7 +1204,7 @@ export namespace Prisma {
     rawUrl?: true
     captureDate?: true
     price?: true
-    albumId?: true
+    createdAt?: true
   }
 
   export type PhotoMaxAggregateInputType = {
@@ -1191,7 +1214,7 @@ export namespace Prisma {
     rawUrl?: true
     captureDate?: true
     price?: true
-    albumId?: true
+    createdAt?: true
   }
 
   export type PhotoCountAggregateInputType = {
@@ -1201,7 +1224,7 @@ export namespace Prisma {
     rawUrl?: true
     captureDate?: true
     price?: true
-    albumId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -1304,7 +1327,7 @@ export namespace Prisma {
     rawUrl: string
     captureDate: Date
     price: number
-    albumId: number | null
+    createdAt: Date
     _count: PhotoCountAggregateOutputType | null
     _avg: PhotoAvgAggregateOutputType | null
     _sum: PhotoSumAggregateOutputType | null
@@ -1334,15 +1357,15 @@ export namespace Prisma {
     captureDate?: boolean
     price?: boolean
     purchases?: boolean | PurchaseFindManyArgs
-    albumId?: boolean
-    album?: boolean | AlbumArgs
+    albums?: boolean | PhotosOnAlbumsFindManyArgs
+    createdAt?: boolean
     _count?: boolean | PhotoCountOutputTypeArgs
   }
 
 
   export type PhotoInclude = {
     purchases?: boolean | PurchaseFindManyArgs
-    album?: boolean | AlbumArgs
+    albums?: boolean | PhotosOnAlbumsFindManyArgs
     _count?: boolean | PhotoCountOutputTypeArgs
   } 
 
@@ -1354,14 +1377,14 @@ export namespace Prisma {
     ? Photo  & {
     [P in TrueKeys<S['include']>]:
         P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
-        P extends 'album' ? AlbumGetPayload<Exclude<S['include'], undefined | null>[P]> | null :
+        P extends 'albums' ? Array < PhotosOnAlbumsGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
         P extends '_count' ? PhotoCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : S extends { select: any } & (PhotoArgs | PhotoFindManyArgs)
       ? {
     [P in TrueKeys<S['select']>]:
         P extends 'purchases' ? Array < PurchaseGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
-        P extends 'album' ? AlbumGetPayload<Exclude<S['select'], undefined | null>[P]> | null :
+        P extends 'albums' ? Array < PhotosOnAlbumsGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
         P extends '_count' ? PhotoCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Photo ? Photo[P] : never
   } 
       : Photo
@@ -1738,7 +1761,7 @@ export namespace Prisma {
 
     purchases<T extends PurchaseFindManyArgs= {}>(args?: Subset<T, PurchaseFindManyArgs>): PrismaPromise<Array<PurchaseGetPayload<T>>| Null>;
 
-    album<T extends AlbumArgs= {}>(args?: Subset<T, AlbumArgs>): Prisma__AlbumClient<AlbumGetPayload<T> | Null>;
+    albums<T extends PhotosOnAlbumsFindManyArgs= {}>(args?: Subset<T, PhotosOnAlbumsFindManyArgs>): PrismaPromise<Array<PhotosOnAlbumsGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -2095,6 +2118,955 @@ export namespace Prisma {
 
 
   /**
+   * Model PhotosOnAlbums
+   */
+
+
+  export type AggregatePhotosOnAlbums = {
+    _count: PhotosOnAlbumsCountAggregateOutputType | null
+    _avg: PhotosOnAlbumsAvgAggregateOutputType | null
+    _sum: PhotosOnAlbumsSumAggregateOutputType | null
+    _min: PhotosOnAlbumsMinAggregateOutputType | null
+    _max: PhotosOnAlbumsMaxAggregateOutputType | null
+  }
+
+  export type PhotosOnAlbumsAvgAggregateOutputType = {
+    photoId: number | null
+    albumId: number | null
+  }
+
+  export type PhotosOnAlbumsSumAggregateOutputType = {
+    photoId: number | null
+    albumId: number | null
+  }
+
+  export type PhotosOnAlbumsMinAggregateOutputType = {
+    photoId: number | null
+    albumId: number | null
+    createdAt: Date | null
+  }
+
+  export type PhotosOnAlbumsMaxAggregateOutputType = {
+    photoId: number | null
+    albumId: number | null
+    createdAt: Date | null
+  }
+
+  export type PhotosOnAlbumsCountAggregateOutputType = {
+    photoId: number
+    albumId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PhotosOnAlbumsAvgAggregateInputType = {
+    photoId?: true
+    albumId?: true
+  }
+
+  export type PhotosOnAlbumsSumAggregateInputType = {
+    photoId?: true
+    albumId?: true
+  }
+
+  export type PhotosOnAlbumsMinAggregateInputType = {
+    photoId?: true
+    albumId?: true
+    createdAt?: true
+  }
+
+  export type PhotosOnAlbumsMaxAggregateInputType = {
+    photoId?: true
+    albumId?: true
+    createdAt?: true
+  }
+
+  export type PhotosOnAlbumsCountAggregateInputType = {
+    photoId?: true
+    albumId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PhotosOnAlbumsAggregateArgs = {
+    /**
+     * Filter which PhotosOnAlbums to aggregate.
+     * 
+    **/
+    where?: PhotosOnAlbumsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotosOnAlbums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PhotosOnAlbumsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: PhotosOnAlbumsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotosOnAlbums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotosOnAlbums.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PhotosOnAlbums
+    **/
+    _count?: true | PhotosOnAlbumsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PhotosOnAlbumsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PhotosOnAlbumsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PhotosOnAlbumsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PhotosOnAlbumsMaxAggregateInputType
+  }
+
+  export type GetPhotosOnAlbumsAggregateType<T extends PhotosOnAlbumsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePhotosOnAlbums]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePhotosOnAlbums[P]>
+      : GetScalarType<T[P], AggregatePhotosOnAlbums[P]>
+  }
+
+
+
+
+  export type PhotosOnAlbumsGroupByArgs = {
+    where?: PhotosOnAlbumsWhereInput
+    orderBy?: Enumerable<PhotosOnAlbumsOrderByWithAggregationInput>
+    by: Array<PhotosOnAlbumsScalarFieldEnum>
+    having?: PhotosOnAlbumsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PhotosOnAlbumsCountAggregateInputType | true
+    _avg?: PhotosOnAlbumsAvgAggregateInputType
+    _sum?: PhotosOnAlbumsSumAggregateInputType
+    _min?: PhotosOnAlbumsMinAggregateInputType
+    _max?: PhotosOnAlbumsMaxAggregateInputType
+  }
+
+
+  export type PhotosOnAlbumsGroupByOutputType = {
+    photoId: number
+    albumId: number
+    createdAt: Date
+    _count: PhotosOnAlbumsCountAggregateOutputType | null
+    _avg: PhotosOnAlbumsAvgAggregateOutputType | null
+    _sum: PhotosOnAlbumsSumAggregateOutputType | null
+    _min: PhotosOnAlbumsMinAggregateOutputType | null
+    _max: PhotosOnAlbumsMaxAggregateOutputType | null
+  }
+
+  type GetPhotosOnAlbumsGroupByPayload<T extends PhotosOnAlbumsGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<PhotosOnAlbumsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PhotosOnAlbumsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PhotosOnAlbumsGroupByOutputType[P]>
+            : GetScalarType<T[P], PhotosOnAlbumsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PhotosOnAlbumsSelect = {
+    photoId?: boolean
+    photo?: boolean | PhotoArgs
+    albumId?: boolean
+    album?: boolean | AlbumArgs
+    createdAt?: boolean
+  }
+
+
+  export type PhotosOnAlbumsInclude = {
+    photo?: boolean | PhotoArgs
+    album?: boolean | AlbumArgs
+  } 
+
+  export type PhotosOnAlbumsGetPayload<S extends boolean | null | undefined | PhotosOnAlbumsArgs, U = keyof S> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? PhotosOnAlbums :
+    S extends undefined ? never :
+    S extends { include: any } & (PhotosOnAlbumsArgs | PhotosOnAlbumsFindManyArgs)
+    ? PhotosOnAlbums  & {
+    [P in TrueKeys<S['include']>]:
+        P extends 'photo' ? PhotoGetPayload<Exclude<S['include'], undefined | null>[P]> :
+        P extends 'album' ? AlbumGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
+  } 
+    : S extends { select: any } & (PhotosOnAlbumsArgs | PhotosOnAlbumsFindManyArgs)
+      ? {
+    [P in TrueKeys<S['select']>]:
+        P extends 'photo' ? PhotoGetPayload<Exclude<S['select'], undefined | null>[P]> :
+        P extends 'album' ? AlbumGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof PhotosOnAlbums ? PhotosOnAlbums[P] : never
+  } 
+      : PhotosOnAlbums
+
+
+  type PhotosOnAlbumsCountArgs = Merge<
+    Omit<PhotosOnAlbumsFindManyArgs, 'select' | 'include'> & {
+      select?: PhotosOnAlbumsCountAggregateInputType | true
+    }
+  >
+
+  export interface PhotosOnAlbumsDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one PhotosOnAlbums that matches the filter.
+     * @param {PhotosOnAlbumsFindUniqueArgs} args - Arguments to find a PhotosOnAlbums
+     * @example
+     * // Get one PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends PhotosOnAlbumsFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, PhotosOnAlbumsFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'PhotosOnAlbums'> extends True ? Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>> : Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T> | null, null>
+
+    /**
+     * Find the first PhotosOnAlbums that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsFindFirstArgs} args - Arguments to find a PhotosOnAlbums
+     * @example
+     * // Get one PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends PhotosOnAlbumsFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, PhotosOnAlbumsFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'PhotosOnAlbums'> extends True ? Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>> : Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T> | null, null>
+
+    /**
+     * Find zero or more PhotosOnAlbums that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findMany()
+     * 
+     * // Get first 10 PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findMany({ take: 10 })
+     * 
+     * // Only select the `photoId`
+     * const photosOnAlbumsWithPhotoIdOnly = await prisma.photosOnAlbums.findMany({ select: { photoId: true } })
+     * 
+    **/
+    findMany<T extends PhotosOnAlbumsFindManyArgs>(
+      args?: SelectSubset<T, PhotosOnAlbumsFindManyArgs>
+    ): PrismaPromise<Array<PhotosOnAlbumsGetPayload<T>>>
+
+    /**
+     * Create a PhotosOnAlbums.
+     * @param {PhotosOnAlbumsCreateArgs} args - Arguments to create a PhotosOnAlbums.
+     * @example
+     * // Create one PhotosOnAlbums
+     * const PhotosOnAlbums = await prisma.photosOnAlbums.create({
+     *   data: {
+     *     // ... data to create a PhotosOnAlbums
+     *   }
+     * })
+     * 
+    **/
+    create<T extends PhotosOnAlbumsCreateArgs>(
+      args: SelectSubset<T, PhotosOnAlbumsCreateArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Create many PhotosOnAlbums.
+     *     @param {PhotosOnAlbumsCreateManyArgs} args - Arguments to create many PhotosOnAlbums.
+     *     @example
+     *     // Create many PhotosOnAlbums
+     *     const photosOnAlbums = await prisma.photosOnAlbums.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends PhotosOnAlbumsCreateManyArgs>(
+      args?: SelectSubset<T, PhotosOnAlbumsCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PhotosOnAlbums.
+     * @param {PhotosOnAlbumsDeleteArgs} args - Arguments to delete one PhotosOnAlbums.
+     * @example
+     * // Delete one PhotosOnAlbums
+     * const PhotosOnAlbums = await prisma.photosOnAlbums.delete({
+     *   where: {
+     *     // ... filter to delete one PhotosOnAlbums
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends PhotosOnAlbumsDeleteArgs>(
+      args: SelectSubset<T, PhotosOnAlbumsDeleteArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Update one PhotosOnAlbums.
+     * @param {PhotosOnAlbumsUpdateArgs} args - Arguments to update one PhotosOnAlbums.
+     * @example
+     * // Update one PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends PhotosOnAlbumsUpdateArgs>(
+      args: SelectSubset<T, PhotosOnAlbumsUpdateArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Delete zero or more PhotosOnAlbums.
+     * @param {PhotosOnAlbumsDeleteManyArgs} args - Arguments to filter PhotosOnAlbums to delete.
+     * @example
+     * // Delete a few PhotosOnAlbums
+     * const { count } = await prisma.photosOnAlbums.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends PhotosOnAlbumsDeleteManyArgs>(
+      args?: SelectSubset<T, PhotosOnAlbumsDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PhotosOnAlbums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends PhotosOnAlbumsUpdateManyArgs>(
+      args: SelectSubset<T, PhotosOnAlbumsUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PhotosOnAlbums.
+     * @param {PhotosOnAlbumsUpsertArgs} args - Arguments to update or create a PhotosOnAlbums.
+     * @example
+     * // Update or create a PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.upsert({
+     *   create: {
+     *     // ... data to create a PhotosOnAlbums
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PhotosOnAlbums we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends PhotosOnAlbumsUpsertArgs>(
+      args: SelectSubset<T, PhotosOnAlbumsUpsertArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Find one PhotosOnAlbums that matches the filter or throw
+     * `NotFoundError` if no matches were found.
+     * @param {PhotosOnAlbumsFindUniqueOrThrowArgs} args - Arguments to find a PhotosOnAlbums
+     * @example
+     * // Get one PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PhotosOnAlbumsFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PhotosOnAlbumsFindUniqueOrThrowArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Find the first PhotosOnAlbums that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsFindFirstOrThrowArgs} args - Arguments to find a PhotosOnAlbums
+     * @example
+     * // Get one PhotosOnAlbums
+     * const photosOnAlbums = await prisma.photosOnAlbums.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PhotosOnAlbumsFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PhotosOnAlbumsFindFirstOrThrowArgs>
+    ): Prisma__PhotosOnAlbumsClient<PhotosOnAlbumsGetPayload<T>>
+
+    /**
+     * Count the number of PhotosOnAlbums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsCountArgs} args - Arguments to filter PhotosOnAlbums to count.
+     * @example
+     * // Count the number of PhotosOnAlbums
+     * const count = await prisma.photosOnAlbums.count({
+     *   where: {
+     *     // ... the filter for the PhotosOnAlbums we want to count
+     *   }
+     * })
+    **/
+    count<T extends PhotosOnAlbumsCountArgs>(
+      args?: Subset<T, PhotosOnAlbumsCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PhotosOnAlbumsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PhotosOnAlbums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PhotosOnAlbumsAggregateArgs>(args: Subset<T, PhotosOnAlbumsAggregateArgs>): PrismaPromise<GetPhotosOnAlbumsAggregateType<T>>
+
+    /**
+     * Group by PhotosOnAlbums.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PhotosOnAlbumsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PhotosOnAlbumsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PhotosOnAlbumsGroupByArgs['orderBy'] }
+        : { orderBy?: PhotosOnAlbumsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PhotosOnAlbumsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPhotosOnAlbumsGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PhotosOnAlbums.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__PhotosOnAlbumsClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    photo<T extends PhotoArgs= {}>(args?: Subset<T, PhotoArgs>): Prisma__PhotoClient<PhotoGetPayload<T> | Null>;
+
+    album<T extends AlbumArgs= {}>(args?: Subset<T, AlbumArgs>): Prisma__AlbumClient<AlbumGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * PhotosOnAlbums base type for findUnique actions
+   */
+  export type PhotosOnAlbumsFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * Filter, which PhotosOnAlbums to fetch.
+     * 
+    **/
+    where: PhotosOnAlbumsWhereUniqueInput
+  }
+
+  /**
+   * PhotosOnAlbums: findUnique
+   */
+  export interface PhotosOnAlbumsFindUniqueArgs extends PhotosOnAlbumsFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * PhotosOnAlbums base type for findFirst actions
+   */
+  export type PhotosOnAlbumsFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * Filter, which PhotosOnAlbums to fetch.
+     * 
+    **/
+    where?: PhotosOnAlbumsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotosOnAlbums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PhotosOnAlbumsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PhotosOnAlbums.
+     * 
+    **/
+    cursor?: PhotosOnAlbumsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotosOnAlbums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotosOnAlbums.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PhotosOnAlbums.
+     * 
+    **/
+    distinct?: Enumerable<PhotosOnAlbumsScalarFieldEnum>
+  }
+
+  /**
+   * PhotosOnAlbums: findFirst
+   */
+  export interface PhotosOnAlbumsFindFirstArgs extends PhotosOnAlbumsFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * PhotosOnAlbums findMany
+   */
+  export type PhotosOnAlbumsFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * Filter, which PhotosOnAlbums to fetch.
+     * 
+    **/
+    where?: PhotosOnAlbumsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PhotosOnAlbums to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PhotosOnAlbumsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PhotosOnAlbums.
+     * 
+    **/
+    cursor?: PhotosOnAlbumsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PhotosOnAlbums from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PhotosOnAlbums.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<PhotosOnAlbumsScalarFieldEnum>
+  }
+
+
+  /**
+   * PhotosOnAlbums create
+   */
+  export type PhotosOnAlbumsCreateArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * The data needed to create a PhotosOnAlbums.
+     * 
+    **/
+    data: XOR<PhotosOnAlbumsCreateInput, PhotosOnAlbumsUncheckedCreateInput>
+  }
+
+
+  /**
+   * PhotosOnAlbums createMany
+   */
+  export type PhotosOnAlbumsCreateManyArgs = {
+    /**
+     * The data used to create many PhotosOnAlbums.
+     * 
+    **/
+    data: Enumerable<PhotosOnAlbumsCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * PhotosOnAlbums update
+   */
+  export type PhotosOnAlbumsUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * The data needed to update a PhotosOnAlbums.
+     * 
+    **/
+    data: XOR<PhotosOnAlbumsUpdateInput, PhotosOnAlbumsUncheckedUpdateInput>
+    /**
+     * Choose, which PhotosOnAlbums to update.
+     * 
+    **/
+    where: PhotosOnAlbumsWhereUniqueInput
+  }
+
+
+  /**
+   * PhotosOnAlbums updateMany
+   */
+  export type PhotosOnAlbumsUpdateManyArgs = {
+    /**
+     * The data used to update PhotosOnAlbums.
+     * 
+    **/
+    data: XOR<PhotosOnAlbumsUpdateManyMutationInput, PhotosOnAlbumsUncheckedUpdateManyInput>
+    /**
+     * Filter which PhotosOnAlbums to update
+     * 
+    **/
+    where?: PhotosOnAlbumsWhereInput
+  }
+
+
+  /**
+   * PhotosOnAlbums upsert
+   */
+  export type PhotosOnAlbumsUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * The filter to search for the PhotosOnAlbums to update in case it exists.
+     * 
+    **/
+    where: PhotosOnAlbumsWhereUniqueInput
+    /**
+     * In case the PhotosOnAlbums found by the `where` argument doesn't exist, create a new PhotosOnAlbums with this data.
+     * 
+    **/
+    create: XOR<PhotosOnAlbumsCreateInput, PhotosOnAlbumsUncheckedCreateInput>
+    /**
+     * In case the PhotosOnAlbums was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<PhotosOnAlbumsUpdateInput, PhotosOnAlbumsUncheckedUpdateInput>
+  }
+
+
+  /**
+   * PhotosOnAlbums delete
+   */
+  export type PhotosOnAlbumsDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+    /**
+     * Filter which PhotosOnAlbums to delete.
+     * 
+    **/
+    where: PhotosOnAlbumsWhereUniqueInput
+  }
+
+
+  /**
+   * PhotosOnAlbums deleteMany
+   */
+  export type PhotosOnAlbumsDeleteManyArgs = {
+    /**
+     * Filter which PhotosOnAlbums to delete
+     * 
+    **/
+    where?: PhotosOnAlbumsWhereInput
+  }
+
+
+  /**
+   * PhotosOnAlbums: findUniqueOrThrow
+   */
+  export type PhotosOnAlbumsFindUniqueOrThrowArgs = PhotosOnAlbumsFindUniqueArgsBase
+      
+
+  /**
+   * PhotosOnAlbums: findFirstOrThrow
+   */
+  export type PhotosOnAlbumsFindFirstOrThrowArgs = PhotosOnAlbumsFindFirstArgsBase
+      
+
+  /**
+   * PhotosOnAlbums without action
+   */
+  export type PhotosOnAlbumsArgs = {
+    /**
+     * Select specific fields to fetch from the PhotosOnAlbums
+     * 
+    **/
+    select?: PhotosOnAlbumsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PhotosOnAlbumsInclude | null
+  }
+
+
+
+  /**
    * Model Album
    */
 
@@ -2118,16 +3090,19 @@ export namespace Prisma {
   export type AlbumMinAggregateOutputType = {
     id: number | null
     name: string | null
+    createdAt: Date | null
   }
 
   export type AlbumMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    createdAt: Date | null
   }
 
   export type AlbumCountAggregateOutputType = {
     id: number
     name: number
+    createdAt: number
     _all: number
   }
 
@@ -2143,16 +3118,19 @@ export namespace Prisma {
   export type AlbumMinAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
   }
 
   export type AlbumMaxAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
   }
 
   export type AlbumCountAggregateInputType = {
     id?: true
     name?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -2251,6 +3229,7 @@ export namespace Prisma {
   export type AlbumGroupByOutputType = {
     id: number
     name: string
+    createdAt: Date
     _count: AlbumCountAggregateOutputType | null
     _avg: AlbumAvgAggregateOutputType | null
     _sum: AlbumSumAggregateOutputType | null
@@ -2275,13 +3254,14 @@ export namespace Prisma {
   export type AlbumSelect = {
     id?: boolean
     name?: boolean
-    photos?: boolean | PhotoFindManyArgs
+    photos?: boolean | PhotosOnAlbumsFindManyArgs
+    createdAt?: boolean
     _count?: boolean | AlbumCountOutputTypeArgs
   }
 
 
   export type AlbumInclude = {
-    photos?: boolean | PhotoFindManyArgs
+    photos?: boolean | PhotosOnAlbumsFindManyArgs
     _count?: boolean | AlbumCountOutputTypeArgs
   } 
 
@@ -2292,13 +3272,13 @@ export namespace Prisma {
     S extends { include: any } & (AlbumArgs | AlbumFindManyArgs)
     ? Album  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'photos' ? Array < PhotoGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
+        P extends 'photos' ? Array < PhotosOnAlbumsGetPayload<Exclude<S['include'], undefined | null>[P]>>  :
         P extends '_count' ? AlbumCountOutputTypeGetPayload<Exclude<S['include'], undefined | null>[P]> :  never
   } 
     : S extends { select: any } & (AlbumArgs | AlbumFindManyArgs)
       ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'photos' ? Array < PhotoGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
+        P extends 'photos' ? Array < PhotosOnAlbumsGetPayload<Exclude<S['select'], undefined | null>[P]>>  :
         P extends '_count' ? AlbumCountOutputTypeGetPayload<Exclude<S['select'], undefined | null>[P]> :  P extends keyof Album ? Album[P] : never
   } 
       : Album
@@ -2673,7 +3653,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    photos<T extends PhotoFindManyArgs= {}>(args?: Subset<T, PhotoFindManyArgs>): PrismaPromise<Array<PhotoGetPayload<T>>| Null>;
+    photos<T extends PhotosOnAlbumsFindManyArgs= {}>(args?: Subset<T, PhotosOnAlbumsFindManyArgs>): PrismaPromise<Array<PhotosOnAlbumsGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -3058,18 +4038,21 @@ export namespace Prisma {
     id: number | null
     photoId: number | null
     cartId: number | null
+    createdAt: Date | null
   }
 
   export type PurchaseMaxAggregateOutputType = {
     id: number | null
     photoId: number | null
     cartId: number | null
+    createdAt: Date | null
   }
 
   export type PurchaseCountAggregateOutputType = {
     id: number
     photoId: number
     cartId: number
+    createdAt: number
     _all: number
   }
 
@@ -3090,18 +4073,21 @@ export namespace Prisma {
     id?: true
     photoId?: true
     cartId?: true
+    createdAt?: true
   }
 
   export type PurchaseMaxAggregateInputType = {
     id?: true
     photoId?: true
     cartId?: true
+    createdAt?: true
   }
 
   export type PurchaseCountAggregateInputType = {
     id?: true
     photoId?: true
     cartId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3201,6 +4187,7 @@ export namespace Prisma {
     id: number
     photoId: number
     cartId: number
+    createdAt: Date
     _count: PurchaseCountAggregateOutputType | null
     _avg: PurchaseAvgAggregateOutputType | null
     _sum: PurchaseSumAggregateOutputType | null
@@ -3228,6 +4215,7 @@ export namespace Prisma {
     photo?: boolean | PhotoArgs
     cartId?: boolean
     cart?: boolean | CartArgs
+    createdAt?: boolean
   }
 
 
@@ -4009,18 +4997,21 @@ export namespace Prisma {
     id: number | null
     emailId: number | null
     alertForDate: Date | null
+    createdAt: Date | null
   }
 
   export type NotificationMaxAggregateOutputType = {
     id: number | null
     emailId: number | null
     alertForDate: Date | null
+    createdAt: Date | null
   }
 
   export type NotificationCountAggregateOutputType = {
     id: number
     emailId: number
     alertForDate: number
+    createdAt: number
     _all: number
   }
 
@@ -4039,18 +5030,21 @@ export namespace Prisma {
     id?: true
     emailId?: true
     alertForDate?: true
+    createdAt?: true
   }
 
   export type NotificationMaxAggregateInputType = {
     id?: true
     emailId?: true
     alertForDate?: true
+    createdAt?: true
   }
 
   export type NotificationCountAggregateInputType = {
     id?: true
     emailId?: true
     alertForDate?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -4150,6 +5144,7 @@ export namespace Prisma {
     id: number
     emailId: number
     alertForDate: Date
+    createdAt: Date
     _count: NotificationCountAggregateOutputType | null
     _avg: NotificationAvgAggregateOutputType | null
     _sum: NotificationSumAggregateOutputType | null
@@ -4176,6 +5171,7 @@ export namespace Prisma {
     emailId?: boolean
     email?: boolean | EmailArgs
     alertForDate?: boolean
+    createdAt?: boolean
   }
 
 
@@ -5910,16 +6906,19 @@ export namespace Prisma {
   export type EmailMinAggregateOutputType = {
     id: number | null
     email: string | null
+    createdAt: Date | null
   }
 
   export type EmailMaxAggregateOutputType = {
     id: number | null
     email: string | null
+    createdAt: Date | null
   }
 
   export type EmailCountAggregateOutputType = {
     id: number
     email: number
+    createdAt: number
     _all: number
   }
 
@@ -5935,16 +6934,19 @@ export namespace Prisma {
   export type EmailMinAggregateInputType = {
     id?: true
     email?: true
+    createdAt?: true
   }
 
   export type EmailMaxAggregateInputType = {
     id?: true
     email?: true
+    createdAt?: true
   }
 
   export type EmailCountAggregateInputType = {
     id?: true
     email?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -6043,6 +7045,7 @@ export namespace Prisma {
   export type EmailGroupByOutputType = {
     id: number
     email: string
+    createdAt: Date
     _count: EmailCountAggregateOutputType | null
     _avg: EmailAvgAggregateOutputType | null
     _sum: EmailSumAggregateOutputType | null
@@ -6069,6 +7072,7 @@ export namespace Prisma {
     email?: boolean
     purchases?: boolean | CartFindManyArgs
     notifications?: boolean | NotificationFindManyArgs
+    createdAt?: boolean
     _count?: boolean | EmailCountOutputTypeArgs
   }
 
@@ -6836,7 +7840,8 @@ export namespace Prisma {
 
   export const AlbumScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    createdAt: 'createdAt'
   };
 
   export type AlbumScalarFieldEnum = (typeof AlbumScalarFieldEnum)[keyof typeof AlbumScalarFieldEnum]
@@ -6854,7 +7859,8 @@ export namespace Prisma {
 
   export const EmailScalarFieldEnum: {
     id: 'id',
-    email: 'email'
+    email: 'email',
+    createdAt: 'createdAt'
   };
 
   export type EmailScalarFieldEnum = (typeof EmailScalarFieldEnum)[keyof typeof EmailScalarFieldEnum]
@@ -6863,7 +7869,8 @@ export namespace Prisma {
   export const NotificationScalarFieldEnum: {
     id: 'id',
     emailId: 'emailId',
-    alertForDate: 'alertForDate'
+    alertForDate: 'alertForDate',
+    createdAt: 'createdAt'
   };
 
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
@@ -6876,16 +7883,26 @@ export namespace Prisma {
     rawUrl: 'rawUrl',
     captureDate: 'captureDate',
     price: 'price',
-    albumId: 'albumId'
+    createdAt: 'createdAt'
   };
 
   export type PhotoScalarFieldEnum = (typeof PhotoScalarFieldEnum)[keyof typeof PhotoScalarFieldEnum]
 
 
+  export const PhotosOnAlbumsScalarFieldEnum: {
+    photoId: 'photoId',
+    albumId: 'albumId',
+    createdAt: 'createdAt'
+  };
+
+  export type PhotosOnAlbumsScalarFieldEnum = (typeof PhotosOnAlbumsScalarFieldEnum)[keyof typeof PhotosOnAlbumsScalarFieldEnum]
+
+
   export const PurchaseScalarFieldEnum: {
     id: 'id',
     photoId: 'photoId',
-    cartId: 'cartId'
+    cartId: 'cartId',
+    createdAt: 'createdAt'
   };
 
   export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
@@ -6933,8 +7950,8 @@ export namespace Prisma {
     captureDate?: DateTimeFilter | Date | string
     price?: IntFilter | number
     purchases?: PurchaseListRelationFilter
-    albumId?: IntNullableFilter | number | null
-    album?: XOR<AlbumRelationFilter, AlbumWhereInput> | null
+    albums?: PhotosOnAlbumsListRelationFilter
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type PhotoOrderByWithRelationInput = {
@@ -6945,8 +7962,8 @@ export namespace Prisma {
     captureDate?: SortOrder
     price?: SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
-    albumId?: SortOrder
-    album?: AlbumOrderByWithRelationInput
+    albums?: PhotosOnAlbumsOrderByRelationAggregateInput
+    createdAt?: SortOrder
   }
 
   export type PhotoWhereUniqueInput = {
@@ -6960,7 +7977,7 @@ export namespace Prisma {
     rawUrl?: SortOrder
     captureDate?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
+    createdAt?: SortOrder
     _count?: PhotoCountOrderByAggregateInput
     _avg?: PhotoAvgOrderByAggregateInput
     _max?: PhotoMaxOrderByAggregateInput
@@ -6978,7 +7995,50 @@ export namespace Prisma {
     rawUrl?: StringWithAggregatesFilter | string
     captureDate?: DateTimeWithAggregatesFilter | Date | string
     price?: IntWithAggregatesFilter | number
-    albumId?: IntNullableWithAggregatesFilter | number | null
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type PhotosOnAlbumsWhereInput = {
+    AND?: Enumerable<PhotosOnAlbumsWhereInput>
+    OR?: Enumerable<PhotosOnAlbumsWhereInput>
+    NOT?: Enumerable<PhotosOnAlbumsWhereInput>
+    photoId?: IntFilter | number
+    photo?: XOR<PhotoRelationFilter, PhotoWhereInput>
+    albumId?: IntFilter | number
+    album?: XOR<AlbumRelationFilter, AlbumWhereInput>
+    createdAt?: DateTimeFilter | Date | string
+  }
+
+  export type PhotosOnAlbumsOrderByWithRelationInput = {
+    photoId?: SortOrder
+    photo?: PhotoOrderByWithRelationInput
+    albumId?: SortOrder
+    album?: AlbumOrderByWithRelationInput
+    createdAt?: SortOrder
+  }
+
+  export type PhotosOnAlbumsWhereUniqueInput = {
+    photoId_albumId?: PhotosOnAlbumsPhotoIdAlbumIdCompoundUniqueInput
+  }
+
+  export type PhotosOnAlbumsOrderByWithAggregationInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
+    createdAt?: SortOrder
+    _count?: PhotosOnAlbumsCountOrderByAggregateInput
+    _avg?: PhotosOnAlbumsAvgOrderByAggregateInput
+    _max?: PhotosOnAlbumsMaxOrderByAggregateInput
+    _min?: PhotosOnAlbumsMinOrderByAggregateInput
+    _sum?: PhotosOnAlbumsSumOrderByAggregateInput
+  }
+
+  export type PhotosOnAlbumsScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<PhotosOnAlbumsScalarWhereWithAggregatesInput>
+    OR?: Enumerable<PhotosOnAlbumsScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<PhotosOnAlbumsScalarWhereWithAggregatesInput>
+    photoId?: IntWithAggregatesFilter | number
+    albumId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type AlbumWhereInput = {
@@ -6987,13 +8047,15 @@ export namespace Prisma {
     NOT?: Enumerable<AlbumWhereInput>
     id?: IntFilter | number
     name?: StringFilter | string
-    photos?: PhotoListRelationFilter
+    photos?: PhotosOnAlbumsListRelationFilter
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type AlbumOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    photos?: PhotoOrderByRelationAggregateInput
+    photos?: PhotosOnAlbumsOrderByRelationAggregateInput
+    createdAt?: SortOrder
   }
 
   export type AlbumWhereUniqueInput = {
@@ -7003,6 +8065,7 @@ export namespace Prisma {
   export type AlbumOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
     _count?: AlbumCountOrderByAggregateInput
     _avg?: AlbumAvgOrderByAggregateInput
     _max?: AlbumMaxOrderByAggregateInput
@@ -7016,6 +8079,7 @@ export namespace Prisma {
     NOT?: Enumerable<AlbumScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
     name?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type PurchaseWhereInput = {
@@ -7027,6 +8091,7 @@ export namespace Prisma {
     photo?: XOR<PhotoRelationFilter, PhotoWhereInput>
     cartId?: IntFilter | number
     cart?: XOR<CartRelationFilter, CartWhereInput>
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type PurchaseOrderByWithRelationInput = {
@@ -7035,6 +8100,7 @@ export namespace Prisma {
     photo?: PhotoOrderByWithRelationInput
     cartId?: SortOrder
     cart?: CartOrderByWithRelationInput
+    createdAt?: SortOrder
   }
 
   export type PurchaseWhereUniqueInput = {
@@ -7045,6 +8111,7 @@ export namespace Prisma {
     id?: SortOrder
     photoId?: SortOrder
     cartId?: SortOrder
+    createdAt?: SortOrder
     _count?: PurchaseCountOrderByAggregateInput
     _avg?: PurchaseAvgOrderByAggregateInput
     _max?: PurchaseMaxOrderByAggregateInput
@@ -7059,6 +8126,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     photoId?: IntWithAggregatesFilter | number
     cartId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type NotificationWhereInput = {
@@ -7069,6 +8137,7 @@ export namespace Prisma {
     emailId?: IntFilter | number
     email?: XOR<EmailRelationFilter, EmailWhereInput>
     alertForDate?: DateTimeFilter | Date | string
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type NotificationOrderByWithRelationInput = {
@@ -7076,6 +8145,7 @@ export namespace Prisma {
     emailId?: SortOrder
     email?: EmailOrderByWithRelationInput
     alertForDate?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationWhereUniqueInput = {
@@ -7087,6 +8157,7 @@ export namespace Prisma {
     id?: SortOrder
     emailId?: SortOrder
     alertForDate?: SortOrder
+    createdAt?: SortOrder
     _count?: NotificationCountOrderByAggregateInput
     _avg?: NotificationAvgOrderByAggregateInput
     _max?: NotificationMaxOrderByAggregateInput
@@ -7101,6 +8172,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     emailId?: IntWithAggregatesFilter | number
     alertForDate?: DateTimeWithAggregatesFilter | Date | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type CartWhereInput = {
@@ -7159,6 +8231,7 @@ export namespace Prisma {
     email?: StringFilter | string
     purchases?: CartListRelationFilter
     notifications?: NotificationListRelationFilter
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type EmailOrderByWithRelationInput = {
@@ -7166,6 +8239,7 @@ export namespace Prisma {
     email?: SortOrder
     purchases?: CartOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
+    createdAt?: SortOrder
   }
 
   export type EmailWhereUniqueInput = {
@@ -7176,6 +8250,7 @@ export namespace Prisma {
   export type EmailOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
+    createdAt?: SortOrder
     _count?: EmailCountOrderByAggregateInput
     _avg?: EmailAvgOrderByAggregateInput
     _max?: EmailMaxOrderByAggregateInput
@@ -7189,6 +8264,7 @@ export namespace Prisma {
     NOT?: Enumerable<EmailScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
     email?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type PhotoCreateInput = {
@@ -7198,7 +8274,8 @@ export namespace Prisma {
     captureDate: Date | string
     price: number
     purchases?: PurchaseCreateNestedManyWithoutPhotoInput
-    album?: AlbumCreateNestedOneWithoutPhotosInput
+    albums?: PhotosOnAlbumsCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
   }
 
   export type PhotoUncheckedCreateInput = {
@@ -7209,7 +8286,8 @@ export namespace Prisma {
     captureDate: Date | string
     price: number
     purchases?: PurchaseUncheckedCreateNestedManyWithoutPhotoInput
-    albumId?: number | null
+    albums?: PhotosOnAlbumsUncheckedCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
   }
 
   export type PhotoUpdateInput = {
@@ -7219,7 +8297,8 @@ export namespace Prisma {
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
     purchases?: PurchaseUpdateManyWithoutPhotoNestedInput
-    album?: AlbumUpdateOneWithoutPhotosNestedInput
+    albums?: PhotosOnAlbumsUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateInput = {
@@ -7230,7 +8309,8 @@ export namespace Prisma {
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
     purchases?: PurchaseUncheckedUpdateManyWithoutPhotoNestedInput
-    albumId?: NullableIntFieldUpdateOperationsInput | number | null
+    albums?: PhotosOnAlbumsUncheckedUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoCreateManyInput = {
@@ -7240,7 +8320,7 @@ export namespace Prisma {
     rawUrl: string
     captureDate: Date | string
     price: number
-    albumId?: number | null
+    createdAt?: Date | string
   }
 
   export type PhotoUpdateManyMutationInput = {
@@ -7249,6 +8329,7 @@ export namespace Prisma {
     rawUrl?: StringFieldUpdateOperationsInput | string
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateManyInput = {
@@ -7258,119 +8339,179 @@ export namespace Prisma {
     rawUrl?: StringFieldUpdateOperationsInput | string
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
-    albumId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsCreateInput = {
+    photo: PhotoCreateNestedOneWithoutAlbumsInput
+    album: AlbumCreateNestedOneWithoutPhotosInput
+    createdAt?: Date | string
+  }
+
+  export type PhotosOnAlbumsUncheckedCreateInput = {
+    photoId: number
+    albumId: number
+    createdAt?: Date | string
+  }
+
+  export type PhotosOnAlbumsUpdateInput = {
+    photo?: PhotoUpdateOneRequiredWithoutAlbumsNestedInput
+    album?: AlbumUpdateOneRequiredWithoutPhotosNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsUncheckedUpdateInput = {
+    photoId?: IntFieldUpdateOperationsInput | number
+    albumId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsCreateManyInput = {
+    photoId: number
+    albumId: number
+    createdAt?: Date | string
+  }
+
+  export type PhotosOnAlbumsUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsUncheckedUpdateManyInput = {
+    photoId?: IntFieldUpdateOperationsInput | number
+    albumId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumCreateInput = {
     name: string
-    photos?: PhotoCreateNestedManyWithoutAlbumInput
+    photos?: PhotosOnAlbumsCreateNestedManyWithoutAlbumInput
+    createdAt?: Date | string
   }
 
   export type AlbumUncheckedCreateInput = {
     id?: number
     name: string
-    photos?: PhotoUncheckedCreateNestedManyWithoutAlbumInput
+    photos?: PhotosOnAlbumsUncheckedCreateNestedManyWithoutAlbumInput
+    createdAt?: Date | string
   }
 
   export type AlbumUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    photos?: PhotoUpdateManyWithoutAlbumNestedInput
+    photos?: PhotosOnAlbumsUpdateManyWithoutAlbumNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    photos?: PhotoUncheckedUpdateManyWithoutAlbumNestedInput
+    photos?: PhotosOnAlbumsUncheckedUpdateManyWithoutAlbumNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumCreateManyInput = {
     id?: number
     name: string
+    createdAt?: Date | string
   }
 
   export type AlbumUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateInput = {
     photo: PhotoCreateNestedOneWithoutPurchasesInput
     cart: CartCreateNestedOneWithoutPurchasesInput
+    createdAt?: Date | string
   }
 
   export type PurchaseUncheckedCreateInput = {
     id?: number
     photoId: number
     cartId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateInput = {
     photo?: PhotoUpdateOneRequiredWithoutPurchasesNestedInput
     cart?: CartUpdateOneRequiredWithoutPurchasesNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     photoId?: IntFieldUpdateOperationsInput | number
     cartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateManyInput = {
     id?: number
     photoId: number
     cartId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateManyMutationInput = {
-
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     photoId?: IntFieldUpdateOperationsInput | number
     cartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationCreateInput = {
     email: EmailCreateNestedOneWithoutNotificationsInput
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type NotificationUncheckedCreateInput = {
     id?: number
     emailId: number
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type NotificationUpdateInput = {
     email?: EmailUpdateOneRequiredWithoutNotificationsNestedInput
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     emailId?: IntFieldUpdateOperationsInput | number
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationCreateManyInput = {
     id?: number
     emailId: number
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type NotificationUpdateManyMutationInput = {
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     emailId?: IntFieldUpdateOperationsInput | number
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartCreateInput = {
@@ -7426,6 +8567,7 @@ export namespace Prisma {
     email: string
     purchases?: CartCreateNestedManyWithoutEmailInput
     notifications?: NotificationCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailUncheckedCreateInput = {
@@ -7433,12 +8575,14 @@ export namespace Prisma {
     email: string
     purchases?: CartUncheckedCreateNestedManyWithoutEmailInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
     purchases?: CartUpdateManyWithoutEmailNestedInput
     notifications?: NotificationUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailUncheckedUpdateInput = {
@@ -7446,20 +8590,24 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     purchases?: CartUncheckedUpdateManyWithoutEmailNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailCreateManyInput = {
     id?: number
     email: string
+    createdAt?: Date | string
   }
 
   export type EmailUpdateManyMutationInput = {
     email?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter = {
@@ -7505,23 +8653,17 @@ export namespace Prisma {
     none?: PurchaseWhereInput
   }
 
-  export type IntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
-  }
-
-  export type AlbumRelationFilter = {
-    is?: AlbumWhereInput | null
-    isNot?: AlbumWhereInput | null
+  export type PhotosOnAlbumsListRelationFilter = {
+    every?: PhotosOnAlbumsWhereInput
+    some?: PhotosOnAlbumsWhereInput
+    none?: PhotosOnAlbumsWhereInput
   }
 
   export type PurchaseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PhotosOnAlbumsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7532,13 +8674,12 @@ export namespace Prisma {
     rawUrl?: SortOrder
     captureDate?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PhotoAvgOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
   }
 
   export type PhotoMaxOrderByAggregateInput = {
@@ -7548,7 +8689,7 @@ export namespace Prisma {
     rawUrl?: SortOrder
     captureDate?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PhotoMinOrderByAggregateInput = {
@@ -7558,13 +8699,12 @@ export namespace Prisma {
     rawUrl?: SortOrder
     captureDate?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PhotoSumOrderByAggregateInput = {
     id?: SortOrder
     price?: SortOrder
-    albumId?: SortOrder
   }
 
   export type IntWithAggregatesFilter = {
@@ -7615,35 +8755,53 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
-  export type IntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
+  export type PhotoRelationFilter = {
+    is?: PhotoWhereInput
+    isNot?: PhotoWhereInput
   }
 
-  export type PhotoListRelationFilter = {
-    every?: PhotoWhereInput
-    some?: PhotoWhereInput
-    none?: PhotoWhereInput
+  export type AlbumRelationFilter = {
+    is?: AlbumWhereInput
+    isNot?: AlbumWhereInput
   }
 
-  export type PhotoOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type PhotosOnAlbumsPhotoIdAlbumIdCompoundUniqueInput = {
+    photoId: number
+    albumId: number
+  }
+
+  export type PhotosOnAlbumsCountOrderByAggregateInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PhotosOnAlbumsAvgOrderByAggregateInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
+  }
+
+  export type PhotosOnAlbumsMaxOrderByAggregateInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PhotosOnAlbumsMinOrderByAggregateInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PhotosOnAlbumsSumOrderByAggregateInput = {
+    photoId?: SortOrder
+    albumId?: SortOrder
   }
 
   export type AlbumCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type AlbumAvgOrderByAggregateInput = {
@@ -7653,20 +8811,17 @@ export namespace Prisma {
   export type AlbumMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type AlbumMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type AlbumSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type PhotoRelationFilter = {
-    is?: PhotoWhereInput
-    isNot?: PhotoWhereInput
   }
 
   export type CartRelationFilter = {
@@ -7678,6 +8833,7 @@ export namespace Prisma {
     id?: SortOrder
     photoId?: SortOrder
     cartId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseAvgOrderByAggregateInput = {
@@ -7690,12 +8846,14 @@ export namespace Prisma {
     id?: SortOrder
     photoId?: SortOrder
     cartId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseMinOrderByAggregateInput = {
     id?: SortOrder
     photoId?: SortOrder
     cartId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseSumOrderByAggregateInput = {
@@ -7718,6 +8876,7 @@ export namespace Prisma {
     id?: SortOrder
     emailId?: SortOrder
     alertForDate?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationAvgOrderByAggregateInput = {
@@ -7729,12 +8888,14 @@ export namespace Prisma {
     id?: SortOrder
     emailId?: SortOrder
     alertForDate?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationMinOrderByAggregateInput = {
     id?: SortOrder
     emailId?: SortOrder
     alertForDate?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type NotificationSumOrderByAggregateInput = {
@@ -7796,6 +8957,7 @@ export namespace Prisma {
   export type EmailCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EmailAvgOrderByAggregateInput = {
@@ -7805,11 +8967,13 @@ export namespace Prisma {
   export type EmailMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EmailMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EmailSumOrderByAggregateInput = {
@@ -7823,10 +8987,11 @@ export namespace Prisma {
     connect?: Enumerable<PurchaseWhereUniqueInput>
   }
 
-  export type AlbumCreateNestedOneWithoutPhotosInput = {
-    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
-    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
-    connect?: AlbumWhereUniqueInput
+  export type PhotosOnAlbumsCreateNestedManyWithoutPhotoInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutPhotoInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>
+    createMany?: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
   }
 
   export type PurchaseUncheckedCreateNestedManyWithoutPhotoInput = {
@@ -7834,6 +8999,13 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<PurchaseCreateOrConnectWithoutPhotoInput>
     createMany?: PurchaseCreateManyPhotoInputEnvelope
     connect?: Enumerable<PurchaseWhereUniqueInput>
+  }
+
+  export type PhotosOnAlbumsUncheckedCreateNestedManyWithoutPhotoInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutPhotoInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>
+    createMany?: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7866,14 +9038,18 @@ export namespace Prisma {
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
   }
 
-  export type AlbumUpdateOneWithoutPhotosNestedInput = {
-    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
-    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
-    upsert?: AlbumUpsertWithoutPhotosInput
-    disconnect?: boolean
-    delete?: boolean
-    connect?: AlbumWhereUniqueInput
-    update?: XOR<AlbumUpdateWithoutPhotosInput, AlbumUncheckedUpdateWithoutPhotosInput>
+  export type PhotosOnAlbumsUpdateManyWithoutPhotoNestedInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutPhotoInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>
+    upsert?: Enumerable<PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput>
+    createMany?: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+    set?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    disconnect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    delete?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    update?: Enumerable<PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput>
+    updateMany?: Enumerable<PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput>
+    deleteMany?: Enumerable<PhotosOnAlbumsScalarWhereInput>
   }
 
   export type PurchaseUncheckedUpdateManyWithoutPhotoNestedInput = {
@@ -7890,54 +9066,88 @@ export namespace Prisma {
     deleteMany?: Enumerable<PurchaseScalarWhereInput>
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type PhotosOnAlbumsUncheckedUpdateManyWithoutPhotoNestedInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutPhotoInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutPhotoInput>
+    upsert?: Enumerable<PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput>
+    createMany?: PhotosOnAlbumsCreateManyPhotoInputEnvelope
+    set?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    disconnect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    delete?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    update?: Enumerable<PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput>
+    updateMany?: Enumerable<PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput>
+    deleteMany?: Enumerable<PhotosOnAlbumsScalarWhereInput>
   }
 
-  export type PhotoCreateNestedManyWithoutAlbumInput = {
-    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
-    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
-    createMany?: PhotoCreateManyAlbumInputEnvelope
-    connect?: Enumerable<PhotoWhereUniqueInput>
+  export type PhotoCreateNestedOneWithoutAlbumsInput = {
+    create?: XOR<PhotoCreateWithoutAlbumsInput, PhotoUncheckedCreateWithoutAlbumsInput>
+    connectOrCreate?: PhotoCreateOrConnectWithoutAlbumsInput
+    connect?: PhotoWhereUniqueInput
   }
 
-  export type PhotoUncheckedCreateNestedManyWithoutAlbumInput = {
-    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
-    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
-    createMany?: PhotoCreateManyAlbumInputEnvelope
-    connect?: Enumerable<PhotoWhereUniqueInput>
+  export type AlbumCreateNestedOneWithoutPhotosInput = {
+    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
+    connect?: AlbumWhereUniqueInput
   }
 
-  export type PhotoUpdateManyWithoutAlbumNestedInput = {
-    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
-    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
-    upsert?: Enumerable<PhotoUpsertWithWhereUniqueWithoutAlbumInput>
-    createMany?: PhotoCreateManyAlbumInputEnvelope
-    set?: Enumerable<PhotoWhereUniqueInput>
-    disconnect?: Enumerable<PhotoWhereUniqueInput>
-    delete?: Enumerable<PhotoWhereUniqueInput>
-    connect?: Enumerable<PhotoWhereUniqueInput>
-    update?: Enumerable<PhotoUpdateWithWhereUniqueWithoutAlbumInput>
-    updateMany?: Enumerable<PhotoUpdateManyWithWhereWithoutAlbumInput>
-    deleteMany?: Enumerable<PhotoScalarWhereInput>
+  export type PhotoUpdateOneRequiredWithoutAlbumsNestedInput = {
+    create?: XOR<PhotoCreateWithoutAlbumsInput, PhotoUncheckedCreateWithoutAlbumsInput>
+    connectOrCreate?: PhotoCreateOrConnectWithoutAlbumsInput
+    upsert?: PhotoUpsertWithoutAlbumsInput
+    connect?: PhotoWhereUniqueInput
+    update?: XOR<PhotoUpdateWithoutAlbumsInput, PhotoUncheckedUpdateWithoutAlbumsInput>
   }
 
-  export type PhotoUncheckedUpdateManyWithoutAlbumNestedInput = {
-    create?: XOR<Enumerable<PhotoCreateWithoutAlbumInput>, Enumerable<PhotoUncheckedCreateWithoutAlbumInput>>
-    connectOrCreate?: Enumerable<PhotoCreateOrConnectWithoutAlbumInput>
-    upsert?: Enumerable<PhotoUpsertWithWhereUniqueWithoutAlbumInput>
-    createMany?: PhotoCreateManyAlbumInputEnvelope
-    set?: Enumerable<PhotoWhereUniqueInput>
-    disconnect?: Enumerable<PhotoWhereUniqueInput>
-    delete?: Enumerable<PhotoWhereUniqueInput>
-    connect?: Enumerable<PhotoWhereUniqueInput>
-    update?: Enumerable<PhotoUpdateWithWhereUniqueWithoutAlbumInput>
-    updateMany?: Enumerable<PhotoUpdateManyWithWhereWithoutAlbumInput>
-    deleteMany?: Enumerable<PhotoScalarWhereInput>
+  export type AlbumUpdateOneRequiredWithoutPhotosNestedInput = {
+    create?: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+    connectOrCreate?: AlbumCreateOrConnectWithoutPhotosInput
+    upsert?: AlbumUpsertWithoutPhotosInput
+    connect?: AlbumWhereUniqueInput
+    update?: XOR<AlbumUpdateWithoutPhotosInput, AlbumUncheckedUpdateWithoutPhotosInput>
+  }
+
+  export type PhotosOnAlbumsCreateNestedManyWithoutAlbumInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutAlbumInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>
+    createMany?: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+  }
+
+  export type PhotosOnAlbumsUncheckedCreateNestedManyWithoutAlbumInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutAlbumInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>
+    createMany?: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+  }
+
+  export type PhotosOnAlbumsUpdateManyWithoutAlbumNestedInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutAlbumInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>
+    upsert?: Enumerable<PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput>
+    createMany?: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+    set?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    disconnect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    delete?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    update?: Enumerable<PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput>
+    updateMany?: Enumerable<PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput>
+    deleteMany?: Enumerable<PhotosOnAlbumsScalarWhereInput>
+  }
+
+  export type PhotosOnAlbumsUncheckedUpdateManyWithoutAlbumNestedInput = {
+    create?: XOR<Enumerable<PhotosOnAlbumsCreateWithoutAlbumInput>, Enumerable<PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>>
+    connectOrCreate?: Enumerable<PhotosOnAlbumsCreateOrConnectWithoutAlbumInput>
+    upsert?: Enumerable<PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput>
+    createMany?: PhotosOnAlbumsCreateManyAlbumInputEnvelope
+    set?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    disconnect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    delete?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    connect?: Enumerable<PhotosOnAlbumsWhereUniqueInput>
+    update?: Enumerable<PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput>
+    updateMany?: Enumerable<PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput>
+    deleteMany?: Enumerable<PhotosOnAlbumsScalarWhereInput>
   }
 
   export type PhotoCreateNestedOneWithoutPurchasesInput = {
@@ -8158,17 +9368,6 @@ export namespace Prisma {
     not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedIntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
-  }
-
   export type NestedIntWithAggregatesFilter = {
     equals?: number
     in?: Enumerable<number>
@@ -8227,40 +9426,15 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter
   }
 
-  export type NestedIntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
-  }
-
-  export type NestedFloatNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedFloatNullableFilter | number | null
-  }
-
   export type PurchaseCreateWithoutPhotoInput = {
     cart: CartCreateNestedOneWithoutPurchasesInput
+    createdAt?: Date | string
   }
 
   export type PurchaseUncheckedCreateWithoutPhotoInput = {
     id?: number
     cartId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseCreateOrConnectWithoutPhotoInput = {
@@ -8273,18 +9447,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type AlbumCreateWithoutPhotosInput = {
-    name: string
+  export type PhotosOnAlbumsCreateWithoutPhotoInput = {
+    album: AlbumCreateNestedOneWithoutPhotosInput
+    createdAt?: Date | string
   }
 
-  export type AlbumUncheckedCreateWithoutPhotosInput = {
-    id?: number
-    name: string
+  export type PhotosOnAlbumsUncheckedCreateWithoutPhotoInput = {
+    albumId: number
+    createdAt?: Date | string
   }
 
-  export type AlbumCreateOrConnectWithoutPhotosInput = {
-    where: AlbumWhereUniqueInput
-    create: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+  export type PhotosOnAlbumsCreateOrConnectWithoutPhotoInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    create: XOR<PhotosOnAlbumsCreateWithoutPhotoInput, PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>
+  }
+
+  export type PhotosOnAlbumsCreateManyPhotoInputEnvelope = {
+    data: Enumerable<PhotosOnAlbumsCreateManyPhotoInput>
+    skipDuplicates?: boolean
   }
 
   export type PurchaseUpsertWithWhereUniqueWithoutPhotoInput = {
@@ -8310,6 +9490,100 @@ export namespace Prisma {
     id?: IntFilter | number
     photoId?: IntFilter | number
     cartId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+  }
+
+  export type PhotosOnAlbumsUpsertWithWhereUniqueWithoutPhotoInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    update: XOR<PhotosOnAlbumsUpdateWithoutPhotoInput, PhotosOnAlbumsUncheckedUpdateWithoutPhotoInput>
+    create: XOR<PhotosOnAlbumsCreateWithoutPhotoInput, PhotosOnAlbumsUncheckedCreateWithoutPhotoInput>
+  }
+
+  export type PhotosOnAlbumsUpdateWithWhereUniqueWithoutPhotoInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    data: XOR<PhotosOnAlbumsUpdateWithoutPhotoInput, PhotosOnAlbumsUncheckedUpdateWithoutPhotoInput>
+  }
+
+  export type PhotosOnAlbumsUpdateManyWithWhereWithoutPhotoInput = {
+    where: PhotosOnAlbumsScalarWhereInput
+    data: XOR<PhotosOnAlbumsUpdateManyMutationInput, PhotosOnAlbumsUncheckedUpdateManyWithoutAlbumsInput>
+  }
+
+  export type PhotosOnAlbumsScalarWhereInput = {
+    AND?: Enumerable<PhotosOnAlbumsScalarWhereInput>
+    OR?: Enumerable<PhotosOnAlbumsScalarWhereInput>
+    NOT?: Enumerable<PhotosOnAlbumsScalarWhereInput>
+    photoId?: IntFilter | number
+    albumId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+  }
+
+  export type PhotoCreateWithoutAlbumsInput = {
+    previewUrl: string
+    fullUrl: string
+    rawUrl: string
+    captureDate: Date | string
+    price: number
+    purchases?: PurchaseCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
+  }
+
+  export type PhotoUncheckedCreateWithoutAlbumsInput = {
+    id?: number
+    previewUrl: string
+    fullUrl: string
+    rawUrl: string
+    captureDate: Date | string
+    price: number
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
+  }
+
+  export type PhotoCreateOrConnectWithoutAlbumsInput = {
+    where: PhotoWhereUniqueInput
+    create: XOR<PhotoCreateWithoutAlbumsInput, PhotoUncheckedCreateWithoutAlbumsInput>
+  }
+
+  export type AlbumCreateWithoutPhotosInput = {
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type AlbumUncheckedCreateWithoutPhotosInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type AlbumCreateOrConnectWithoutPhotosInput = {
+    where: AlbumWhereUniqueInput
+    create: XOR<AlbumCreateWithoutPhotosInput, AlbumUncheckedCreateWithoutPhotosInput>
+  }
+
+  export type PhotoUpsertWithoutAlbumsInput = {
+    update: XOR<PhotoUpdateWithoutAlbumsInput, PhotoUncheckedUpdateWithoutAlbumsInput>
+    create: XOR<PhotoCreateWithoutAlbumsInput, PhotoUncheckedCreateWithoutAlbumsInput>
+  }
+
+  export type PhotoUpdateWithoutAlbumsInput = {
+    previewUrl?: StringFieldUpdateOperationsInput | string
+    fullUrl?: StringFieldUpdateOperationsInput | string
+    rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    purchases?: PurchaseUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotoUncheckedUpdateWithoutAlbumsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    previewUrl?: StringFieldUpdateOperationsInput | string
+    fullUrl?: StringFieldUpdateOperationsInput | string
+    rawUrl?: StringFieldUpdateOperationsInput | string
+    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    price?: IntFieldUpdateOperationsInput | number
+    purchases?: PurchaseUncheckedUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumUpsertWithoutPhotosInput = {
@@ -8319,69 +9593,49 @@ export namespace Prisma {
 
   export type AlbumUpdateWithoutPhotosInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AlbumUncheckedUpdateWithoutPhotosInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PhotoCreateWithoutAlbumInput = {
-    previewUrl: string
-    fullUrl: string
-    rawUrl: string
-    captureDate: Date | string
-    price: number
-    purchases?: PurchaseCreateNestedManyWithoutPhotoInput
+  export type PhotosOnAlbumsCreateWithoutAlbumInput = {
+    photo: PhotoCreateNestedOneWithoutAlbumsInput
+    createdAt?: Date | string
   }
 
-  export type PhotoUncheckedCreateWithoutAlbumInput = {
-    id?: number
-    previewUrl: string
-    fullUrl: string
-    rawUrl: string
-    captureDate: Date | string
-    price: number
-    purchases?: PurchaseUncheckedCreateNestedManyWithoutPhotoInput
+  export type PhotosOnAlbumsUncheckedCreateWithoutAlbumInput = {
+    photoId: number
+    createdAt?: Date | string
   }
 
-  export type PhotoCreateOrConnectWithoutAlbumInput = {
-    where: PhotoWhereUniqueInput
-    create: XOR<PhotoCreateWithoutAlbumInput, PhotoUncheckedCreateWithoutAlbumInput>
+  export type PhotosOnAlbumsCreateOrConnectWithoutAlbumInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    create: XOR<PhotosOnAlbumsCreateWithoutAlbumInput, PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>
   }
 
-  export type PhotoCreateManyAlbumInputEnvelope = {
-    data: Enumerable<PhotoCreateManyAlbumInput>
+  export type PhotosOnAlbumsCreateManyAlbumInputEnvelope = {
+    data: Enumerable<PhotosOnAlbumsCreateManyAlbumInput>
     skipDuplicates?: boolean
   }
 
-  export type PhotoUpsertWithWhereUniqueWithoutAlbumInput = {
-    where: PhotoWhereUniqueInput
-    update: XOR<PhotoUpdateWithoutAlbumInput, PhotoUncheckedUpdateWithoutAlbumInput>
-    create: XOR<PhotoCreateWithoutAlbumInput, PhotoUncheckedCreateWithoutAlbumInput>
+  export type PhotosOnAlbumsUpsertWithWhereUniqueWithoutAlbumInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    update: XOR<PhotosOnAlbumsUpdateWithoutAlbumInput, PhotosOnAlbumsUncheckedUpdateWithoutAlbumInput>
+    create: XOR<PhotosOnAlbumsCreateWithoutAlbumInput, PhotosOnAlbumsUncheckedCreateWithoutAlbumInput>
   }
 
-  export type PhotoUpdateWithWhereUniqueWithoutAlbumInput = {
-    where: PhotoWhereUniqueInput
-    data: XOR<PhotoUpdateWithoutAlbumInput, PhotoUncheckedUpdateWithoutAlbumInput>
+  export type PhotosOnAlbumsUpdateWithWhereUniqueWithoutAlbumInput = {
+    where: PhotosOnAlbumsWhereUniqueInput
+    data: XOR<PhotosOnAlbumsUpdateWithoutAlbumInput, PhotosOnAlbumsUncheckedUpdateWithoutAlbumInput>
   }
 
-  export type PhotoUpdateManyWithWhereWithoutAlbumInput = {
-    where: PhotoScalarWhereInput
-    data: XOR<PhotoUpdateManyMutationInput, PhotoUncheckedUpdateManyWithoutPhotosInput>
-  }
-
-  export type PhotoScalarWhereInput = {
-    AND?: Enumerable<PhotoScalarWhereInput>
-    OR?: Enumerable<PhotoScalarWhereInput>
-    NOT?: Enumerable<PhotoScalarWhereInput>
-    id?: IntFilter | number
-    previewUrl?: StringFilter | string
-    fullUrl?: StringFilter | string
-    rawUrl?: StringFilter | string
-    captureDate?: DateTimeFilter | Date | string
-    price?: IntFilter | number
-    albumId?: IntNullableFilter | number | null
+  export type PhotosOnAlbumsUpdateManyWithWhereWithoutAlbumInput = {
+    where: PhotosOnAlbumsScalarWhereInput
+    data: XOR<PhotosOnAlbumsUpdateManyMutationInput, PhotosOnAlbumsUncheckedUpdateManyWithoutPhotosInput>
   }
 
   export type PhotoCreateWithoutPurchasesInput = {
@@ -8390,7 +9644,8 @@ export namespace Prisma {
     rawUrl: string
     captureDate: Date | string
     price: number
-    album?: AlbumCreateNestedOneWithoutPhotosInput
+    albums?: PhotosOnAlbumsCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
   }
 
   export type PhotoUncheckedCreateWithoutPurchasesInput = {
@@ -8400,7 +9655,8 @@ export namespace Prisma {
     rawUrl: string
     captureDate: Date | string
     price: number
-    albumId?: number | null
+    albums?: PhotosOnAlbumsUncheckedCreateNestedManyWithoutPhotoInput
+    createdAt?: Date | string
   }
 
   export type PhotoCreateOrConnectWithoutPurchasesInput = {
@@ -8437,7 +9693,8 @@ export namespace Prisma {
     rawUrl?: StringFieldUpdateOperationsInput | string
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
-    album?: AlbumUpdateOneWithoutPhotosNestedInput
+    albums?: PhotosOnAlbumsUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PhotoUncheckedUpdateWithoutPurchasesInput = {
@@ -8447,7 +9704,8 @@ export namespace Prisma {
     rawUrl?: StringFieldUpdateOperationsInput | string
     captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
     price?: IntFieldUpdateOperationsInput | number
-    albumId?: NullableIntFieldUpdateOperationsInput | number | null
+    albums?: PhotosOnAlbumsUncheckedUpdateManyWithoutPhotoNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartUpsertWithoutPurchasesInput = {
@@ -8471,12 +9729,14 @@ export namespace Prisma {
   export type EmailCreateWithoutNotificationsInput = {
     email: string
     purchases?: CartCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailUncheckedCreateWithoutNotificationsInput = {
     id?: number
     email: string
     purchases?: CartUncheckedCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailCreateOrConnectWithoutNotificationsInput = {
@@ -8492,21 +9752,25 @@ export namespace Prisma {
   export type EmailUpdateWithoutNotificationsInput = {
     email?: StringFieldUpdateOperationsInput | string
     purchases?: CartUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailUncheckedUpdateWithoutNotificationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     purchases?: CartUncheckedUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateWithoutCartInput = {
     photo: PhotoCreateNestedOneWithoutPurchasesInput
+    createdAt?: Date | string
   }
 
   export type PurchaseUncheckedCreateWithoutCartInput = {
     id?: number
     photoId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseCreateOrConnectWithoutCartInput = {
@@ -8522,12 +9786,14 @@ export namespace Prisma {
   export type EmailCreateWithoutPurchasesInput = {
     email: string
     notifications?: NotificationCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailUncheckedCreateWithoutPurchasesInput = {
     id?: number
     email: string
     notifications?: NotificationUncheckedCreateNestedManyWithoutEmailInput
+    createdAt?: Date | string
   }
 
   export type EmailCreateOrConnectWithoutPurchasesInput = {
@@ -8559,12 +9825,14 @@ export namespace Prisma {
   export type EmailUpdateWithoutPurchasesInput = {
     email?: StringFieldUpdateOperationsInput | string
     notifications?: NotificationUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmailUncheckedUpdateWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     notifications?: NotificationUncheckedUpdateManyWithoutEmailNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartCreateWithoutEmailInput = {
@@ -8592,11 +9860,13 @@ export namespace Prisma {
 
   export type NotificationCreateWithoutEmailInput = {
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type NotificationUncheckedCreateWithoutEmailInput = {
     id?: number
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type NotificationCreateOrConnectWithoutEmailInput = {
@@ -8658,76 +9928,87 @@ export namespace Prisma {
     id?: IntFilter | number
     emailId?: IntFilter | number
     alertForDate?: DateTimeFilter | Date | string
+    createdAt?: DateTimeFilter | Date | string
   }
 
   export type PurchaseCreateManyPhotoInput = {
     id?: number
     cartId: number
+    createdAt?: Date | string
+  }
+
+  export type PhotosOnAlbumsCreateManyPhotoInput = {
+    albumId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateWithoutPhotoInput = {
     cart?: CartUpdateOneRequiredWithoutPurchasesNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateWithoutPhotoInput = {
     id?: IntFieldUpdateOperationsInput | number
     cartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
     cartId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PhotoCreateManyAlbumInput = {
-    id?: number
-    previewUrl: string
-    fullUrl: string
-    rawUrl: string
-    captureDate: Date | string
-    price: number
+  export type PhotosOnAlbumsUpdateWithoutPhotoInput = {
+    album?: AlbumUpdateOneRequiredWithoutPhotosNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PhotoUpdateWithoutAlbumInput = {
-    previewUrl?: StringFieldUpdateOperationsInput | string
-    fullUrl?: StringFieldUpdateOperationsInput | string
-    rawUrl?: StringFieldUpdateOperationsInput | string
-    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    price?: IntFieldUpdateOperationsInput | number
-    purchases?: PurchaseUpdateManyWithoutPhotoNestedInput
+  export type PhotosOnAlbumsUncheckedUpdateWithoutPhotoInput = {
+    albumId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PhotoUncheckedUpdateWithoutAlbumInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    previewUrl?: StringFieldUpdateOperationsInput | string
-    fullUrl?: StringFieldUpdateOperationsInput | string
-    rawUrl?: StringFieldUpdateOperationsInput | string
-    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    price?: IntFieldUpdateOperationsInput | number
-    purchases?: PurchaseUncheckedUpdateManyWithoutPhotoNestedInput
+  export type PhotosOnAlbumsUncheckedUpdateManyWithoutAlbumsInput = {
+    albumId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PhotoUncheckedUpdateManyWithoutPhotosInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    previewUrl?: StringFieldUpdateOperationsInput | string
-    fullUrl?: StringFieldUpdateOperationsInput | string
-    rawUrl?: StringFieldUpdateOperationsInput | string
-    captureDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    price?: IntFieldUpdateOperationsInput | number
+  export type PhotosOnAlbumsCreateManyAlbumInput = {
+    photoId: number
+    createdAt?: Date | string
+  }
+
+  export type PhotosOnAlbumsUpdateWithoutAlbumInput = {
+    photo?: PhotoUpdateOneRequiredWithoutAlbumsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsUncheckedUpdateWithoutAlbumInput = {
+    photoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PhotosOnAlbumsUncheckedUpdateManyWithoutPhotosInput = {
+    photoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateManyCartInput = {
     id?: number
     photoId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateWithoutCartInput = {
     photo?: PhotoUpdateOneRequiredWithoutPurchasesNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateWithoutCartInput = {
     id?: IntFieldUpdateOperationsInput | number
     photoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartCreateManyEmailInput = {
@@ -8739,6 +10020,7 @@ export namespace Prisma {
   export type NotificationCreateManyEmailInput = {
     id?: number
     alertForDate: Date | string
+    createdAt?: Date | string
   }
 
   export type CartUpdateWithoutEmailInput = {
@@ -8762,16 +10044,19 @@ export namespace Prisma {
 
   export type NotificationUpdateWithoutEmailInput = {
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUncheckedUpdateWithoutEmailInput = {
     id?: IntFieldUpdateOperationsInput | number
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUncheckedUpdateManyWithoutNotificationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     alertForDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
