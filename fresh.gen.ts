@@ -4,20 +4,26 @@
 
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/_404.tsx";
-import * as $1 from "./routes/download/[id].tsx";
-import * as $2 from "./routes/index.tsx";
-import * as $3 from "./routes/photo.tsx";
-import * as $$0 from "./islands/GameOfLifeCanvas.tsx";
+import * as $1 from "./routes/api/preview/[id].ts";
+import * as $2 from "./routes/download/[id].tsx";
+import * as $3 from "./routes/index.tsx";
+import * as $4 from "./routes/photo.tsx";
+import * as $5 from "./routes/photo/[id].tsx";
+import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
+import * as $$1 from "./islands/GameOfLifeCanvas.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
-    "./routes/download/[id].tsx": $1,
-    "./routes/index.tsx": $2,
-    "./routes/photo.tsx": $3,
+    "./routes/api/preview/[id].ts": $1,
+    "./routes/download/[id].tsx": $2,
+    "./routes/index.tsx": $3,
+    "./routes/photo.tsx": $4,
+    "./routes/photo/[id].tsx": $5,
   },
   islands: {
-    "./islands/GameOfLifeCanvas.tsx": $$0,
+    "./islands/AddOrRemoveToCart.tsx": $$0,
+    "./islands/GameOfLifeCanvas.tsx": $$1,
   },
   baseUrl: import.meta.url,
   config,

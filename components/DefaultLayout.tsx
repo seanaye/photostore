@@ -71,40 +71,25 @@ const colours = [
 const iconStyle =
   "text-gray-700 hover:text-blue-500 transition-all duration-300";
 
+const matchHref = (active: boolean) =>
+  active ? "font-bold pointer-events-none" : iconStyle;
+
 export function DefaultLayout(props: {
   children: JSX.Element;
   url: URL;
   render: boolean;
 }) {
   return (
-    <div class="w-screen h-screen absolute">
-      <div class="flex justify-center items-center absolute inset-0">
-        {props.render ? (
-          <GameOfLifeCanvas colors={colours} />
-        ) : (
-          <div
-            class="absolute w-screen h-screen top-0 left-0"
-            style={{ "background-color": colours[0] }}
-          />
-        )}
-        {props.children}
-      </div>
-      <Header class="justify-between h-16 items-center px-6">
+    <>
+      <Header class="justify-between h-16 items-center px-6 sticky top-0 left-0 right-0 z-10">
         <>
           <div class="flex flex-row justify-self-start bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-8 px-4 py-2">
-            <a
-              href="/"
-              class={props.url.pathname === "/" ? "font-bold" : iconStyle}
-            >
+            <a href="/" class={matchHref(props.url.pathname === "/")}>
               Home
             </a>
             <a
               href="/photo"
-              class={
-                props.url.pathname.startsWith("/photo")
-                  ? "font-bold"
-                  : iconStyle
-              }
+              class={matchHref(props.url.pathname.startsWith("/photo"))}
             >
               Photography
             </a>
@@ -122,6 +107,19 @@ export function DefaultLayout(props: {
           </div>
         </>
       </Header>
-    </div>
+      <div
+        class="min-w-screen min-h-screen flex flex-col absolute top-0 left-0 right-0"
+        style={{ backgroundColor: colours[0] }}
+      >
+        <div class="flex justify-center items-center flex-grow w-full">
+          {props.render && (
+            <div class="z-0 absolute inset-0">
+              <GameOfLifeCanvas colors={colours} />
+            </div>
+          )}
+          <div class="z-10 w-full flex justify-center">{props.children}</div>
+        </div>
+      </div>
+    </>
   );
 }

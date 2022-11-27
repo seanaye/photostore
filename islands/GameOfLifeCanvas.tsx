@@ -1,12 +1,13 @@
-import { Cell, DxUniverse, get_memory, instantiate } from "../static/rs_lib.generated.js";
+import {
+  Cell,
+  DxUniverse,
+  get_memory,
+  instantiate,
+} from "../static/rs_lib.generated.js";
 import { signal, useComputed } from "@preact/signals";
 import { useMeasureWindow } from "../hooks/useMeasureWindow.ts";
 import { useDevicePixelRatio } from "../hooks/useGetDevicePixelRatio.ts";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-} from "preact/hooks";
+import { useCallback, useEffect, useRef } from "preact/hooks";
 interface Props {
   colors: string[];
 }
@@ -108,10 +109,12 @@ export default function GameOfLifeCanvas(props: Props) {
   }, []);
 
   useEffect(() => {
-    instantiate({ url: new URL("rs_lib_bg.wasm", location.origin )}).then((m) => {
-      mod.value = m;
-      setupUniverse();
-    });
+    instantiate({ url: new URL("rs_lib_bg.wasm", location.origin) }).then(
+      (m) => {
+        mod.value = m;
+        setupUniverse();
+      }
+    );
     return () => {
       const cur = universe.peek();
       if (cur) {
@@ -138,18 +141,12 @@ export default function GameOfLifeCanvas(props: Props) {
   }, []);
 
   return (
-    <>
-      <div
-        class="absolute w-screen h-screen top-0 left-0"
-        style={{ "background-color": props.colors[0] }}
-      />
-      <canvas
-        class="absolute w-screen h-screen top-0 left-0"
-        width={fullWidth.value * devicePixelRatio.value}
-        height={fullHeight.value * devicePixelRatio.value}
-        ref={canvasRef}
-        onPointerMove={onPointerMove}
-      />
-    </>
+    <canvas
+      class="w-full h-full"
+      width={fullWidth.value * devicePixelRatio.value}
+      height={fullHeight.value * devicePixelRatio.value}
+      ref={canvasRef}
+      onPointerMove={onPointerMove}
+    />
   );
 }
