@@ -6,6 +6,7 @@ import type {
   StripeElements,
 } from "https://esm.sh/@stripe/stripe-js@1.44.1";
 import { useEffect, useRef } from "preact/hooks";
+import { LoadingSpinner } from "../components/LoadingSpinner.tsx";
 
 const validate = z.string().email();
 const email = signal("");
@@ -32,7 +33,7 @@ function EmailInput() {
           autofocus
           class={`${
             validEmail.value
-              ? "focus:border-green-300 focus:outline-green-300 focus:ring-green-300"
+              ? "border-green-300 focus:border-green-300 focus:outline-green-300 focus:ring-green-300"
               : "border-red-300 outline-red-300 ring-red-300"
           } block w-full rounded-md shadow-sm sm:text-sm`}
         />
@@ -89,7 +90,7 @@ export default function CheckoutForm(props: {
   amount: number;
   url: string;
 }) {
-  console.log({ props })
+  console.log({ props });
   const paymentElementRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (stripe.peek()) return;
@@ -268,9 +269,14 @@ export default function CheckoutForm(props: {
         <>
           <button
             type="submit"
-            class="mt-6 w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            class="mt-6 h-12 w-full inline-flex justify-center items-center gap-4 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             Pay {props.amount}
+            {processing.value && (
+              <div class="h-8 w-8">
+                <LoadingSpinner />
+              </div>
+            )}
           </button>
 
           <p class="mt-6 flex justify-center text-sm font-medium text-gray-500">

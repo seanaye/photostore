@@ -6,16 +6,25 @@ import { DefaultLayout } from "../components/DefaultLayout.tsx";
 import { getCartJson } from "../store/cart.ts";
 import { stripe } from "../utils/stripe.ts";
 import { config } from "https://deno.land/std@0.166.0/dotenv/mod.ts";
+import { deleteCookie } from "https://deno.land/std@0.166.0/http/cookie.ts";
 
 const envVars = await config();
 const stripePubKey = envVars.STRIPE_KEY;
 
 type States =
   | { s: "CartEmpty" }
-  | { s: "CartFull"; clientSecret: string; amount: number };
+  | { s: "CartFull"; clientSecret: string; amount: number }
+  | { s: "Completed" };
 
 export const handler: Handlers<Cookies & States, Cookies> = {
   async GET(req, ctx) {
+    const url = new URL(req.url);
+    if (url.searchParams.get("redirect_status") === "succeeded") {
+      const html = await ctx.render({ ...ctx.state, s: "Completed" });
+      deleteCookie(html.headers, "cart")
+      return html
+    }
+
     const cartJs = getCartJson(ctx.state.cookies);
     if (cartJs.length === 0) {
       return ctx.render({ ...ctx.state, s: "CartEmpty" });
@@ -58,18 +67,32 @@ export const handler: Handlers<Cookies & States, Cookies> = {
 function Content(props: PageProps<States & Cookies>) {
   if (props.data.s === "CartEmpty") {
     return (
+      <>
+        <h2 class="text-lg pb-4">Checkout</h2>
+        <span>
+          Your cart is empty <a href="/photo">back to gallery</a>
+        </span>
+      </>
+    );
+  }
+
+  if (props.data.s === "Completed") {
+    return (
       <span>
-        Your cart is empty <a href="/photo">back to gallery</a>
+        Thank you for your support! A download link will be sent to your email.
       </span>
     );
   }
   return (
-    <CheckoutForm
-      clientSecret={props.data.clientSecret}
-      stripePubKey={stripePubKey}
-      amount={props.data.amount}
-      url={props.url.toString()}
-    />
+    <>
+      <h2 class="text-lg pb-4">Checkout</h2>
+      <CheckoutForm
+        clientSecret={props.data.clientSecret}
+        stripePubKey={stripePubKey}
+        amount={props.data.amount}
+        url={props.url.toString()}
+      />
+    </>
   );
 }
 
@@ -77,7 +100,6 @@ export default function Checkout(props: PageProps<States & Cookies>) {
   return (
     <DefaultLayout cookies={props.data.cookies} url={props.url} render>
       <div class="bg-gray-200 px-12 py-6 rounded">
-        <h2 class="text-lg pb-4">Checkout</h2>
         <Content {...props} />
       </div>
     </DefaultLayout>

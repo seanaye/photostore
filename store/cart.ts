@@ -82,7 +82,7 @@ function createStore(initVal: Array<number>) {
   };
 }
 
-export function getCartJson(cookies: Record<string, string>) {
+export function getCartJson(cookies: Record<string, string> = {}) {
   const strVal = decodeURIComponent(cookies["cart"] ?? "");
   return safeParse(strVal, [] as number[]);
 }
