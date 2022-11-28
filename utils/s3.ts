@@ -24,14 +24,17 @@ const s3 = new ApiFactory({
 const bucket = "photostore";
 
 export function presignGetObject(key: string) {
-  return getSignedUrl({
+  const url = new URL(getSignedUrl({
     accessKeyId: configData.accessKeyId,
     secretAccessKey: configData.awsSecretKey,
     region: configData.region,
     endpoint: new URL(configData.endpoint).hostname,
     bucketName: bucket,
     objectPath: `/${key}`,
-  });
+  }));
+  // sign the actual url then replace with cdn
+  url.hostname = url.hostname.replace("nyc3.digitaloceanspaces.com", "nyc3.cdn.digitaloceanspaces.com")
+  return url.toString()
 }
 
 export const getUrlEnding = (u: string) =>

@@ -1,15 +1,11 @@
 import { Handlers } from "$fresh/server.ts";
-import { prisma } from "../../utils/prisma.ts";
+import { prisma } from "../../../utils/prisma.ts";
 import * as zip from "https://deno.land/x/zipjs@v2.6.57/index.js";
-import { getUrlEnding, presignGetObject } from "../../utils/s3.ts";
+import { getUrlEnding, presignGetObject } from "../../../utils/s3.ts";
 
 
 const archiveName = "download";
-
-
-
 async function createFileEntry(u: string) {
-  console.log(u);
   const filename = getUrlEnding(u);
   return {
     res: await fetch(presignGetObject(filename)),

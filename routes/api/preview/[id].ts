@@ -8,7 +8,6 @@ const n = z.preprocess(Number, z.number().gt(0));
 export const handler: Handlers = {
   async GET(_, ctx) {
     const id = n.safeParse(ctx.params.id);
-    console.log(id);
     if (!id.success) {
       return ctx.renderNotFound();
     }

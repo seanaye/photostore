@@ -1,5 +1,4 @@
 import { computed, signal } from "@preact/signals";
-import { getCookies } from "https://deno.land/std@0.166.0/http/cookie.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 
 function safeParse<T>(s: string | null | undefined, def: T) {
@@ -9,20 +8,6 @@ function safeParse<T>(s: string | null | undefined, def: T) {
   } catch {
     return def;
   }
-}
-
-// returns the cookie with the given name,
-// or undefined if not found
-function getCookie(name: string) {
-  if (!IS_BROWSER) return;
-  const matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
-  );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 function setCookie(
@@ -68,7 +53,6 @@ function createStore(initVal: Array<number>) {
     _cart.value = update;
     if (IS_BROWSER) {
       const val = JSON.stringify(cart.peek());
-      console.log(val);
       setCookie("cart", `${val}`);
     }
   }
@@ -98,12 +82,17 @@ function createStore(initVal: Array<number>) {
   };
 }
 
+export function getCartJson(cookies: Record<string, string>) {
+  const strVal = decodeURIComponent(cookies["cart"] ?? "");
+  return safeParse(strVal, [] as number[]);
+}
+
 let store: ReturnType<typeof createStore> | null = null;
 export function getCart(cookieObj: Record<string, string>) {
+  console.log("get cart");
   if (store) {
     return store;
   }
-  const strVal = decodeURIComponent(cookieObj["cart"] ?? "");
-  store = createStore(safeParse(strVal, []));
+  store = createStore(getCartJson(cookieObj));
   return store;
 }

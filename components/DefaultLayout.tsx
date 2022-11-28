@@ -1,8 +1,8 @@
 import { JSX } from "preact/jsx-runtime";
+import CartDropdown from "../islands/CartDropdown.tsx";
 import GameOfLifeCanvas from "../islands/GameOfLifeCanvas.tsx";
 import { githubUrl, linkedinUrl, twitterUrl } from "../utils/socialUrls.ts";
 import { GithubIcon } from "./GithubIcon.tsx";
-import { Header } from "./Header.tsx";
 import { LinkedinIcon } from "./LinkedinIcon.tsx";
 import { TwitterIcon } from "./TwitterIcon.tsx";
 
@@ -78,12 +78,13 @@ export function DefaultLayout(props: {
   children: JSX.Element;
   url: URL;
   render: boolean;
+  cookies: Record<string, string>;
 }) {
   return (
     <>
-      <Header class="justify-between h-16 items-center px-6 sticky top-0 left-0 right-0 z-10">
-        <>
-          <div class="flex flex-row justify-self-start bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-8 px-4 py-2">
+      <div class="grid grid-cols-3 gap-4 relative w-full justify-between h-16 items-center px-6 sticky top-0 left-0 right-0 z-20">
+        <div class="flex justify-start">
+          <div class="flex flex-row flex-shrink bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-8 px-4 py-2">
             <a href="/" class={matchHref(props.url.pathname === "/")}>
               Home
             </a>
@@ -94,7 +95,12 @@ export function DefaultLayout(props: {
               Photography
             </a>
           </div>
-          <div class="flex flex-row bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-4 px-4 py-2">
+        </div>
+        <div class="flex justify-center">
+          <CartDropdown cookies={props.cookies} />
+        </div>
+        <div class="flex justify-end">
+          <div class="flex flex-row flex-shrink bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-4 px-4 py-2">
             <a href={githubUrl} target="_blank">
               <GithubIcon class={iconStyle} />
             </a>
@@ -105,19 +111,21 @@ export function DefaultLayout(props: {
               <LinkedinIcon class={iconStyle} />
             </a>
           </div>
-        </>
-      </Header>
+        </div>
+      </div>
       <div
-        class="min-w-screen min-h-screen flex flex-col absolute top-0 left-0 right-0"
+        class="min-w-screen min-h-screen flex flex-col absolute top-0 left-0 right-0 z-10"
         style={{ backgroundColor: colours[0] }}
       >
         <div class="flex justify-center items-center flex-grow w-full">
+          <div class="w-full flex justify-center">
+            <div class="z-10">{props.children}</div>
+          </div>
           {props.render && (
-            <div class="z-0 absolute inset-0">
+            <div class="absolute inset-0 z-0">
               <GameOfLifeCanvas colors={colours} />
             </div>
           )}
-          <div class="z-10 w-full flex justify-center">{props.children}</div>
         </div>
       </div>
     </>

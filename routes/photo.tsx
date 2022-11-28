@@ -3,6 +3,7 @@ import { DefaultLayout } from "../components/DefaultLayout.tsx";
 import { PhotoGrid } from "../components/PhotoGrid.tsx";
 import { prisma } from "../utils/prisma.ts";
 import { presignUrl } from "../utils/s3.ts";
+import { Cookies } from "./_middleware.ts";
 
 interface Loaded {
   images: Array<{
@@ -13,7 +14,7 @@ interface Loaded {
 
 const defaultAlbumId = 1;
 
-export const handler: Handlers<Loaded> = {
+export const handler: Handlers<Loaded, Cookies> = {
   async GET(_, ctx) {
     const album = await prisma.album.findUnique({
       where: {
@@ -40,14 +41,15 @@ export const handler: Handlers<Loaded> = {
       images: album.photos.map(({ photo: { previewUrl, id } }) => ({
         previewUrl: presignUrl(previewUrl),
         id,
+        ...ctx.state,
       })),
     });
   },
 };
 
-export default function Home(props: PageProps<Loaded>) {
+export default function Home(props: PageProps<Loaded & Cookies>) {
   return (
-    <DefaultLayout url={props.url} render={false}>
+    <DefaultLayout url={props.url} render={false} cookies={props.data.cookies}>
       <div class="w-full px-12 md:px-3 lg:px-6">
         <PhotoGrid photos={props.data.images} />
       </div>

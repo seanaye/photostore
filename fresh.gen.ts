@@ -4,26 +4,42 @@
 
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/_404.tsx";
-import * as $1 from "./routes/api/preview/[id].ts";
-import * as $2 from "./routes/download/[id].tsx";
-import * as $3 from "./routes/index.tsx";
-import * as $4 from "./routes/photo.tsx";
-import * as $5 from "./routes/photo/[id].tsx";
+import * as $1 from "./routes/_middleware.ts";
+import * as $2 from "./routes/api/cart.ts";
+import * as $3 from "./routes/api/download/[id].tsx";
+import * as $4 from "./routes/api/preview/[id].ts";
+import * as $5 from "./routes/checkout.tsx";
+import * as $6 from "./routes/index.tsx";
+import * as $7 from "./routes/photo.tsx";
+import * as $8 from "./routes/photo/[id].tsx";
 import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
-import * as $$1 from "./islands/GameOfLifeCanvas.tsx";
+import * as $$1 from "./islands/CartDropdown.tsx";
+import * as $$2 from "./islands/CheckoutForm.tsx";
+import * as $$3 from "./islands/Download.tsx";
+import * as $$4 from "./islands/FullscreenImg.tsx";
+import * as $$5 from "./islands/GameOfLifeCanvas.tsx";
+import * as $$6 from "./islands/ShareButton.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
-    "./routes/api/preview/[id].ts": $1,
-    "./routes/download/[id].tsx": $2,
-    "./routes/index.tsx": $3,
-    "./routes/photo.tsx": $4,
-    "./routes/photo/[id].tsx": $5,
+    "./routes/_middleware.ts": $1,
+    "./routes/api/cart.ts": $2,
+    "./routes/api/download/[id].tsx": $3,
+    "./routes/api/preview/[id].ts": $4,
+    "./routes/checkout.tsx": $5,
+    "./routes/index.tsx": $6,
+    "./routes/photo.tsx": $7,
+    "./routes/photo/[id].tsx": $8,
   },
   islands: {
     "./islands/AddOrRemoveToCart.tsx": $$0,
-    "./islands/GameOfLifeCanvas.tsx": $$1,
+    "./islands/CartDropdown.tsx": $$1,
+    "./islands/CheckoutForm.tsx": $$2,
+    "./islands/Download.tsx": $$3,
+    "./islands/FullscreenImg.tsx": $$4,
+    "./islands/GameOfLifeCanvas.tsx": $$5,
+    "./islands/ShareButton.tsx": $$6,
   },
   baseUrl: import.meta.url,
   config,

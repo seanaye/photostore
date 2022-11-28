@@ -27,6 +27,10 @@ export default function GameOfLifeCanvas(props: Props) {
   const { width: fullWidth, height: fullHeight } = useMeasureWindow();
   const devicePixelRatio = useDevicePixelRatio();
 
+  useEffect(() => {
+    setupUniverse();
+  }, [fullWidth.value, fullHeight.value]);
+
   const width = useComputed(() => Math.floor(fullWidth.value / pxPerCell));
   const height = useComputed(() => Math.floor(fullHeight.value / pxPerCell));
 
@@ -42,15 +46,21 @@ export default function GameOfLifeCanvas(props: Props) {
 
   const setupUniverse = useCallback(() => {
     const m = mod.value;
+    clearInterval(timerId);
+    cancelAnimationFrame(frameId);
     const ctx = canvasRef.current?.getContext("2d");
     if (!m || !ctx) return;
-    universe.value = DxUniverse.new(width.value, height.value);
-    const ratio = devicePixelRatio.value;
+
+    universe.value = DxUniverse.new(width.peek(), height.peek());
+    const ratio = devicePixelRatio.peek();
     ctx.scale(ratio, ratio);
 
     function draw(ctx: CanvasRenderingContext2D) {
       const cur = universe.value;
       if (!cur || !m) return;
+
+      ctx.fillStyle = props.colors[0];
+      ctx.fillRect(0, 0, fullWidth.peek(), fullHeight.peek());
 
       cur.tick();
 
@@ -58,24 +68,18 @@ export default function GameOfLifeCanvas(props: Props) {
       const cells = new Uint8Array(
         get_memory().buffer,
         cellsPtr,
-        width.value * height.value
+        width.peek() * height.peek()
       );
 
-      for (let row = 0; row < height.value; row += 1) {
-        for (let col = 0; col < width.value; col += 1) {
-          const idx = row * width.value + col;
+      for (let row = 0; row < height.peek(); row += 1) {
+        for (let col = 0; col < width.peek(); col += 1) {
+          const idx = row * width.peek() + col;
           ctx.fillStyle = mapTo(cells[idx]);
 
           const x = col * pxPerCell + 1;
           const y = row * pxPerCell + 1;
 
           ctx.beginPath();
-          // ctx.fillRect(
-          //   col * pxPerCell + 1,
-          //   row * pxPerCell + 1,
-          //   pxPerCell,
-          //   pxPerCell
-          // );
           ctx.arc(
             x + halfPxPerCell,
             y + halfPxPerCell,
@@ -87,14 +91,6 @@ export default function GameOfLifeCanvas(props: Props) {
         }
       }
 
-      // ctx.stroke();
-    }
-
-    if (timerId) {
-      clearInterval(timerId);
-    }
-    if (frameId) {
-      cancelAnimationFrame(frameId);
     }
 
     function renderLoop() {
@@ -128,15 +124,15 @@ export default function GameOfLifeCanvas(props: Props) {
         cancelAnimationFrame(frameId);
       }
     };
-  });
+  }, []);
 
   const onPointerMove = useCallback((event: PointerEvent) => {
     const cur = universe.value;
     if (!cur) return;
 
     const { offsetX, offsetY } = event;
-    const w = Math.floor(offsetY / (pxPerCell * devicePixelRatio.value));
-    const h = Math.floor(offsetX / (pxPerCell * devicePixelRatio.value));
+    const w = Math.floor(offsetY / pxPerCell);
+    const h = Math.floor(offsetX / pxPerCell);
     cur.set_cell(w, h, Cell.Alive);
   }, []);
 
