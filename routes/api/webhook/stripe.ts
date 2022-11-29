@@ -40,6 +40,8 @@ export const handler: Handlers = {
           JSON.parse(paymentIntent.metadata.cart),
           paymentIntent.receipt_email
         );
+
+
       }
     }
     return new Response();
@@ -77,3 +79,5 @@ async function createCartIdentifier(cart: number[], email: string) {
     },
   });
 }
+
+
