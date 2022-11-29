@@ -1,5 +1,5 @@
 import { config } from "https://deno.land/std@0.166.0/dotenv/mod.ts";
-import Stripe from "npm:stripe@11.1.0"
+import Stripe from "https://esm.sh/stripe@11.1.0"
 
 
 const envVars = await config();
