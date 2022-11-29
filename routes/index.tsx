@@ -9,7 +9,7 @@ const avatarImg = "/avatar.jpeg";
 const emoji = `🇨🇦`;
 const description = `Hi! My name is Sean Aye, I'm a ${emoji} software engineer working on the future of document drafting and reviewing. In my free time I enjoy taking photos, making music, and travelling.`;
 
-export const handler: Handlers<any, Cookies> = {
+export const handler: Handlers<Cookies, Cookies> = {
   GET(_, ctx) {
     return ctx.render(ctx.state);
   },
@@ -18,9 +18,12 @@ export const handler: Handlers<any, Cookies> = {
 export default function Home(props: PageProps<Cookies>) {
   return (
     <DefaultLayout url={props.url} cookies={props.data.cookies} render>
-      <AboutSean
-        {...{ avatarImg, twitterUrl, githubUrl, linkedinUrl, description }}
-      />
+      <div class="w-full min-h-screen flex justify-center items-center pointer-events-none">
+        <AboutSean
+          class="pointer-events-auto"
+          {...{ avatarImg, twitterUrl, githubUrl, linkedinUrl, description }}
+        />
+      </div>
     </DefaultLayout>
   );
 }

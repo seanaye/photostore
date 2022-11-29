@@ -7,9 +7,14 @@ export function AboutSean(props: {
   twitterUrl: string;
   linkedinUrl: string;
   children?: JSX.Element;
+  class?: string;
 }) {
   return (
-    <div class="max-w-3xl mx-auto p-4 mx-6 bg-gray-200 shadow-lg shadow-gray-900 rounded-lg">
+    <div
+      class={`${
+        props.class ?? ""
+      } max-w-3xl mx-auto p-4 mx-6 bg-gray-200 shadow-lg shadow-gray-900 rounded-lg`}
+    >
       <div class="sm:flex">
         <div class="flex-shrink-0 flex items-center px-4">
           <img

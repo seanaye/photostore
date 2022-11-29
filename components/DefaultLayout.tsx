@@ -97,7 +97,9 @@ export function DefaultLayout(props: {
           </div>
         </div>
         <div class="flex justify-center">
-          {props.url.pathname !== "/checkout" && <CartDropdown cookies={props.cookies} />}
+          {props.url.pathname !== "/checkout" && (
+            <CartDropdown cookies={props.cookies} />
+          )}
         </div>
         <div class="flex justify-end">
           <div class="flex flex-row flex-shrink bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-4 px-4 py-2">
@@ -114,19 +116,21 @@ export function DefaultLayout(props: {
         </div>
       </div>
       <div
-        class="min-w-screen min-h-screen flex flex-col absolute top-0 left-0 right-0 z-10"
+        class="min-w-screen min-h-screen absolute top-0 left-0 right-0"
         style={{ backgroundColor: colours[0] }}
       >
-        <div class="flex justify-center items-center flex-grow w-full">
-          <div class="w-full flex justify-center">
-            <div class="z-10">{props.children}</div>
-          </div>
-          {props.render && (
-            <div class="absolute inset-0 z-0">
-              <GameOfLifeCanvas colors={colours} />
-            </div>
-          )}
-        </div>
+        {props.render && <GameOfLifeCanvas colors={colours} />}
+
+        {/* <div class="flex justify-center items-center flex-grow w-full"> */}
+        {/*   <div class="w-full flex justify-center"> */}
+        {/*     <div class="z-10 w-full">{props.children}</div> */}
+        {/*   </div> */}
+        {/*     <div class="absolute inset-0 z-0"> */}
+        {/*     </div> */}
+        {/* </div> */}
+      </div>
+      <div class="min-w-screen min-h-screen absolute top-0 left-0 right-0 pointer-events-none">
+        {props.children}
       </div>
     </>
   );

@@ -14,7 +14,7 @@ interface Loaded {
 
 const defaultAlbumId = 1;
 
-export const handler: Handlers<Loaded, Cookies> = {
+export const handler: Handlers<Loaded & Cookies, Cookies> = {
   async GET(_, ctx) {
     const album = await prisma.album.findUnique({
       where: {
@@ -38,10 +38,10 @@ export const handler: Handlers<Loaded, Cookies> = {
     }
 
     return ctx.render({
+      ...ctx.state,
       images: album.photos.map(({ photo: { previewUrl, id } }) => ({
         previewUrl: presignUrl(previewUrl),
         id,
-        ...ctx.state,
       })),
     });
   },
@@ -50,8 +50,10 @@ export const handler: Handlers<Loaded, Cookies> = {
 export default function Home(props: PageProps<Loaded & Cookies>) {
   return (
     <DefaultLayout url={props.url} render={false} cookies={props.data.cookies}>
-      <div class="w-full px-12 md:px-3 lg:px-6">
-        <PhotoGrid photos={props.data.images} />
+      <div class="w-full min-h-screen flex justify-center items-center">
+        <div class="w-full px-12 md:px-3 lg:px-6">
+          <PhotoGrid photos={props.data.images} />
+        </div>
       </div>
     </DefaultLayout>
   );

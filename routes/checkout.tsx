@@ -21,14 +21,15 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     const url = new URL(req.url);
     if (url.searchParams.get("redirect_status") === "succeeded") {
       const html = await ctx.render({ ...ctx.state, s: "Completed" });
-      deleteCookie(html.headers, "cart")
-      return html
+      deleteCookie(html.headers, "cart");
+      return html;
     }
 
     const cartJs = getCartJson(ctx.state.cookies);
     if (cartJs.length === 0) {
       return ctx.render({ ...ctx.state, s: "CartEmpty" });
     }
+    console.log('before')
     const res = await prisma.photo.findMany({
       where: {
         id: {
@@ -43,13 +44,18 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     // sum prices
     const amount = res.reduce((acc, cur) => acc + cur.price, 0);
 
+    console.log('intent')
     const intent = await stripe.paymentIntents.create({
       amount,
       currency: "cad",
+      metadata: {
+        cart: JSON.stringify(cartJs)
+      },
       automatic_payment_methods: {
         enabled: true,
       },
     });
+    console.log('after')
 
     if (!intent.client_secret) {
       throw new Error("No client secret returned");
@@ -99,8 +105,10 @@ function Content(props: PageProps<States & Cookies>) {
 export default function Checkout(props: PageProps<States & Cookies>) {
   return (
     <DefaultLayout cookies={props.data.cookies} url={props.url} render>
-      <div class="bg-gray-200 px-12 py-6 rounded">
-        <Content {...props} />
+      <div class="w-full min-h-screen flex justify-center items-center">
+        <div class="bg-gray-200 px-12 py-6 rounded pointer-events-auto">
+          <Content {...props} />
+        </div>
       </div>
     </DefaultLayout>
   );
