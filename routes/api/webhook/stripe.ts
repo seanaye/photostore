@@ -7,6 +7,7 @@ const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
 
 export const handler: Handlers = {
   async POST(req, ctx) {
+    console.log(req.headers)
     const sig = req.headers.get("stripe-signature");
     if (!sig || !webhookSecret) {
       return new Response(`Empty stripe-signature`, {
