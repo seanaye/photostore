@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { PaymentIntent } from "https://esm.sh/v98/@stripe/stripe-js@1.44.1/types/index.d.ts";
 import { prisma } from "../../../utils/prisma.ts";
-import { stripe } from "../../../utils/stripe.ts";
+import { stripe, crpytoProvider } from "../../../utils/stripe.ts";
 
 const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
 
@@ -14,7 +14,9 @@ export const handler: Handlers = {
       event = await stripe.webhooks.constructEventAsync(
         req.body,
         sig,
-        webhookSecret
+        webhookSecret,
+        undefined,
+        crpytoProvider
       );
     } catch (e) {
       console.error(e);
