@@ -9,6 +9,7 @@ export const handler: Handlers = {
   async POST(req, ctx) {
     console.log(req.headers)
     const sig = req.headers.get("stripe-signature");
+    console.log({ sig })
     if (!sig || !webhookSecret) {
       return new Response(`Empty stripe-signature`, {
         status: 400,
