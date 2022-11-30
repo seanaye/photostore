@@ -1,8 +1,8 @@
 // @generated file from wasmbuild -- do not edit
 // deno-lint-ignore-file
 // deno-fmt-ignore-file
-// source-hash: f5ffe61c9a4e5feb22613727ddace51e51f2463b
-export let wasm;
+// source-hash: 6c9eadcba7e6ef1688fe794927b3c0468b8b7de1
+let wasm;
 let cachedInt32Memory0;
 
 const cachedTextDecoder = new TextDecoder("utf-8", {
@@ -23,6 +23,44 @@ function getUint8Memory0() {
 
 function getStringFromWasm0(ptr, len) {
   return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
+}
+
+const heap = new Array(32).fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+let heap_next = heap.length;
+
+function addHeapObject(obj) {
+  if (heap_next === heap.length) heap.push(heap.length + 1);
+  const idx = heap_next;
+  heap_next = heap[idx];
+
+  heap[idx] = obj;
+  return idx;
+}
+
+function getObject(idx) {
+  return heap[idx];
+}
+
+function dropObject(idx) {
+  if (idx < 36) return;
+  heap[idx] = heap_next;
+  heap_next = idx;
+}
+
+function takeObject(idx) {
+  const ret = getObject(idx);
+  dropObject(idx);
+  return ret;
+}
+/**
+ * @returns {any}
+ */
+export function get_memory() {
+  const ret = wasm.get_memory();
+  return takeObject(ret);
 }
 
 function notDefined(what) {
@@ -106,6 +144,10 @@ const imports = {
     __wbindgen_throw: function (arg0, arg1) {
       throw new Error(getStringFromWasm0(arg0, arg1));
     },
+    __wbindgen_memory: function () {
+      const ret = wasm.memory;
+      return addHeapObject(ret);
+    },
   },
 };
 
@@ -143,7 +185,7 @@ let lastLoadPromise;
  * @param {InstantiateOptions=} opts
  * @returns {Promise<{
  *   instance: WebAssembly.Instance;
- *   exports: { DxUniverse : typeof DxUniverse  }
+ *   exports: { get_memory: typeof get_memory; DxUniverse : typeof DxUniverse  }
  * }>}
  */
 export function instantiateWithInstance(opts) {
@@ -171,7 +213,7 @@ export function instantiateWithInstance(opts) {
 }
 
 function getWasmInstanceExports() {
-  return { DxUniverse };
+  return { get_memory, DxUniverse };
 }
 
 /** Gets if the Wasm module has been instantiated. */
