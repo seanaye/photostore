@@ -98,7 +98,7 @@ export function DefaultLayout(props: {
         </div>
         <div class="flex justify-center">
           {props.url.pathname !== "/checkout" && (
-            <CartDropdown cookies={props.cookies} />
+            <CartDropdown cookies={props.cookies} url={props.url} />
           )}
         </div>
         <div class="flex justify-end">

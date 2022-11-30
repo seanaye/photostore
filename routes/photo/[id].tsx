@@ -52,7 +52,7 @@ export default function Photo(props: PageProps<Image & Cookies>) {
   return (
     <DefaultLayout render={false} url={props.url} cookies={props.data.cookies}>
       <div class="w-full min-h-screen flex justify-center items-center">
-        <div class="px-8 flex flex-col w-full">
+        <div class="px-8 flex flex-col w-full pointer-events-auto">
           <div
             style={{ aspectRatio: "4/3" }}
             class="flex justify-center items-center"

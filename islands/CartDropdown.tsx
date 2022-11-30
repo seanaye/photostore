@@ -2,12 +2,12 @@ import { getCart } from "../store/cart.ts";
 import { computePosition } from "https://esm.sh/@floating-ui/dom@1.0.7";
 import { batch, effect, Signal, signal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
-import { useCSP } from "$fresh/runtime.ts";
 import { CartData } from "../routes/api/cart.ts";
 import { LoadingSpinner } from "../components/LoadingSpinner.tsx";
 
 interface Props {
   cookies: Record<string, string>;
+  url: URL
 }
 
 const xy = signal({ x: 0, y: 0 });
@@ -19,7 +19,7 @@ const buttonSelector = "activator";
 const fetching = signal(false);
 const fullCart = signal<CartData>([]);
 let controller = new AbortController();
-function CartContent(props: { cart: Signal<number[]> }) {
+function CartContent(props: { cart: Signal<number[]>; url: URL }) {
   useEffect(() => {
     return effect(() => {
       // just need to subscribe, the api parses the cookie
@@ -30,7 +30,9 @@ function CartContent(props: { cart: Signal<number[]> }) {
       controller = new AbortController();
       fetching.value = true;
 
-      fetch(`http://localhost:8000/api/cart`, {
+      const u = new URL(props.url).pathname = "/api/cart"
+
+      fetch(u.toString(), {
         signal: controller.signal,
       })
         .then(
@@ -159,7 +161,7 @@ export default function CartDropdown(props: Props) {
         style={{ left: `${xy.value.x}px`, top: `${xy.value.y}px` }}
         id={tooltipSelector}
       >
-        <CartContent cart={cart.cart} />
+        <CartContent cart={cart.cart} url={props.url} />
       </div>
     </div>
   );

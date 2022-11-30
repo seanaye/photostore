@@ -51,7 +51,7 @@ export default function Home(props: PageProps<Loaded & Cookies>) {
   return (
     <DefaultLayout url={props.url} render={false} cookies={props.data.cookies}>
       <div class="w-full min-h-screen flex justify-center items-center">
-        <div class="w-full px-12 md:px-3 lg:px-6">
+        <div class="w-full px-12 md:px-3 lg:px-6 pointer-events-auto">
           <PhotoGrid photos={props.data.images} />
         </div>
       </div>
