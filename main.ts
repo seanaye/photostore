@@ -11,6 +11,6 @@ import twindPlugin from "$fresh/plugins/twind.ts";
 import twindConfig from "./twind.config.ts";
 import { config } from "https://deno.land/std@0.166.0/dotenv/mod.ts";
 
-await config({ export: true })
+console.log({ env: await config({ export: true }) });
 
 await start(manifest, { plugins: [twindPlugin(twindConfig)] });

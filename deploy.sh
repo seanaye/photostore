@@ -5,12 +5,11 @@ set -e
 
 # build
 deno task wasmbuild
+deployctl deploy --project seanaye-portfolio-deploy \
+  --exclude=prisma \
+  --exclude=target \
+  --exclude=rs_lib \
+  --dry-run \
+  ./main.ts
 
-git branch -D deploy
-git checkout -b deploy
-git add -A
-git commit -m "deploy"
-git checkout -
-
-git push -f git@github.com:seanaye/photostore deploy:deploy
 
