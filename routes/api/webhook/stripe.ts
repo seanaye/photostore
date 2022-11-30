@@ -1,11 +1,9 @@
 import { Handlers } from "$fresh/server.ts";
-import { config } from "https://deno.land/std/dotenv/mod.ts";
 import { PaymentIntent } from "https://esm.sh/v98/@stripe/stripe-js@1.44.1/types/index.d.ts";
 import { prisma } from "../../../utils/prisma.ts";
 import { stripe } from "../../../utils/stripe.ts";
 
-const envVars = await config();
-const webhookSecret = envVars.WEBHOOK_SECRET;
+const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
 
 export const handler: Handlers = {
   async POST(req, ctx) {

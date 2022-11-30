@@ -6,7 +6,7 @@ set -e
 # build
 deno task wasmbuild
 
-git branch -d deploy
+git branch -D deploy
 git checkout -b deploy
 git add -A
 git commit -m "deploy"

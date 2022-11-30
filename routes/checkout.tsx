@@ -5,11 +5,9 @@ import { Cookies } from "./_middleware.ts";
 import { DefaultLayout } from "../components/DefaultLayout.tsx";
 import { getCartJson } from "../store/cart.ts";
 import { stripe } from "../utils/stripe.ts";
-import { config } from "https://deno.land/std@0.166.0/dotenv/mod.ts";
 import { deleteCookie } from "https://deno.land/std@0.166.0/http/cookie.ts";
 
-const envVars = await config();
-const stripePubKey = envVars.STRIPE_KEY;
+const stripePubKey = Deno.env.get("STRIPE_KEY");
 
 type States =
   | { s: "CartEmpty" }

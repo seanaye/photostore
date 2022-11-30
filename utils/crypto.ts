@@ -1,7 +1,3 @@
-import { config } from "https://deno.land/std/dotenv/mod.ts";
-
-const envVars = await config();
-
 interface LinkData {
   emailId: number;
   cartId: number;
@@ -12,7 +8,7 @@ const name = "AES-GCM";
 async function getKey() {
   return await crypto.subtle.importKey(
     "raw",
-    new TextEncoder().encode(envVars.ENCRYPT_KEY),
+    new TextEncoder().encode(Deno.env.get("ENCRYPT_KEY")),
     { name },
     false,
     ["encrypt", "decrypt"]
@@ -49,6 +45,6 @@ export async function decryptLink(encrypted: string, ivStr: string) {
     await getKey(),
     b64
   );
-  const json = new TextDecoder().decode(res)
-  return JSON.parse(json) as LinkData
+  const json = new TextDecoder().decode(res);
+  return JSON.parse(json) as LinkData;
 }
