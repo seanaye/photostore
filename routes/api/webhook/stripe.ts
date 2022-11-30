@@ -8,11 +8,16 @@ const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
 export const handler: Handlers = {
   async POST(req, ctx) {
     const sig = req.headers.get("stripe-signature");
+    if (!sig || !webhookSecret) {
+      return new Response(`Empty stripe-signature`, {
+        status: 400,
+      });
+    }
     let event: ReturnType<typeof stripe["webhooks"]["constructEvent"]>;
 
     try {
       event = await stripe.webhooks.constructEventAsync(
-        req.body,
+        await req.text(),
         sig,
         webhookSecret,
         undefined,
@@ -32,16 +37,15 @@ export const handler: Handlers = {
         };
         if (!paymentIntent.receipt_email) {
           return new Response(`No email sent in body`, {
-            status: 400
-          })
+            status: 400,
+          });
         }
         console.log({ paymentIntent });
         const { cartIdentifier } = await createCartIdentifier(
           JSON.parse(paymentIntent.metadata.cart),
           paymentIntent.receipt_email
         );
-
-
+        console.log(`Sending email of cartId ${cartIdentifier} to ${paymentIntent.receipt_email}`)
       }
     }
     return new Response();
@@ -79,5 +83,3 @@ async function createCartIdentifier(cart: number[], email: string) {
     },
   });
 }
-
-
