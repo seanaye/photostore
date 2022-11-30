@@ -51,34 +51,38 @@ export default function Photo(props: PageProps<Image & Cookies>) {
   const url = `/api/preview/${props.data.id}`;
   return (
     <DefaultLayout render={false} url={props.url} cookies={props.data.cookies}>
-      <div class="w-full min-h-screen flex justify-center items-center">
-        <div class="px-8 flex flex-col w-full pointer-events-auto">
-          <div
-            style={{ aspectRatio: "4/3" }}
-            class="flex justify-center items-center"
-          >
-            <FullscreenImg src={url} class="w-full flex-grow cursor-pointer" />
+      <div class="w-full h-screen flex justify-center items-center">
+        <div class="pointer-events-auto">
+          <div class="mx-auto max-w-screen md:max-w-4xl sm:px-6">
+            <div class="" style={{ aspectRatio: "4/3" }}>
+              <FullscreenImg
+                src={url}
+                class="h-full w-full object-contain object-center cursor-pointer"
+              />
+            </div>
           </div>
-          <div class="flex flex-row justify-end">
-            <span class="isolate inline-flex rounded-md shadow-sm">
-              <DownloadButton
-                url={url}
-                title="Preview Image"
-                text="from seanaye.ca"
-                class="rounded-l-md"
-              />
-              <ShareButton
-                url={props.url.toString()}
-                title="Sean's Gallery"
-                text="Free preview or buy"
-                class="-ml-px"
-              />
-              <AddOrRemoveCart
-                cookies={props.data.cookies}
-                id={props.data.id}
-                class="rounded-r-md -ml-px"
-              />
-            </span>
+          <div class="mx-auto max-w-screen md:max-w-4xl sm:px-6">
+            <div class="flex flex-row justify-end">
+              <span class="isolate inline-flex rounded-md shadow-sm">
+                <DownloadButton
+                  url={url}
+                  title="Preview Image"
+                  text="from seanaye.ca"
+                  class="rounded-l-md"
+                />
+                <ShareButton
+                  url={props.url.toString()}
+                  title="Sean's Gallery"
+                  text="Free preview or buy"
+                  class="-ml-px"
+                />
+                <AddOrRemoveCart
+                  cookies={props.data.cookies}
+                  id={props.data.id}
+                  class="rounded-r-md -ml-px"
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
