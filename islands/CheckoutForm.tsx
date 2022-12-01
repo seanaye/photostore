@@ -7,6 +7,7 @@ import type {
 } from "https://esm.sh/@stripe/stripe-js@1.44.1";
 import { useEffect, useRef } from "preact/hooks";
 import { LoadingSpinner } from "../components/LoadingSpinner.tsx";
+import { formatCentsToCad } from "../utils/format.ts";
 
 const validate = z.string().email();
 const email = signal("");
@@ -125,10 +126,7 @@ export default function CheckoutForm(props: {
             class="mt-6 h-12 w-full inline-flex justify-center items-center gap-4 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             Pay{" "}
-            {Intl.NumberFormat("en-CA", {
-              style: "currency",
-              currency: "CAD",
-            }).format(props.amount / 100)}
+            {formatCentsToCad(props.amount)}
             {processing.value && (
               <div class="h-8 w-8">
                 <LoadingSpinner />

@@ -1,7 +1,8 @@
 {
   "tasks": {
-    "start": "deno run -A --watch=static/,routes/ dev.ts",
-    "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.10.2/main.ts --out ./static"
+    "start": "deno run -A --unstable --watch=static/,routes/ dev.ts",
+    "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.10.2/main.ts --out ./static",
+    "mailwind": "deno run -A https://esm.sh/mailwind --input-html emailTemplate/email.html --output-html emailTemplate/template.html"
   },
   "importMap": "./import_map.json",
   "compilerOptions": {

@@ -84,12 +84,17 @@ function createStore(initVal: Array<number>) {
 
 export function getCartJson(cookies: Record<string, string> = {}) {
   const strVal = decodeURIComponent(cookies["cart"] ?? "");
-  return safeParse(strVal, [] as number[]);
+  const out = safeParse(strVal, [] as number[]);
+  console.log(out);
+  return out;
 }
 
 let store: ReturnType<typeof createStore> | null = null;
 export function getCart(cookieObj: Record<string, string>) {
-  console.log("get cart");
+  if (!IS_BROWSER) {
+    // avoid context pollution
+    return createStore(getCartJson(cookieObj));
+  }
   if (store) {
     return store;
   }

@@ -4,6 +4,7 @@ import { batch, effect, Signal, signal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import { CartData } from "../routes/api/cart.ts";
 import { LoadingSpinner } from "../components/LoadingSpinner.tsx";
+import { formatCentsToCad } from "../utils/format.ts";
 
 interface Props {
   cookies: Record<string, string>;
@@ -64,7 +65,7 @@ function CartContent(props: { cart: Signal<number[]>; url: URL }) {
                   class="h-16 w-16 flex-none rounded-md border border-gray-200"
                 />
                 <div class="ml-4 flex-auto">
-                  <h3 class="font-medium text-gray-900">${i.price}</h3>
+                  <h3 class="font-medium text-gray-900">{formatCentsToCad(i.price)}</h3>
                   <p class="text-gray-500">
                     Includes full quality and RAW file
                   </p>
@@ -92,6 +93,7 @@ function CartContent(props: { cart: Signal<number[]>; url: URL }) {
 
 export default function CartDropdown(props: Props) {
   const cart = getCart(props.cookies);
+  console.log({ cart })
   const tooltipRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 

@@ -6,19 +6,36 @@ import { DefaultLayout } from "../components/DefaultLayout.tsx";
 import { getCartJson } from "../store/cart.ts";
 import { stripe } from "../utils/stripe.ts";
 import { deleteCookie } from "https://deno.land/std@0.166.0/http/cookie.ts";
+import CheckoutStatus from "../islands/CheckoutStatus.tsx";
 
-const stripePubKey = Deno.env.get("STRIPE_KEY");
+const stripePubKey = Deno.env.get("STRIPE_KEY") ?? "";
 
 type States =
   | { s: "CartEmpty" }
   | { s: "CartFull"; clientSecret: string; amount: number }
-  | { s: "Completed" };
+  | { s: "Completed"; paymentIntentId: string; initState: string };
 
 export const handler: Handlers<Cookies & States, Cookies> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
-    if (url.searchParams.get("redirect_status") === "succeeded") {
-      const html = await ctx.render({ ...ctx.state, s: "Completed" });
+    const paymentIntentId = url.searchParams.get(
+      "payment_intent"
+    );
+    if (paymentIntentId) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        paymentIntentId
+      );
+
+      if (!paymentIntent) {
+        return ctx.renderNotFound();
+      }
+
+      const html = await ctx.render({
+        ...ctx.state,
+        s: "Completed",
+        paymentIntentId,
+        initState: paymentIntent.status,
+      });
       deleteCookie(html.headers, "cart");
       return html;
     }
@@ -27,7 +44,7 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     if (cartJs.length === 0) {
       return ctx.render({ ...ctx.state, s: "CartEmpty" });
     }
-    console.log('before')
+    console.log("before");
     const res = await prisma.photo.findMany({
       where: {
         id: {
@@ -42,18 +59,18 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     // sum prices
     const amount = res.reduce((acc, cur) => acc + cur.price, 0);
 
-    console.log('intent')
+    console.log("intent");
     const intent = await stripe.paymentIntents.create({
       amount,
       currency: "cad",
       metadata: {
-        cart: JSON.stringify(cartJs)
+        cart: JSON.stringify(cartJs),
       },
       automatic_payment_methods: {
         enabled: true,
       },
     });
-    console.log('after')
+    console.log("after");
 
     if (!intent.client_secret) {
       throw new Error("No client secret returned");
@@ -81,11 +98,7 @@ function Content(props: PageProps<States & Cookies>) {
   }
 
   if (props.data.s === "Completed") {
-    return (
-      <span>
-        Thank you for your support! A download link will be sent to your email.
-      </span>
-    );
+    return <CheckoutStatus paymentIntentId={props.data.paymentIntentId} initState={props.data.initState} />;
   }
   return (
     <>

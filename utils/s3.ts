@@ -1,4 +1,3 @@
-import { config } from "https://deno.land/std@0.166.0/dotenv/mod.ts";
 import { ApiFactory } from "https://deno.land/x/aws_api@v0.7.0/client/mod.ts";
 import { S3 } from "https://deno.land/x/aws_api@v0.7.0/services/s3/mod.ts";
 import { getSignedUrl } from "https://raw.githubusercontent.com/mashaal/aws_s3_presign/mashaal-patch-1/mod.ts";

@@ -6,42 +6,48 @@ import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_middleware.ts";
 import * as $2 from "./routes/api/cart.ts";
-import * as $3 from "./routes/api/download/[id].tsx";
-import * as $4 from "./routes/api/preview/[id].ts";
-import * as $5 from "./routes/api/webhook/stripe.ts";
-import * as $6 from "./routes/checkout.tsx";
-import * as $7 from "./routes/index.tsx";
-import * as $8 from "./routes/photo.tsx";
-import * as $9 from "./routes/photo/[id].tsx";
+import * as $3 from "./routes/api/debug.ts";
+import * as $4 from "./routes/api/download/[id].tsx";
+import * as $5 from "./routes/api/preview/[id].ts";
+import * as $6 from "./routes/api/stripe/listen.ts";
+import * as $7 from "./routes/api/stripe/webhook.ts";
+import * as $8 from "./routes/checkout.tsx";
+import * as $9 from "./routes/index.tsx";
+import * as $10 from "./routes/photo.tsx";
+import * as $11 from "./routes/photo/[id].tsx";
 import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
 import * as $$1 from "./islands/CartDropdown.tsx";
 import * as $$2 from "./islands/CheckoutForm.tsx";
-import * as $$3 from "./islands/Download.tsx";
-import * as $$4 from "./islands/FullscreenImg.tsx";
-import * as $$5 from "./islands/GameOfLifeCanvas.tsx";
-import * as $$6 from "./islands/ShareButton.tsx";
+import * as $$3 from "./islands/CheckoutStatus.tsx";
+import * as $$4 from "./islands/Download.tsx";
+import * as $$5 from "./islands/FullscreenImg.tsx";
+import * as $$6 from "./islands/GameOfLifeCanvas.tsx";
+import * as $$7 from "./islands/ShareButton.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
     "./routes/_middleware.ts": $1,
     "./routes/api/cart.ts": $2,
-    "./routes/api/download/[id].tsx": $3,
-    "./routes/api/preview/[id].ts": $4,
-    "./routes/api/webhook/stripe.ts": $5,
-    "./routes/checkout.tsx": $6,
-    "./routes/index.tsx": $7,
-    "./routes/photo.tsx": $8,
-    "./routes/photo/[id].tsx": $9,
+    "./routes/api/debug.ts": $3,
+    "./routes/api/download/[id].tsx": $4,
+    "./routes/api/preview/[id].ts": $5,
+    "./routes/api/stripe/listen.ts": $6,
+    "./routes/api/stripe/webhook.ts": $7,
+    "./routes/checkout.tsx": $8,
+    "./routes/index.tsx": $9,
+    "./routes/photo.tsx": $10,
+    "./routes/photo/[id].tsx": $11,
   },
   islands: {
     "./islands/AddOrRemoveToCart.tsx": $$0,
     "./islands/CartDropdown.tsx": $$1,
     "./islands/CheckoutForm.tsx": $$2,
-    "./islands/Download.tsx": $$3,
-    "./islands/FullscreenImg.tsx": $$4,
-    "./islands/GameOfLifeCanvas.tsx": $$5,
-    "./islands/ShareButton.tsx": $$6,
+    "./islands/CheckoutStatus.tsx": $$3,
+    "./islands/Download.tsx": $$4,
+    "./islands/FullscreenImg.tsx": $$5,
+    "./islands/GameOfLifeCanvas.tsx": $$6,
+    "./islands/ShareButton.tsx": $$7,
   },
   baseUrl: import.meta.url,
   config,
