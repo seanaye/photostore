@@ -57,12 +57,13 @@ export const handler: Handlers = {
           JSON.parse(paymentIntent.metadata.cart),
           paymentIntent.receipt_email
         );
-        await sendEMailTemplate({
+        const [res, err] = await sendEMailTemplate({
           to: [paymentIntent.receipt_email],
           text: "download",
           link: new URL(`/api/download/${cartIdentifier}`, req.url).toString(),
           subject: "Photo Receipt",
         });
+        console.log(res, err)
       }
     }
     return new Response("ok");
