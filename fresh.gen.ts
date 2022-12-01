@@ -6,15 +6,14 @@ import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_middleware.ts";
 import * as $2 from "./routes/api/cart.ts";
-import * as $3 from "./routes/api/debug.ts";
-import * as $4 from "./routes/api/download/[id].tsx";
-import * as $5 from "./routes/api/preview/[id].ts";
-import * as $6 from "./routes/api/stripe/listen.ts";
-import * as $7 from "./routes/api/stripe/webhook.ts";
-import * as $8 from "./routes/checkout.tsx";
-import * as $9 from "./routes/index.tsx";
-import * as $10 from "./routes/photo.tsx";
-import * as $11 from "./routes/photo/[id].tsx";
+import * as $3 from "./routes/api/download/[id].tsx";
+import * as $4 from "./routes/api/preview/[id].ts";
+import * as $5 from "./routes/api/stripe/listen.ts";
+import * as $6 from "./routes/api/stripe/webhook.ts";
+import * as $7 from "./routes/checkout.tsx";
+import * as $8 from "./routes/index.tsx";
+import * as $9 from "./routes/photo.tsx";
+import * as $10 from "./routes/photo/[id].tsx";
 import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
 import * as $$1 from "./islands/CartDropdown.tsx";
 import * as $$2 from "./islands/CheckoutForm.tsx";
@@ -29,15 +28,14 @@ const manifest = {
     "./routes/_404.tsx": $0,
     "./routes/_middleware.ts": $1,
     "./routes/api/cart.ts": $2,
-    "./routes/api/debug.ts": $3,
-    "./routes/api/download/[id].tsx": $4,
-    "./routes/api/preview/[id].ts": $5,
-    "./routes/api/stripe/listen.ts": $6,
-    "./routes/api/stripe/webhook.ts": $7,
-    "./routes/checkout.tsx": $8,
-    "./routes/index.tsx": $9,
-    "./routes/photo.tsx": $10,
-    "./routes/photo/[id].tsx": $11,
+    "./routes/api/download/[id].tsx": $3,
+    "./routes/api/preview/[id].ts": $4,
+    "./routes/api/stripe/listen.ts": $5,
+    "./routes/api/stripe/webhook.ts": $6,
+    "./routes/checkout.tsx": $7,
+    "./routes/index.tsx": $8,
+    "./routes/photo.tsx": $9,
+    "./routes/photo/[id].tsx": $10,
   },
   islands: {
     "./islands/AddOrRemoveToCart.tsx": $$0,
