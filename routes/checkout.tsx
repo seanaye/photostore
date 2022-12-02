@@ -44,7 +44,6 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     if (cartJs.length === 0) {
       return ctx.render({ ...ctx.state, s: "CartEmpty" });
     }
-    console.log("before");
     const res = await prisma.photo.findMany({
       where: {
         id: {
@@ -59,7 +58,6 @@ export const handler: Handlers<Cookies & States, Cookies> = {
     // sum prices
     const amount = res.reduce((acc, cur) => acc + cur.price, 0);
 
-    console.log("intent");
     const intent = await stripe.paymentIntents.create({
       amount,
       currency: "cad",
@@ -70,7 +68,6 @@ export const handler: Handlers<Cookies & States, Cookies> = {
         enabled: true,
       },
     });
-    console.log("after");
 
     if (!intent.client_secret) {
       throw new Error("No client secret returned");

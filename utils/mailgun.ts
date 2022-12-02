@@ -12,7 +12,6 @@ async function fetchClient<T = Record<string, any>>(
   const upw = btoa(`api:${apiKey}`);
   headers.set("Authorization", `Basic ${upw}`);
   const url = new URL(`${predicate}${ending}`);
-  console.log({ url });
   const res = await fetch(
     new Request(url, {
       ...opts,
@@ -20,7 +19,6 @@ async function fetchClient<T = Record<string, any>>(
       credentials: "include",
     })
   );
-  console.log(res);
 
   if (!res.ok) {
     return [null, res];
@@ -58,8 +56,6 @@ async function template(props: TemplateProps) {
   for (const [key, value] of Object.entries(props)) {
     text = text.replace(`#${key}`, value);
   }
-
-  console.log(text);
 
   return text;
 }

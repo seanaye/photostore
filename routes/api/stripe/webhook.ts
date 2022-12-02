@@ -7,10 +7,8 @@ import { stripe, crpytoProvider } from "../../../utils/stripe.ts";
 const webhookSecret = Deno.env.get("WEBHOOK_SECRET");
 
 export const handler: Handlers = {
-  async POST(req, ctx) {
-    console.log(req.headers);
+  async POST(req) {
     const sig = req.headers.get("stripe-signature");
-    console.log({ sig });
     if (sig == null || !webhookSecret) {
       console.log("Empty stripe signature");
       return new Response(`Empty stripe-signature`, {
@@ -57,13 +55,12 @@ export const handler: Handlers = {
           JSON.parse(paymentIntent.metadata.cart),
           paymentIntent.receipt_email
         );
-        const [res, err] = await sendEMailTemplate({
+        console.log(await sendEMailTemplate({
           to: [paymentIntent.receipt_email],
           text: "download",
           link: new URL(`/api/download/${cartIdentifier}`, req.url).toString(),
           subject: "Photo Receipt",
-        });
-        console.log(res, err)
+        }));
       }
     }
     return new Response("ok");

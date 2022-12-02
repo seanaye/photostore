@@ -93,7 +93,6 @@ function CartContent(props: { cart: Signal<number[]>; url: URL }) {
 
 export default function CartDropdown(props: Props) {
   const cart = getCart(props.cookies);
-  console.log({ cart })
   const tooltipRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 

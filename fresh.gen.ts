@@ -14,6 +14,7 @@ import * as $7 from "./routes/checkout.tsx";
 import * as $8 from "./routes/index.tsx";
 import * as $9 from "./routes/photo.tsx";
 import * as $10 from "./routes/photo/[id].tsx";
+import * as $11 from "./routes/subscribe.tsx";
 import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
 import * as $$1 from "./islands/CartDropdown.tsx";
 import * as $$2 from "./islands/CheckoutForm.tsx";
@@ -22,6 +23,7 @@ import * as $$4 from "./islands/Download.tsx";
 import * as $$5 from "./islands/FullscreenImg.tsx";
 import * as $$6 from "./islands/GameOfLifeCanvas.tsx";
 import * as $$7 from "./islands/ShareButton.tsx";
+import * as $$8 from "./islands/SubscribeForm.tsx";
 
 const manifest = {
   routes: {
@@ -36,6 +38,7 @@ const manifest = {
     "./routes/index.tsx": $8,
     "./routes/photo.tsx": $9,
     "./routes/photo/[id].tsx": $10,
+    "./routes/subscribe.tsx": $11,
   },
   islands: {
     "./islands/AddOrRemoveToCart.tsx": $$0,
@@ -46,6 +49,7 @@ const manifest = {
     "./islands/FullscreenImg.tsx": $$5,
     "./islands/GameOfLifeCanvas.tsx": $$6,
     "./islands/ShareButton.tsx": $$7,
+    "./islands/SubscribeForm.tsx": $$8,
   },
   baseUrl: import.meta.url,
   config,

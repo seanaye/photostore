@@ -85,7 +85,6 @@ function createStore(initVal: Array<number>) {
 export function getCartJson(cookies: Record<string, string> = {}) {
   const strVal = decodeURIComponent(cookies["cart"] ?? "");
   const out = safeParse(strVal, [] as number[]);
-  console.log(out);
   return out;
 }
 

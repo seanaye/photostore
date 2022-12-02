@@ -1,5 +1,4 @@
-import { z } from "https://deno.land/x/zod@v3.19.1/mod.ts";
-import { signal, computed } from "@preact/signals";
+import { signal, computed, Signal } from "@preact/signals";
 import { JSX } from "preact";
 import type {
   loadStripe,
@@ -8,53 +7,11 @@ import type {
 import { useEffect, useRef } from "preact/hooks";
 import { LoadingSpinner } from "../components/LoadingSpinner.tsx";
 import { formatCentsToCad } from "../utils/format.ts";
+import {  EmailInput  } from "../components/EmailInput.tsx";
+import { createEmailStore } from "../store/email.ts";
+import { Transition } from "../components/Transition.tsx";
 
-const validate = z.string().email();
-const email = signal("");
-const validEmail = computed(() => validate.safeParse(email.value).success);
-function EmailInput() {
-  return (
-    <div class="px-2">
-      <label
-        for="email-address"
-        class="block text-sm font-medium text-gray-700"
-      >
-        Email address
-      </label>
-      <div class="mt-1">
-        <input
-          type="email"
-          id="email-address"
-          name="email-address"
-          autocomplete="email"
-          value={email.value}
-          onInput={(e) => {
-            email.value = e.currentTarget.value;
-          }}
-          readonly={processing.value}
-          autofocus
-          class={`${
-            validEmail.value
-              ? "border-green-300 focus:border-green-300 focus:outline-green-300 focus:ring-green-300"
-              : "border-red-300 outline-red-300 ring-red-300"
-          } block w-full rounded-md shadow-sm sm:text-sm`}
-        />
-      </div>
-    </div>
-  );
-}
-
-function Transition(props: { children: JSX.Element }) {
-  return (
-    <div
-      class={`${
-        validEmail.value ? "max-h-screen" : "max-h-0"
-      } transition-all duration-300 overflow-hidden w-72`}
-    >
-      {props.children}
-    </div>
-  );
-}
+const { validEmail, email } = createEmailStore()
 
 const stripe = signal<null | Awaited<ReturnType<typeof loadStripe>>>(null);
 const elementsSignal = signal<null | StripeElements>(null);
@@ -93,7 +50,6 @@ export default function CheckoutForm(props: {
   amount: number;
   url: string;
 }) {
-  console.log({ props });
   const paymentElementRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (stripe.peek()) return;
@@ -114,12 +70,12 @@ export default function CheckoutForm(props: {
   return (
     <form onSubmit={(e) => onSubmit(e, props.url)}>
       <div class="flex flex-col gap-4">
-        <EmailInput />
-        <Transition>
+        <EmailInput readonly={processing} email={email} validEmail={validEmail} />
+        <Transition show={validEmail}>
           <div class="p-2" ref={paymentElementRef}></div>
         </Transition>
       </div>
-      <Transition>
+      <Transition show={validEmail}>
         <>
           <button
             type="submit"
