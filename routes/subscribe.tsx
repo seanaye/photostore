@@ -1,22 +1,16 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { DefaultLayout } from "../components/DefaultLayout.tsx";
-import SubscribeForm, { CalDate } from "../islands/SubscribeForm.tsx";
+import SubscribeForm from "../islands/SubscribeForm.tsx";
 import { Cookies } from "./_middleware.ts";
 
-function getTime(): CalDate {
+function getTime() {
   const torontoTimeStr = new Date().toLocaleString("en-US", {
     timeZone: "America/Toronto",
   });
-  const tt = new Date(torontoTimeStr);
-  console.log(tt);
-  return {
-    year: tt.getFullYear(),
-    month: tt.getMonth(),
-    day: tt.getDate(),
-  };
+  return torontoTimeStr;
 }
 
-type State = { s: "Form"; initDate: CalDate } | { s: "Complete" };
+type State = { s: "Form"; initDate: string } | { s: "Complete" };
 
 export const handler: Handlers<State & Cookies, Cookies> = {
   async GET(req, ctx) {
@@ -37,7 +31,11 @@ function Content(props: PageProps<State>) {
 export default function Subscribe(props: PageProps<State & Cookies>) {
   return (
     <DefaultLayout url={props.url} cookies={props.data.cookies} render>
-      <Content {...props} />
+      <div class="w-full min-h-screen flex justify-center items-center">
+        <div class="bg-gray-200 px-12 py-6 rounded pointer-events-auto">
+          <Content {...props} />
+        </div>
+      </div>
     </DefaultLayout>
   );
 }

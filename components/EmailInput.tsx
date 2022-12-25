@@ -4,9 +4,10 @@ export function EmailInput(props: {
   readonly: Signal<boolean>;
   email: Signal<string>;
   validEmail: Signal<boolean>;
+  class?: string
 }) {
   return (
-    <div class="px-2">
+    <div class={props.class ?? ""}>
       <label
         for="email-address"
         class="block text-sm font-medium text-gray-700"

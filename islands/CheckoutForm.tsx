@@ -70,7 +70,7 @@ export default function CheckoutForm(props: {
   return (
     <form onSubmit={(e) => onSubmit(e, props.url)}>
       <div class="flex flex-col gap-4">
-        <EmailInput readonly={processing} email={email} validEmail={validEmail} />
+        <EmailInput readonly={processing} email={email} validEmail={validEmail} class="px-2" />
         <Transition show={validEmail}>
           <div class="p-2" ref={paymentElementRef}></div>
         </Transition>
