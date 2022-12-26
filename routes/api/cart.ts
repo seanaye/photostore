@@ -4,6 +4,7 @@ import { prisma } from "../../utils/prisma.ts";
 import { Cookies } from "../_middleware.ts";
 
 async function getCartData(ids: number[]) {
+  if (ids.length === 0) return []
   return await prisma.photo.findMany({
     where: {
       id: {
@@ -19,7 +20,7 @@ async function getCartData(ids: number[]) {
 
 export type CartData = Awaited<ReturnType<typeof getCartData>>;
 
-export const handler: Handlers<any, Cookies> = {
+export const handler: Handlers<never, Cookies> = {
   async GET(_, ctx) {
     const res = await getCartData(getCartJson(ctx.state.cookies));
 

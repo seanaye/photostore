@@ -1,4 +1,3 @@
-import { Head } from "$fresh/runtime.ts";
 import { AppProps } from "$fresh/src/server/types.ts";
 import { colours } from "../utils/colors.ts"
 

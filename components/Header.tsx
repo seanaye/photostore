@@ -28,9 +28,9 @@ export function Header(props: { url: URL; cookies: Record<string, string>; class
         {/* </div> */}
       </div>
       <div class="flex justify-center">
-        {props.url.pathname !== "/checkout" && (
-          <CartDropdown cookies={props.cookies} url={props.url} />
-        )}
+        {/* {props.url.pathname !== "/checkout" && ( */}
+        {/*   <CartDropdown cookies={props.cookies} url={props.url} /> */}
+        {/* )} */}
       </div>
       <div class="flex justify-end">
         <div class="flex flex-row flex-shrink bg-gray-200 shadow-lg shadow-gray-900 rounded-lg gap-4 px-4 py-2">
