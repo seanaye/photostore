@@ -2,11 +2,11 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { prisma } from "../utils/prisma.ts";
 import CheckoutForm from "../islands/CheckoutForm.tsx";
 import { Cookies } from "./_middleware.ts";
-import { DefaultLayout } from "../components/DefaultLayout.tsx";
 import { getCartJson } from "../store/cart.ts";
 import { stripe } from "../utils/stripe.ts";
 import { deleteCookie } from "https://deno.land/std@0.166.0/http/cookie.ts";
 import CheckoutStatus from "../islands/CheckoutStatus.tsx";
+import { GameOfLifeLayout } from "../components/Layout.tsx";
 
 const stripePubKey = Deno.env.get("STRIPE_KEY") ?? "";
 
@@ -112,12 +112,12 @@ function Content(props: PageProps<States & Cookies>) {
 
 export default function Checkout(props: PageProps<States & Cookies>) {
   return (
-    <DefaultLayout cookies={props.data.cookies} url={props.url} render>
+    <GameOfLifeLayout cookies={props.data.cookies} url={props.url}>
       <div class="w-full min-h-screen flex justify-center items-center">
         <div class="bg-gray-200 px-12 py-6 rounded pointer-events-auto">
           <Content {...props} />
         </div>
       </div>
-    </DefaultLayout>
+    </GameOfLifeLayout>
   );
 }

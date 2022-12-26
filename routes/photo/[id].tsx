@@ -2,22 +2,29 @@ import { prisma } from "../../utils/prisma.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { z } from "https://deno.land/x/zod@v3.19.1/mod.ts";
 import { getUrlEnding, presignUrl } from "../../utils/s3.ts";
-import { DefaultLayout } from "../../components/DefaultLayout.tsx";
 import AddOrRemoveCart from "../../islands/AddOrRemoveToCart.tsx";
 import DownloadButton from "../../islands/Download.tsx";
 import ShareButton from "../../islands/ShareButton.tsx";
 import FullscreenImg from "../../islands/FullscreenImg.tsx";
 import { Cookies } from "../_middleware.ts";
+import { PlainLayout } from "../../components/Layout.tsx";
 
 interface Image {
   previewUrl: string;
   filename: string;
   id: number;
   price: number;
+  width: number;
+  height: number;
   cookies: Record<string, string>;
 }
 
 const n = z.preprocess(Number, z.number().gt(0));
+
+
+function getRandom(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
 
 export const handler: Handlers<Image & Cookies, Cookies> = {
   async GET(_, ctx) {
@@ -43,6 +50,8 @@ export const handler: Handlers<Image & Cookies, Cookies> = {
       ...res,
       previewUrl: presignUrl(res.previewUrl),
       filename: getUrlEnding(res.previewUrl),
+      height: getRandom(100,500),
+      width: getRandom(100, 500),
       ...ctx.state,
     });
   },
@@ -50,14 +59,15 @@ export const handler: Handlers<Image & Cookies, Cookies> = {
 export default function Photo(props: PageProps<Image & Cookies>) {
   const url = `/api/preview/${props.data.id}`;
   return (
-    <DefaultLayout render={false} url={props.url} cookies={props.data.cookies}>
+    <PlainLayout url={props.url} cookies={props.data.cookies}>
       <div class="w-full h-screen flex justify-center items-center">
         <div class="pointer-events-auto">
           <div class="mx-auto max-w-screen md:max-w-4xl sm:px-6">
-            <div class="" style={{ aspectRatio: "4/3" }}>
+            <div class="h-96" >
               <FullscreenImg
                 src={url}
-                class="h-full w-full object-contain object-center cursor-pointer"
+                class="h-full cursor-pointer"
+                style={{ aspectRatio: `${props.data.width}/${props.data.height}`}}
               />
             </div>
           </div>
@@ -86,6 +96,6 @@ export default function Photo(props: PageProps<Image & Cookies>) {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </PlainLayout>
   );
 }

@@ -2,7 +2,7 @@ import { JSX } from "preact/jsx-runtime";
 import { useEffect, useRef } from "preact/hooks";
 
 export default function FullscreenImg(
-  props: Pick<JSX.HTMLAttributes<HTMLInputElement>, "src" | "class">
+  props: Pick<JSX.HTMLAttributes<HTMLInputElement>, "src" | "class" | "style" | "height" | "width">
 ) {
   const imgRef = useRef<HTMLImageElement>(null);
   useEffect(() => {

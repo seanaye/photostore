@@ -76,7 +76,7 @@ export default function CheckoutForm(props: {
         </Transition>
       </div>
       <Transition show={validEmail}>
-        <>
+        <div class="p-2">
           <button
             type="submit"
             class="mt-6 h-12 w-full inline-flex justify-center items-center gap-4 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -106,7 +106,7 @@ export default function CheckoutForm(props: {
             </svg>
             Payments handled by Stripe
           </p>
-        </>
+        </div>
       </Transition>
     </form>
   );

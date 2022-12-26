@@ -1,6 +1,5 @@
-import { Head } from "$fresh/runtime.ts";
 import { AboutSean } from "../components/AboutSean.tsx";
-import { DefaultLayout } from "../components/DefaultLayout.tsx";
+import { GameOfLifeLayout } from "../components/Layout.tsx";
 import { githubUrl, linkedinUrl, twitterUrl } from "../utils/socialUrls.ts";
 import { Handlers, type PageProps } from "$fresh/server.ts";
 import { Cookies } from "./_middleware.ts";
@@ -17,13 +16,13 @@ export const handler: Handlers<Cookies, Cookies> = {
 
 export default function Home(props: PageProps<Cookies>) {
   return (
-    <DefaultLayout url={props.url} cookies={props.data.cookies} render>
+    <GameOfLifeLayout url={props.url} cookies={props.data.cookies}>
       <div class="w-full min-h-screen flex justify-center items-center pointer-events-none">
         <AboutSean
           class="pointer-events-auto"
           {...{ avatarImg, twitterUrl, githubUrl, linkedinUrl, description }}
         />
       </div>
-    </DefaultLayout>
+    </GameOfLifeLayout>
   );
 }

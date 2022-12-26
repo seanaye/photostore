@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { DefaultLayout } from "../components/DefaultLayout.tsx";
+import { PlainLayout } from "../components/Layout.tsx";
 import { PhotoGrid } from "../components/PhotoGrid.tsx";
 import { prisma } from "../utils/prisma.ts";
 import { presignUrl } from "../utils/s3.ts";
@@ -49,12 +49,8 @@ export const handler: Handlers<Loaded & Cookies, Cookies> = {
 
 export default function Home(props: PageProps<Loaded & Cookies>) {
   return (
-    <DefaultLayout url={props.url} render={false} cookies={props.data.cookies}>
-      <div class="w-full min-h-screen flex justify-center items-center">
-        <div class="w-full px-12 md:px-3 lg:px-6 pointer-events-auto">
-          <PhotoGrid photos={props.data.images} />
-        </div>
-      </div>
-    </DefaultLayout>
+    <PlainLayout url={props.url} cookies={props.data.cookies}>
+      <PhotoGrid photos={props.data.images} />
+    </PlainLayout>
   );
 }
