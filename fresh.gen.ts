@@ -13,9 +13,11 @@ import * as $6 from "./routes/api/stripe/listen.ts";
 import * as $7 from "./routes/api/stripe/webhook.ts";
 import * as $8 from "./routes/checkout.tsx";
 import * as $9 from "./routes/index.tsx";
-import * as $10 from "./routes/photo.tsx";
-import * as $11 from "./routes/photo/[id].tsx";
-import * as $12 from "./routes/subscribe.tsx";
+import * as $10 from "./routes/kavir.tsx";
+import * as $11 from "./routes/kavir/[id].tsx";
+import * as $12 from "./routes/photo.tsx";
+import * as $13 from "./routes/photo/[id].tsx";
+import * as $14 from "./routes/subscribe.tsx";
 import * as $$0 from "./islands/AddOrRemoveToCart.tsx";
 import * as $$1 from "./islands/CartDropdown.tsx";
 import * as $$2 from "./islands/CheckoutForm.tsx";
@@ -38,9 +40,11 @@ const manifest = {
     "./routes/api/stripe/webhook.ts": $7,
     "./routes/checkout.tsx": $8,
     "./routes/index.tsx": $9,
-    "./routes/photo.tsx": $10,
-    "./routes/photo/[id].tsx": $11,
-    "./routes/subscribe.tsx": $12,
+    "./routes/kavir.tsx": $10,
+    "./routes/kavir/[id].tsx": $11,
+    "./routes/photo.tsx": $12,
+    "./routes/photo/[id].tsx": $13,
+    "./routes/subscribe.tsx": $14,
   },
   islands: {
     "./islands/AddOrRemoveToCart.tsx": $$0,
